@@ -136,6 +136,10 @@ public class Total extends ReplicatedDBObject {
         return value;
     }
 
+    public void setValue(double value) {
+        this.value = (int) (100 * value);
+    }
+
     public void setValue(String valueStr) {
         int dotPos = valueStr.indexOf('.');
         if (dotPos > 0) {
@@ -153,10 +157,6 @@ public class Total extends ReplicatedDBObject {
     }
 
     public void setValue(float value) {
-        this.value = (int) (100 * value);
-    }
-
-    public void setValue(double value) {
         this.value = (int) (100 * value);
     }
 
