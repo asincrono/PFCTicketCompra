@@ -67,6 +67,7 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
                     SELECT_CHAIN_FRAGMENT);
             mChains = savedInstanceState.getParcelableArrayList(Keys.KEY_CHAIN_LIST);
             mShops = savedInstanceState.getParcelableArrayList(Keys.KEY_SHOP_LIST);
+            mSelectedChain = savedInstanceState.getParcelable(Keys.KEY_CHAIN);
         }
 
         mChainAdapter = new ChainAdapter(this, mChains);
@@ -168,6 +169,9 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
         outState.putInt(Keys.KEY_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
         outState.putParcelableArrayList(Keys.KEY_CHAIN_LIST, mChains);
         outState.putParcelableArrayList(Keys.KEY_SHOP_LIST, mShops);
+        if (mSelectedChain != null) {
+            outState.putParcelable(Keys.KEY_CHAIN, mSelectedChain);
+        }
     }
 
     @Override

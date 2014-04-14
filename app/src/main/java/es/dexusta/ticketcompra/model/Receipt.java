@@ -165,6 +165,10 @@ public class Receipt extends ReplicatedDBObject {
         return timestamp;
     }
 
+    public void setTimestamp(String strTimestamp) {
+        timestamp = DateTime.parseRfc3339(strTimestamp);
+    }
+
     public void setTimestamp(long timestamp) {
         this.timestamp = new DateTime(false, timestamp, 0);
     }
@@ -172,13 +176,9 @@ public class Receipt extends ReplicatedDBObject {
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
     }
-
+    
     public void setTimestamp(Calendar timestamp) {
         this.timestamp = new DateTime(false, timestamp.getTimeInMillis(), 0);
-    }
-    
-    public void setTimestamp(String strTimestamp) {
-        timestamp = DateTime.parseRfc3339(strTimestamp);
     }
 
     public Date getDateTimestamp() {
