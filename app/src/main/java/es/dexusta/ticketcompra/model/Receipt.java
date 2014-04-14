@@ -165,6 +165,10 @@ public class Receipt extends ReplicatedDBObject {
         return timestamp;
     }
 
+    public void setTimestamp(DateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public void setTimestamp(Calendar timestamp) {
         this.timestamp = new DateTime(false, timestamp.getTimeInMillis(), 0);
     }
@@ -172,11 +176,11 @@ public class Receipt extends ReplicatedDBObject {
     public void setTimestamp(String strTimestamp) {
         timestamp = DateTime.parseRfc3339(strTimestamp);
     }
-
+    
     public Date getDateTimestamp() {
         return new Date(timestamp.getValue());
     }
-    
+
     // Devuelve el timestamp en milisegundos (tiempo local).
     public long getMillisTimestamp() {
         return timestamp.getValue();
@@ -184,10 +188,6 @@ public class Receipt extends ReplicatedDBObject {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = new DateTime(false, timestamp, 0);
-    }
-
-    public void setTimestamp(DateTime timestamp) {
-        this.timestamp = timestamp;
     }
 
     @Override
