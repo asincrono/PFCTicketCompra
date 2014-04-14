@@ -43,11 +43,16 @@ public class ChainSelectionFragment extends ListFragment {
             Log.d(TAG, "onAttach." + activity.getLocalClassName());
         if (activity instanceof ChainSelectionCallback) {
             mCallback = (ChainSelectionCallback) activity;
-            setListAdapter(mCallback.getChainAdapter());
         } else {
             throw new ClassCastException(activity.toString()
                     + " must implemenet ChainSelectionCallback");
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListAdapter(mCallback.getChainAdapter());
     }
 
     @Override

@@ -136,6 +136,10 @@ public class Total extends ReplicatedDBObject {
         return value;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     public void setValue(float value) {
         this.value = (int) (100 * value);
     }
@@ -154,10 +158,6 @@ public class Total extends ReplicatedDBObject {
         } else {
             value = Integer.parseInt(valueStr);
         }
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     public String getReceiptUnivId() {

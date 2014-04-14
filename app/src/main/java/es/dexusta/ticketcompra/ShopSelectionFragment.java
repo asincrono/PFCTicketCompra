@@ -35,7 +35,6 @@ public class ShopSelectionFragment extends ListFragment {
         super.onAttach(activity);
         if (activity instanceof ShopSelectionCallback) {
             mCallback = (ShopSelectionCallback) activity;
-            setListAdapter(mCallback.getShopAdapter());
         } else {
             throw new ClassCastException(activity.toString()
                     + " must implement ShopSelectionCallback");
@@ -64,13 +63,19 @@ public class ShopSelectionFragment extends ListFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListAdapter(mCallback.getShopAdapter());
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         if (DEBUG)
             Log.d(TAG, "onStart.");
-        
+
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
