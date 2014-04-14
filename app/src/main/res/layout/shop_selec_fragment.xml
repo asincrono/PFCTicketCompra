@@ -5,11 +5,11 @@
 
     <Button
         android:id="@+id/btt_add_shop"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="left|center_vertical"
-        style="?android:attr/borderlessButtonStyle"
         android:paddingLeft="10dp"
         android:text="@string/btt_add_shop" />
 
@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btt_add_shop"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
 
     </ListView>
 

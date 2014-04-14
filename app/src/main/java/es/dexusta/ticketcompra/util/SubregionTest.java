@@ -22,12 +22,12 @@ public class SubregionTest {
         return mSubregion.getId();
     }
     
-    public String getName() {
-        return mSubregion.getName();
-    }
-    
     public void setId(long id) {
         mSubregion.setId(id);
+    }
+    
+    public String getName() {
+        return mSubregion.getName();
     }
     
     public void setName(String name) {

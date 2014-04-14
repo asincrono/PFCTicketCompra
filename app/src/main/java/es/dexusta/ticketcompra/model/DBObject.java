@@ -17,22 +17,22 @@ public abstract class DBObject implements Parcelable {
 	    
 	}
 	
+	protected DBObject(Parcel in) {
+	    mId = in.readLong();
+	}
+    
+    public long getId() {
+        return mId;
+    }
+	
     /**
-     * Establece un identificador para el objeto (se corresponder· con el campo _id de la base de 
+     * Establece un identificador para el objeto (se corresponder√° con el campo _id de la base de
      * datos).
      * @param id el identificador del objeto en la base de datos.
      */
     public void setId(long id) {
         mId = id;
     }
-    
-    public long getId() {
-        return mId;
-    }
-	
-	protected DBObject(Parcel in) {
-	    mId = in.readLong();
-	}
 	
     @Override
     public void writeToParcel(Parcel dest, int flags) {

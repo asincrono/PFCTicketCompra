@@ -1,11 +1,11 @@
 package es.dexusta.ticketcompra.util;
 
-import java.io.IOException;
+import android.content.res.XmlResourceParser;
+import android.os.AsyncTask;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.content.res.XmlResourceParser;
-import android.os.AsyncTask;
+import java.io.IOException;
 
 public class XmlParserTask extends AsyncTask<Void, Void, Object> {
     private static final String TAG = "XmlParserTask";

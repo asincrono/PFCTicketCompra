@@ -1,25 +1,26 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Detail;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class DetailDataAccess extends DataAccess<Detail> {
     private static final String  TAG             = "DetailDataAccess";
     private static final boolean DEBUG           = true;
 
     private static final String  TABLE_NAME      = DBHelper.TBL_DETAIL;
-
+    private static final String  BASE_QUERY      = "SELECT * FROM " + TABLE_NAME + " WHERE ? = ?";
     private static final String  ID              = DBHelper.T_DETAIL_ID;
     private static final String  UNIV_ID         = DBHelper.T_DETAIL_UNIVERSAL_ID;
     private static final String  PRODUCT_ID      = DBHelper.T_DETAIL_PROD_ID;
@@ -30,80 +31,32 @@ public class DetailDataAccess extends DataAccess<Detail> {
     private static final String  UNITS           = DBHelper.T_DETAIL_UNITS;
     private static final String  WEIGHT          = DBHelper.T_DETAIL_WEIGHT;
     private static final String  UPDATED         = DBHelper.T_DETAIL_UPDATED;
-
-    private static final String  BASE_QUERY      = "SELECT * FROM " + TABLE_NAME + " WHERE ? = ?";
-
     private DBHelper             mHelper;
 
     public DetailDataAccess(DBHelper helper) {
         mHelper = helper;
     }
 
-    // Métodos de acceso específicos de Detail.
+    // MÃ©todos de acceso especÃ­ficos de Detail.
     // public void read(Receipt receipt) {
     // String[] args = {RECEIPT_ID, Long.toString(receipt.getId())};
     // new AsyncDetailQuery(mHelper, BASE_QUERY, args, listener).execute();
     // }
 
-    @Override
-    public void list() {
-        DataAccessCallbacks<Detail> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + RECEIPT_ID;
-            new DetailAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Detail> listener = getCallback();
-        if (listener != null) {
-            new DetailAsyncQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Detail> dataList) {
-        new DetailAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
-    }
-
-    @Override
-    public void update(List<Detail> dataList) {
-        new DetailAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
-    }
-
-    @Override
-    public void delete(List<Detail> dataList) {
-        new DetailAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {
-        new DetailAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    public void getCount() {
-        DataAccessCallbacks<Detail> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new DetailAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
-    }
-
     public static ContentValues getValues(Detail data) {
         ContentValues cv = null;
         if (data != null) {
             cv = new ContentValues();
-            long id = data.getId(); 
+            long id = data.getId();
             if (id > 0) {
                 cv.put(ID, id);
             }
-            
+
             String univId = data.getUniversalId();
             if (univId != null) {
                 cv.put(UNIV_ID, univId);
             }
-            
+
             cv.put(PRODUCT_ID, data.getProductId());
             cv.put(PRODUCT_UNIV_ID, data.getProductUnivId());
             cv.put(RECEIPT_ID, data.getReceiptId());
@@ -177,6 +130,51 @@ public class DetailDataAccess extends DataAccess<Detail> {
         }
 
         return list;
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Detail> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + RECEIPT_ID;
+            new DetailAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Detail> listener = getCallback();
+        if (listener != null) {
+            new DetailAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Detail> dataList) {
+        new DetailAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Detail> dataList) {
+        new DetailAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    @Override
+    public void delete(List<Detail> dataList) {
+        new DetailAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new DetailAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    public void getCount() {
+        DataAccessCallbacks<Detail> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new DetailAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class DetailAsyncQuery extends AsyncQuery<Detail> {

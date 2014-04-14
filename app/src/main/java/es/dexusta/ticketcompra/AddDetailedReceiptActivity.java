@@ -1,9 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +14,10 @@ import android.widget.Toast;
 import com.google.cloud.backend.android.CloudBackendFragmentActivity;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.AddDetailFragment.AddDetailCallback;
 import es.dexusta.ticketcompra.ListDetailsFragment.ListDetailsCallback;
@@ -315,7 +315,7 @@ public class AddDetailedReceiptActivity extends CloudBackendFragmentActivity imp
         // ft.replace(android.R.id.content, fragment);
         // }
 
-        // Es el segundo fragmento y podrá volverse al primero?
+        // Es el segundo fragmento y podrï¿½ volverse al primero?
         ft.addToBackStack(null);
 
         ft.commit();
@@ -416,10 +416,10 @@ public class AddDetailedReceiptActivity extends CloudBackendFragmentActivity imp
                 @Override
                 public void onDataProcessed(int processed, List<Detail> dataList,
                         Operation operation, boolean result) {
-                    // Iniciar la cadena de inserción del receipt y de los
+                    // Iniciar la cadena de inserciï¿½n del receipt y de los
                     // detalles
                     // en el backend.
-                    // Además (si se completa la tarea) se marcarán como
+                    // Ademï¿½s (si se completa la tarea) se marcarï¿½n como
                     // actualizados en la BD.
                     BackendDataAccess.uploadReceiptDetails(mReceipt, mDetails,
                             getApplicationContext(), getCloudBackend());
@@ -444,7 +444,7 @@ public class AddDetailedReceiptActivity extends CloudBackendFragmentActivity imp
             listReceipt.add(mReceipt);
             mDS.insertReceipts(listReceipt);
 
-            // TODO: ¿Mostrar una lista con los receipts insertados donde figure
+            // TODO: ï¿½Mostrar una lista con los receipts insertados donde figure
             // el
             // presente?
             Intent intent = new Intent(this, TicketCompraActivity.class);
@@ -475,95 +475,6 @@ public class AddDetailedReceiptActivity extends CloudBackendFragmentActivity imp
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
-    // private void showAcceptCancelActionBar(OnClickListener onClickAccept,
-    // OnClickListener onClickCancel) {
-    // final ActionBar actionBar = getActionBar();
-    //
-    // LayoutInflater inflater =
-    // LayoutInflater.from(actionBar.getThemedContext());
-    //
-    // final View actionBarCustomView =
-    // inflater.inflate(R.layout.actionbar_cancel_accept, null);
-    //
-    // actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-    // actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-    //
-    // actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-    // ActionBar.DISPLAY_SHOW_CUSTOM
-    // | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-    // // Previous line is equivalent to:
-    // // actionBar.setDisplayShowTitleEnabled(false);
-    // // actionBar.setDisplayShowHomeEnabled(false);
-    // // actionBar.setDisplayUseLogoEnabled(false);
-    // // actionBar.setDisplayShowCustomEnabled(true);
-    //
-    // actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-    // ViewGroup.LayoutParams.MATCH_PARENT,
-    // ViewGroup.LayoutParams.MATCH_PARENT));
-    // }
-
-    // private class DetailedReceiptPagerAdapter extends FragmentPagerAdapter {
-    // private static final int FRAGMENTS = 2;
-    //
-    // private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new
-    // SparseArray<WeakReference<Fragment>>();
-    // private FragmentManager mFragmentManager;
-    //
-    // public DetailedReceiptPagerAdapter(FragmentManager fm) {
-    // super(fm);
-    // mFragmentManager = fm;
-    // }
-    //
-    // @Override
-    // public Object instantiateItem(ViewGroup container, int position) {
-    // Fragment fragment = (Fragment) super.instantiateItem(container,
-    // position);
-    // mRegisteredFragments.put(position, new
-    // WeakReference<Fragment>(fragment));
-    // return fragment;
-    // }
-    //
-    // @Override
-    // public void destroyItem(ViewGroup container, int position, Object object)
-    // {
-    // super.destroyItem(container, position, object);
-    // mRegisteredFragments.remove(position);
-    // }
-    //
-    // public Fragment getFragment(int position) {
-    // WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-    // return (fw != null) ? fw.get() : null;
-    // }
-    //
-    // @Override
-    // public Fragment getItem(int position) {
-    // WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-    // Fragment fragment = (fw != null) ? fw.get() : null;
-    //
-    // if (fragment == null) {
-    // switch (position) {
-    // case LIST_DETAILS_FRAGMENT:
-    // fragment = new ListDetailsFragment();
-    // break;
-    // case ADD_DETAL_FRAGMENT:
-    // fragment = new AddDetailFragment();
-    // break;
-    // default:
-    // fragment = new ListDetailsFragment();
-    // break;
-    // }
-    // }
-    //
-    // return fragment;
-    // }
-    //
-    // @Override
-    // public int getCount() {
-    // return FRAGMENTS;
-    // }
-    //
-    // }
 
     @Override
     public boolean isInsertionActive() {
@@ -599,26 +510,4 @@ public class AddDetailedReceiptActivity extends CloudBackendFragmentActivity imp
             mContext = null;
         }
     }
-
-    // class UploadReceiptCallbackHandler extends
-    // CloudCallbackHandler<CloudEntity> {
-    // private Receipt mReceipt;
-    // private List<Detail> mDetails;
-    //
-    // public UploadReceiptCallbackHandler(Receipt receipt) {
-    // mReceipt = receipt;
-    // }
-    //
-    // @Override
-    // public void onComplete(CloudEntity result) {
-    // mReceipt.setUpdated(true);
-    // List<Receipt> receips = new ArrayList<Receipt>();
-    // receips.add(mReceipt);
-    // mDS.updateReceipts(receips);
-    //
-    // BackendDataAccess.uploadDetails(mDetails, getApplicationContext(),
-    // getCloudBackend());
-    // }
-    //
-    // }
 }

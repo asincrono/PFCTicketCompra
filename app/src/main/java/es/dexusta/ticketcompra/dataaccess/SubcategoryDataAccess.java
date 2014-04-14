@@ -1,86 +1,36 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Subcategory;
 
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+
 public class SubcategoryDataAccess extends DataAccess<Subcategory> {
     private static final String TAG   = "SubcategoryDataAccess";
-    private static boolean      DEBUG = false;
-
-    public static void setDebug(boolean debug) {
-        DEBUG = debug;
-    }
-
     private static final String                    TABLE_NAME  = DBHelper.TBL_SUBCATEGORY;
     private static final String                    ID          = DBHelper.T_SUBCAT_ID;
     private static final String                    CATEGORY_ID = DBHelper.T_SUBCAT_CAT_ID;
     private static final String                    NAME        = DBHelper.T_SUBCAT_NAME;
     private static final String                    DESCRIPTION = DBHelper.T_SUBCAT_DESCR;
+    private static boolean      DEBUG = false;
+private DBHelper                               mHelper;
 
-    private DBHelper                               mHelper;;
-
-    public SubcategoryDataAccess(DBHelper helper) {
+        public SubcategoryDataAccess(DBHelper helper) {
         mHelper = helper;
-    }
+    };
 
-    @Override
-    public void list() {
-        DataAccessCallbacks<Subcategory> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
-            new SubcategoryAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Subcategory> listener = getCallback();
-        if (listener != null) {
-            new SubcategoryAsyncQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Subcategory> dataList) {
-        new SubcategoryAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
-    }
-
-    @Override
-    public void update(List<Subcategory> dataList) {
-        new SubcategoryAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
-    }
-
-    @Override
-    public void delete(List<Subcategory> dataList) {
-        if (dataList == null) {            
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        } 
-        new SubcategoryAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {
-        new SubcategoryAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Subcategory> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new SubcategoryAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
+    public static void setDebug(boolean debug) {
+        DEBUG = debug;
     }
 
     public static ContentValues getValues(Subcategory subcat) {
@@ -140,6 +90,55 @@ public class SubcategoryDataAccess extends DataAccess<Subcategory> {
             c.moveToPosition(savedPosition);
         }
         return list;
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Subcategory> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
+            new SubcategoryAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Subcategory> listener = getCallback();
+        if (listener != null) {
+            new SubcategoryAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Subcategory> dataList) {
+        new SubcategoryAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Subcategory> dataList) {
+        new SubcategoryAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    @Override
+    public void delete(List<Subcategory> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new SubcategoryAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new SubcategoryAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Subcategory> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new SubcategoryAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class SubcategoryAsyncQuery extends AsyncQuery<Subcategory> {

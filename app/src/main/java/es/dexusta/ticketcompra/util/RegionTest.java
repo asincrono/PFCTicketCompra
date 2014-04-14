@@ -22,12 +22,12 @@ public class RegionTest {
         return mRegion.getId();
     }
 
-    public String getName() {
-        return mRegion.getName();
-    }
-    
     public void setId(long id) {
         mRegion.setId(id);
+    }
+    
+    public String getName() {
+        return mRegion.getName();
     }
     
     public void setName(String name) {

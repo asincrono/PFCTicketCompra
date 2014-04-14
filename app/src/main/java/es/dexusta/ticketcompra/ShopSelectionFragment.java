@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -13,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+
 import es.dexusta.ticketcompra.control.ShopAdapter;
 import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.model.Shop;
@@ -28,18 +26,19 @@ public class ShopSelectionFragment extends ListFragment {
     
     private Button mBttNewShop; 
 
-    public static ShopSelectionFragment newInstance(List<Shop> list) {
-        ShopSelectionFragment fragment = new ShopSelectionFragment();
-        fragment.setList(list);
-        return fragment;
+    public static ShopSelectionFragment newInstance() {
+        return new ShopSelectionFragment();
     }
 
-    public void setList(List<Shop> list) {
-        ShopAdapter adapter = (ShopAdapter) getListAdapter();
-        if (adapter != null) {
-            adapter.sawpList(list);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ShopSelectionCallback) {
+            mCallback = (ShopSelectionCallback) activity;
+            setListAdapter(mCallback.getShopAdapter());
         } else {
-            setListAdapter(new ShopAdapter(getActivity(), list));
+            throw new ClassCastException(activity.toString()
+                    + " must implement ShopSelectionCallback");
         }
     }
 
@@ -48,48 +47,42 @@ public class ShopSelectionFragment extends ListFragment {
         View v = inflater.inflate(R.layout.shop_selec_fragment, container, false);
         mBttNewShop = (Button) v.findViewById(R.id.btt_add_shop);
         mBttNewShop.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 mCallback.onClickAddShop();
             }
         });
-        
+
         return v;
-        
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof ShopSelectionCallback) {
-            mCallback = (ShopSelectionCallback) activity;
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ShopSelectionCallback");
-        }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (DEBUG) Log.d(TAG, "onCreateView.");
     }
-    
-    
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart.");
+        if (DEBUG)
+            Log.d(TAG, "onStart.");
         
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume.");
+        if (DEBUG)
+            Log.d(TAG, "onResume.");
         
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause.");
+        if (DEBUG) Log.d(TAG, "onPause.");
     }
     
     @Override

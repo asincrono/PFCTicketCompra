@@ -1,12 +1,13 @@
 package es.dexusta.ticketcompra.util;
 
-import java.io.IOException;
+import android.content.res.XmlResourceParser;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.content.res.XmlResourceParser;
-import android.util.Log;
+import java.io.IOException;
+
 import es.dexusta.ticketcompra.model.Region;
 import es.dexusta.ticketcompra.model.Subregion;
 import es.dexusta.ticketcompra.model.Town;

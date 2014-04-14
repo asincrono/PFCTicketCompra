@@ -1,18 +1,19 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Receipt;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class ReceiptDataAccess extends DataAccess<Receipt> {
     private static final String TAG = "ReceiptDataAccess";
@@ -36,71 +37,21 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
         mHelper = helper;
     }
 
-    @Override
-    public void list() {
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + TIMESTAMP;
-            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) { 
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Receipt> dataList) {
-        new ReceiptAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
-    }
-
-    @Override
-    public void update(List<Receipt> dataList) {
-        new ReceiptAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();        
-    }
-
-    @Override
-    public void delete(List<Receipt> dataList) {
-        if (dataList == null) {            
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }                
-        new ReceiptAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();        
-    }
-
-    @Override
-    public void deleteAll() {
-        new ReceiptAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new ReceiptAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
-
-    }
-
-    public static ContentValues getValues(Receipt data) {        
+    public static ContentValues getValues(Receipt data) {
         ContentValues cv = null;
 
         if (data != null) {
             cv = new ContentValues();
             long id = data.getId();
             if (id > 0) {
-                cv.put(ID, id);                
+                cv.put(ID, id);
             }
-            
+
             String univ_id = data.getUniversalId();
             if (univ_id != null) {
                 cv.put(UNIV_ID, univ_id);
             }
-            cv.put(SHOP_ID, data.getShopId());  
+            cv.put(SHOP_ID, data.getShopId());
             cv.put(SHOP_UNIV_ID, data.getShopUnivId());
             cv.put(TOTAL, data.getTotal());
             cv.put(TIMESTAMP, data.getTimestampRfc3339());
@@ -119,7 +70,7 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
             receipt.setUniversalId(c.getString(c.getColumnIndexOrThrow(UNIV_ID)));
             receipt.setShopId(c.getLong(c.getColumnIndexOrThrow(SHOP_ID)));
             receipt.setShopUnivId(c.getString(c.getColumnIndexOrThrow(SHOP_UNIV_ID)));
-            receipt.setTotal(c.getInt(c.getColumnIndexOrThrow(TOTAL)));                       
+            receipt.setTotal(c.getInt(c.getColumnIndexOrThrow(TOTAL)));
             receipt.setTimestamp(c.getString(c.getColumnIndexOrThrow(TIMESTAMP)));
             receipt.setUpdated(c.getInt(c.getColumnIndexOrThrow(UPDATED)) > 0);
         }
@@ -148,7 +99,7 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
 
                     receipt.setId(c.getLong(idIndex));
                     receipt.setUniversalId(c.getString(univIdIndex));
-                    receipt.setShopId(c.getLong(shopIdIndex));        
+                    receipt.setShopId(c.getLong(shopIdIndex));
                     receipt.setShopUnivId(c.getString(shopUnivIdIndex));
                     receipt.setTotal(c.getInt(totalIndex));
                     receipt.setTimestamp(c.getString(timestampIndex));
@@ -164,6 +115,56 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
         }
 
         return list;
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Receipt> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + TIMESTAMP;
+            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Receipt> listener = getCallback();
+        if (listener != null) {
+            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Receipt> dataList) {
+        new ReceiptAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Receipt> dataList) {
+        new ReceiptAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    @Override
+    public void delete(List<Receipt> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new ReceiptAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new ReceiptAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Receipt> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new ReceiptAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
+
     }
 
     class ReceiptAsyncQuery extends AsyncQuery<Receipt> {

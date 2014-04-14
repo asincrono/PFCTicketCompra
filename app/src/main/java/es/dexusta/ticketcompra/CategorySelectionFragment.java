@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
@@ -12,6 +10,9 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.CategoryAdapter;
 import es.dexusta.ticketcompra.control.CategorySelectionCallback;
 import es.dexusta.ticketcompra.model.Category;
@@ -45,7 +46,7 @@ public class CategorySelectionFragment extends ListFragment {
     public void setList(List<Category> list) {    
         CategoryAdapter adapter = (CategoryAdapter) getListAdapter();
         if (adapter != null) {
-            adapter.sawpList(list);
+            adapter.swapList(list);
         }
         else {
             FragmentActivity fragAct = getActivity();

@@ -1,26 +1,6 @@
 package es.dexusta.ticketcompra;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.TimeZone;
-
-import org.achartengine.chart.PointStyle;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
-
 import android.app.Activity;
-//import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -36,9 +16,28 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-//import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.achartengine.chart.PointStyle;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.renderer.DefaultRenderer;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.TimeZone;
+
 import es.dexusta.ticketcompra.EndingDatePickerFragment.SetEndingDateCallbacks;
 import es.dexusta.ticketcompra.StartDatePickerFragment.SetStartDateCallbacks;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -49,6 +48,9 @@ import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Shop;
 import es.dexusta.ticketcompra.util.Interval.Periodicity;
+
+//import android.app.DatePickerDialog;
+//import android.widget.DatePicker;
 
 public class TesterGraph extends Activity implements SetStartDateCallbacks, SetEndingDateCallbacks,
         OnItemSelectedListener {
@@ -63,7 +65,7 @@ public class TesterGraph extends Activity implements SetStartDateCallbacks, SetE
     private static final String[] TEST_RECEIPT_TIMESTAMPS = {
             "01/01/2014", // (Jueves)
             "02/01/2014",
-            // <salto de un día>
+            // <salto de un dÃ­a>
             "04/01/2014",
             "05/01/2014",
             // <salto de una semana>
@@ -71,19 +73,16 @@ public class TesterGraph extends Activity implements SetStartDateCallbacks, SetE
             "14/01/2014",
             "15/01/2014",
             // <salto de un mes>
-            "01/03/2014", // (Sábado)
+            "01/03/2014", // (SÃ¡bado)
             "02/03/2014",
             // <salto una semana>
             "10/03/2014", "11/03/2014", "12/03/2014", "13/03/2014", "14/03/2014", "15/03/2014",
             "16/03/2014", "17/03/2014", "18/03/2014", "19/03/2014", "20/03/2014",
-            // <salto un año>
+            // <salto un aÃ±o>
             "01/01/2015", "02/01/2015"                   };
-
+    private static final int      SIZE                    = 10;
     private SimpleDateFormat      mServiceDF              = new SimpleDateFormat("dd/MM/yyyy",
                                                                   Locale.US);
-
-    private static final int      SIZE                    = 10;
-
     private double                mMaxValue;
 
     private TextView              mTvStartDate;
@@ -468,7 +467,7 @@ public class TesterGraph extends Activity implements SetStartDateCallbacks, SetE
         double step = mMaxValue / 10;
         double yLabelValue = 0;
         for (int i = 0; i < 10; ++i) {
-            renderer.addYTextLabel(yLabelValue, yLabelValue + " €  ");
+            renderer.addYTextLabel(yLabelValue, yLabelValue + " ï¿½  ");
             yLabelValue += step;
         }
 

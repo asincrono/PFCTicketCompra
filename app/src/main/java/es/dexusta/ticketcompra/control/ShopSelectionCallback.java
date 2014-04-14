@@ -7,5 +7,6 @@ public interface ShopSelectionCallback {
     public void onShopSelected(Shop shop);
     public void onCancelShopSelection();
     public void onClickAddShop();
+    public ShopAdapter getShopAdapter();
 
 }

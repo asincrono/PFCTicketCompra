@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra.model;
 
-import java.math.BigDecimal;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Parcel;
@@ -10,21 +8,33 @@ import android.util.Log;
 
 import com.google.cloud.backend.android.CloudEntity;
 
+import java.math.BigDecimal;
+
 import es.dexusta.ticketcompra.util.Installation;
 
 public class Total extends ReplicatedDBObject {
-    private static final boolean DEBUG                    = true;
-    private static final String  TAG                      = "Total";
-
     public static final String   KIND_NAME                = "total";
-
     public static final String   PROPERTY_RECEIPT_ID      = "receipt_id";
     public static final String   PROPERTY_RECEIPT_UNIV_ID = "receipt_universal_id";
     public static final String   PROPERTY_VALUE           = "value";
+    public static final Parcelable.Creator<Total> CREATOR = new Creator<Total>() {
 
+                                                              @Override
+                                                              public Total[] newArray(int size) {
+                                                                  return new Total[size];
+                                                              }
+
+                                                              @Override
+                                                              public Total createFromParcel(
+                                                                      Parcel source) {
+                                                                  return new Total(source);
+                                                              }
+                                                          };
+    private static final boolean DEBUG                    = true;
+    private static final String  TAG                      = "Total";
     private long                 receiptId;
     private String               receiptUnivId;
-    // En céntimos de euro.
+    // En cÃ©ntimos de euro.
     private int                  value;
 
     public Total() {
@@ -50,6 +60,13 @@ public class Total extends ReplicatedDBObject {
         } else {
             Log.wtf(TAG, "Returned value type isn't BigDecimal nor String!!!");
         }
+    }
+
+    private Total(Parcel in) {
+        super(in);
+        receiptId = in.readLong();
+        receiptUnivId = in.readString();
+        value = in.readInt();
     }
 
     @Override
@@ -119,14 +136,6 @@ public class Total extends ReplicatedDBObject {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public void setValue(float value) {
-        this.value = (int) (100 * value);
-    }
-
     public void setValue(double value) {
         this.value = (int) (100 * value);
     }
@@ -141,6 +150,14 @@ public class Total extends ReplicatedDBObject {
         } else {
             value = Integer.parseInt(valueStr);
         }
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public void setValue(float value) {
+        this.value = (int) (100 * value);
     }
 
     public String getReceiptUnivId() {
@@ -163,25 +180,4 @@ public class Total extends ReplicatedDBObject {
         dest.writeString(receiptUnivId);
         dest.writeInt(value);
     }
-
-    private Total(Parcel in) {
-        super(in);
-        receiptId = in.readLong();
-        receiptUnivId = in.readString();
-        value = in.readInt();
-    }
-
-    public static final Parcelable.Creator<Total> CREATOR = new Creator<Total>() {
-
-                                                              @Override
-                                                              public Total[] newArray(int size) {
-                                                                  return new Total[size];
-                                                              }
-
-                                                              @Override
-                                                              public Total createFromParcel(
-                                                                      Parcel source) {
-                                                                  return new Total(source);
-                                                              }
-                                                          };
 }

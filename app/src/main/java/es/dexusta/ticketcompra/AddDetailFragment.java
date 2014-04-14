@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 

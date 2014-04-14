@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +11,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
-import es.dexusta.ticketcompra.R;
+
+import java.util.ArrayList;
 
 import es.dexusta.ticketcompra.dataaccess.Keys;
 import es.dexusta.ticketcompra.model.Detail;
@@ -34,9 +33,7 @@ public class AddDetailActivity extends CloudBackendActivity implements OnItemSel
     private Product              mProduct;
 
     private ArrayList<Detail>    mDetails;
-    
-    enum UnitType {WEIGHT, VOLUME};
-    private UnitType mUnitType;
+    private UnitType mUnitType;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +54,21 @@ public class AddDetailActivity extends CloudBackendActivity implements OnItemSel
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.chose_weight_volume, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        
+
         mSpinner.setAdapter(adapter);
     }
 
     public void onClickAccept(View v) {
         // Validate detail
         Detail detail = validate();
-        if (detail != null) {                        
+        if (detail != null) {
             // Add the new detail to the details list.
             mDetails.add(detail);
             // Go back to receipt info (detail list plus total).
             Intent i = new Intent();
         }
         else {
-            
+
         }
     }
 
@@ -91,12 +88,14 @@ public class AddDetailActivity extends CloudBackendActivity implements OnItemSel
         }
         else {
             mUnitType = UnitType.VOLUME;
-        }        
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        mUnitType = UnitType.WEIGHT;        
+        mUnitType = UnitType.WEIGHT;
     }
+
+enum UnitType {WEIGHT, VOLUME}
 
 }

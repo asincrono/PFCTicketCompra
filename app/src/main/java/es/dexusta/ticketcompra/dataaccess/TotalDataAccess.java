@@ -1,18 +1,19 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Total;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class TotalDataAccess extends DataAccess<Total> {
     private static final String  TAG             = "TotalDataAccess";
@@ -33,57 +34,6 @@ public class TotalDataAccess extends DataAccess<Total> {
         mHelper = helper;
     }
 
-    @Override
-    public void list() {
-        DataAccessCallbacks<Total> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME;
-            new AsyncTotalQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Total> listener = getCallback();
-        if (listener != null) {
-            new AsyncTotalQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Total> dataList) {
-        new AsyncTotalInput(mHelper, dataList, INSERT, getCallback()).execute();
-    }
-
-    @Override
-    public void update(List<Total> dataList) {
-        new AsyncTotalInput(mHelper, dataList, UPDATE, getCallback()).execute();
-
-    }
-
-    @Override
-    public void delete(List<Total> dataList) {
-        if (dataList == null) {
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }
-        new AsyncTotalInput(mHelper, dataList, DELETE, getCallback()).execute();
-
-    }
-
-    @Override
-    public void deleteAll() {
-        new AsyncTotalInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Total> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new TotalAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
-    }
-
     public static ContentValues getValues(Total data) {
         ContentValues cv = null;
 
@@ -93,12 +43,12 @@ public class TotalDataAccess extends DataAccess<Total> {
             if (id > 0) {
                 cv.put(ID, id);
             }
-            
+
             String univId = data.getUniversalId();
             if (univId != null) {
                 cv.put(UNIV_ID, univId);
             }
-            
+
             cv.put(RECEIPT_ID, data.getReceiptId());
             cv.put(RECEIPT_UNIV_ID, data.getReceiptUnivId());
             cv.put(VALUE, data.getValue());
@@ -159,6 +109,57 @@ public class TotalDataAccess extends DataAccess<Total> {
         }
 
         return list;
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Total> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME;
+            new AsyncTotalQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Total> listener = getCallback();
+        if (listener != null) {
+            new AsyncTotalQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Total> dataList) {
+        new AsyncTotalInput(mHelper, dataList, INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Total> dataList) {
+        new AsyncTotalInput(mHelper, dataList, UPDATE, getCallback()).execute();
+
+    }
+
+    @Override
+    public void delete(List<Total> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new AsyncTotalInput(mHelper, dataList, DELETE, getCallback()).execute();
+
+    }
+
+    @Override
+    public void deleteAll() {
+        new AsyncTotalInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Total> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new TotalAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class AsyncTotalQuery extends AsyncQuery<Total> {

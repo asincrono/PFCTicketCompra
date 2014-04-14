@@ -72,12 +72,12 @@ public abstract class ReplicatedDBObject extends DBObject implements Persistent 
         }
     }
 
-    public void setUniversalId(String universalId) {
-        mUniversalId = universalId;
-    }
-
     public String getUniversalId() {
         return mUniversalId;
+    }
+
+    public void setUniversalId(String universalId) {
+        mUniversalId = universalId;
     }
     
     public String getInstallation() {
@@ -98,12 +98,12 @@ public abstract class ReplicatedDBObject extends DBObject implements Persistent 
     
     public abstract ContentValues getValues();
 
-    public void setUpdated(boolean updated) {
-        mUpdated = updated;
-    }
-
     public boolean isUpdated() {
         return mUpdated;
+    }
+
+    public void setUpdated(boolean updated) {
+        mUpdated = updated;
     }
 
 }

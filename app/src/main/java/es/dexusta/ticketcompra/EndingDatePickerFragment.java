@@ -1,14 +1,14 @@
 package es.dexusta.ticketcompra;
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.widget.DatePicker;
+
+import java.util.Calendar;
 
 public class EndingDatePickerFragment extends DialogFragment implements OnDateSetListener {
     private SetEndingDateCallbacks mListener;

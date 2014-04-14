@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="send">Send</string>
     <string name="sendMessage">sendMessage</string>
-    <string name="emptystring"></string>    
+    <string name="emptystring"></string>
     <string name="category_example_text">A category</string>
     <string name="btt_insert_category">Insert category</string>
     <string name="btt_read">Read</string>
@@ -18,10 +18,10 @@
     <string name="btt_new_receipt">New receipt</string>
     <string name="btt_new_report">New report</string>
     <string name="btt_new_graph">New graphic</string>
-    <string name="btt_add_chain">New chain&#8230;</string>
-    <string name="btt_add_shop">New shop&#8230;</string>
-    <string name="btt_add_product">new product&#8230;</string>
-    <string name="btt_add_detail">New detail line&#8230;</string>
+    <string name="btt_add_chain">New chain…</string>
+    <string name="btt_add_shop">New shop…</string>
+    <string name="btt_add_product">new product…</string>
+    <string name="btt_add_detail">New detail line…</string>
     <string name="btt_cancel">Cancel</string>
     <string name="btt_accept">Accept</string>
     <string name="lbl_address">Address</string>
@@ -83,7 +83,7 @@
     </string-array>
 
     <string name="lbl_fraction_of_time">fraction of time</string>
-    <string name="tv_lbl_group_by">GROUP BY&#8230;</string>
+    <string name="tv_lbl_group_by">GROUP BY…</string>
     <string name="lbl_shop_or_chain">shop or chain</string>
     <string name="lbl_kind_of_product">kind of product</string>
     <string name="lbl_product">Product</string>
@@ -369,5 +369,6 @@
     <string name="cumulative_spending_title">Cumulative Spending</string>
     <string name="spending_in_time_title">Spending in time</string>
     <string name="spending_by_category_title">Spending by category</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -1,16 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -21,6 +10,18 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.renderer.DefaultRenderer;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import es.dexusta.ticketcompra.EndingDatePickerFragment.SetEndingDateCallbacks;
 import es.dexusta.ticketcompra.StartDatePickerFragment.SetStartDateCallbacks;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;

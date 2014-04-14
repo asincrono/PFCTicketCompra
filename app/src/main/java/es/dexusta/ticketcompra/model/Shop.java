@@ -1,13 +1,13 @@
 package es.dexusta.ticketcompra.model;
 
-import java.math.BigDecimal;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.math.BigDecimal;
 
 import es.dexusta.ticketcompra.util.Installation;
 
@@ -21,14 +21,25 @@ public class Shop extends ReplicatedDBObject {
     public static final String PROPERTY_LATITUDE  = "latitude";
     public static final String PROPERTY_LONGITUDE = "longitude";
     public static final String PROPERTY_ADDRESS   = "address";
+    public static final Parcelable.Creator<Shop> CREATOR = new Creator<Shop>() {
 
+                                                             @Override
+                                                             public Shop[] newArray(int size) {
+                                                                 return new Shop[size];
+                                                             }
+
+                                                             @Override
+                                                             public Shop createFromParcel(
+                                                                     Parcel source) {
+                                                                 return new Shop(source);
+                                                             }
+                                                         };
     private long               chainId;
     private long               townId;
     private String             townName;
     // private String name;
     private double             latitude;
     private double             longitude;
-
     private String             address;                         // ???
 
     public Shop() {
@@ -62,12 +73,26 @@ public class Shop extends ReplicatedDBObject {
         longitude = ((BigDecimal) entity.get(PROPERTY_LONGITUDE)).doubleValue();
         address = (String) entity.get(PROPERTY_ADDRESS);
     }
+    
+    private Shop(Parcel in) {
+        super(in);
+        chainId = in.readLong();
+        townId = in.readLong();
+        townName = in.readString();
+        // name = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        address = in.readString();
+        if (address.length() == 0) {
+            address = null;
+        }
+    }
 
     @Override
     public String getKindName() {
         return KIND_NAME;
     }
-    
+
     @Override
     public String getTableName() {
         return DBHelper.TBL_SHOP;
@@ -96,13 +121,13 @@ public class Shop extends ReplicatedDBObject {
     @Override
     public ContentValues getValues() {
         ContentValues cv = null;
-    
+
         cv = new ContentValues();
         long id = getId();
         if (id > 0) {
             cv.put(DBHelper.T_SHOP_ID, id);
         }
-    
+
         String univId = getUniversalId();
         if (univId != null) {
             cv.put(DBHelper.T_SHOP_UNIVERSAL_ID, univId);
@@ -117,7 +142,7 @@ public class Shop extends ReplicatedDBObject {
         // Less confusing than use Boolean as there is no getBoolean from
         // cursor.
         cv.put(DBHelper.T_SHOP_UPDATED, isUpdated() ? 1 : 0);
-    
+
         return cv;
     }
 
@@ -137,20 +162,12 @@ public class Shop extends ReplicatedDBObject {
         this.townId = townId;
     }
 
-    public void setTownName(String townName) {
-        this.townName = townName;
-    }
-
     public String getTownName() {
         return townName;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setTownName(String townName) {
+        this.townName = townName;
     }
 
     // public String getName() {
@@ -160,6 +177,14 @@ public class Shop extends ReplicatedDBObject {
     // public void setName(String name) {
     // this.name = name;
     // }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     public double getLongitude() {
         return longitude;
@@ -210,32 +235,4 @@ public class Shop extends ReplicatedDBObject {
         // dest.writeString(address);
         // }
     }
-
-    private Shop(Parcel in) {
-        super(in);
-        chainId = in.readLong();
-        townId = in.readLong();
-        townName = in.readString();
-        // name = in.readString();
-        latitude = in.readDouble();
-        longitude = in.readDouble();
-        address = in.readString();
-        if (address.length() == 0) {
-            address = null;
-        }
-    }
-
-    public static final Parcelable.Creator<Shop> CREATOR = new Creator<Shop>() {
-
-                                                             @Override
-                                                             public Shop[] newArray(int size) {
-                                                                 return new Shop[size];
-                                                             }
-
-                                                             @Override
-                                                             public Shop createFromParcel(
-                                                                     Parcel source) {
-                                                                 return new Shop(source);
-                                                             }
-                                                         };
 }

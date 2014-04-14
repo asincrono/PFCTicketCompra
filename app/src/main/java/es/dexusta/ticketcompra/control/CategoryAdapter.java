@@ -1,14 +1,13 @@
 package es.dexusta.ticketcompra.control;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import es.dexusta.ticketcompra.R;
+import java.util.List;
 
+import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.model.Category;
 
 public class CategoryAdapter extends DBObjectAdapter<Category> {

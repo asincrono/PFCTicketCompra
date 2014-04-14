@@ -7,8 +7,8 @@ import java.util.HashMap;
 import es.dexusta.ticketcompra.model.Town;
 
 public class Country {
-    private String name;
     private final HashMap<Long, RegionTest> mRegionMap = new HashMap<Long, RegionTest>();
+    private String name;
 
     public String getName() {
         return name;

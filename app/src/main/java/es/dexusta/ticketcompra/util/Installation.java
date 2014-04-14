@@ -1,20 +1,20 @@
 package es.dexusta.ticketcompra.util;
 
+import android.content.Context;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.UUID;
 
-import android.content.Context;
-
 /**
  * Created by asincrono on 7/08/13.
  */
 public class Installation {
+    private static final String INSTALLATION = "installation";
     private static int num_char = 36;
     private static String sID = null;
-    private static final String INSTALLATION = "installation";
 
     public synchronized static String id(Context context) {
 

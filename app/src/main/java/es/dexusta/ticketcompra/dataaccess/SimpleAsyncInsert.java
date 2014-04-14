@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra.dataaccess;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.ReplicatedDBObject;

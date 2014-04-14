@@ -1,14 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -29,6 +20,15 @@ import com.google.cloud.backend.android.CloudEntity;
 import com.google.cloud.backend.android.CloudQuery;
 import com.google.cloud.backend.android.F;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
@@ -42,16 +42,16 @@ import es.dexusta.ticketcompra.model.Total;
 import es.dexusta.ticketcompra.util.Installation;
 
 /*
- * La finalidad de esta actividad es probar el evío y actualización de datos.
- * Probaré a crear una tienda, subirla y luego comprobar si abriendo la aplicación desde otro dispositivo lee la nueva tienda.
+ * La finalidad de esta actividad es probar el evÃ­o y actualizaciÃ³n de datos.
+ * ProbarÃ© a crear una tienda, subirla y luego comprobar si abriendo la aplicaciï¿½n desde otro dispositivo lee la nueva tienda.
  *  
- *  1.- Arranca la aplicación.
- *  2.- Comprueba si hay conexión.
- *  2.1.- Si hay conexión intenta cargar nuevos datos (desde última acutalización)
+ *  1.- Arranca la aplicaciÃ³n.
+ *  2.- Comprueba si hay conexiÃ³n.
+ *  2.1.- Si hay conexiÃ³n intenta cargar nuevos datos (desde Ãºltima acutalizaciÃ³n)
  *  2.1.1.- 
  *  2.1.2.-
  *  2.1.3.-  
- *  2.2.- Si no hay conexión avisa y pasa.
+ *  2.2.- Si no hay conexiÃ³n avisa y pasa.
  *  
  */
 public class TesterCloudBackendActivtity extends CloudBackendActivity {
@@ -604,7 +604,7 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
         List<Shop> pendingShops = new ArrayList<Shop>();
 
         /*
-         * Este método insertar 5 shops pendientes.
+         * Este mï¿½todo insertar 5 shops pendientes.
          */
         for (int i = 1; i < 6; ++i) {
             shop = new Shop();
@@ -664,10 +664,10 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
     public void insertNew(List<Shop> shops) {
         /*
          * 1.- Comprobar si hay conectividad (esto no implica que se pueda
-         * insertar) 1.1.- Si no hay conectividad: Inserción en local con
+         * insertar) 1.1.- Si no hay conectividad: Inserciï¿½n en local con
          * "updated" = false (0). 1.2.- Si hay conectividad: Intentar insertar
-         * con CloudBackend. 1.2.1.- Si éxito: inserción en local con "updated"
-         * = true (1). 1.2.2.- Si error: inserción en local con "updated" =
+         * con CloudBackend. 1.2.1.- Si ï¿½xito: inserciï¿½n en local con "updated"
+         * = true (1). 1.2.2.- Si error: inserciï¿½n en local con "updated" =
          * false (0).
          */
 
@@ -695,8 +695,8 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
     public void insertPending() {
 
         /*
-         * 0.- Comprobar conexión (si no la hay nada) (hay conexión) 1.- Obtener
-         * lista de pendientes. 2.- Si la lista no está vacía. (hay pendientes)
+         * 0.- Comprobar conexiï¿½n (si no la hay nada) (hay conexiï¿½n) 1.- Obtener
+         * lista de pendientes. 2.- Si la lista no estï¿½ vacï¿½a. (hay pendientes)
          * 3.- Generar lista de entities. 4.- Preparar callback que: 4.1.- En
          * acierto actualizar la lista a update = 1. 4.2.- En error no haga
          * nada.
@@ -715,7 +715,7 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
 
     }
 
-    // Buscará nuevas tiendas en el datastore y las descargará e insertará.
+    // Buscarï¿½ nuevas tiendas en el datastore y las descargarï¿½ e insertarï¿½.
     public void listNew() {
         DateTime dt = null;
 
@@ -1208,12 +1208,12 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
         @Override
         public void onDataReceived(List<Shop> results) {
             /*
-             * Esta será la lista de tiendas con updated = false (0).
+             * Esta serï¿½ la lista de tiendas con updated = false (0).
              */
 
             // Log.d(TAG, "Number of pending shops = " + results.size());
             if (results != null) {
-                showToast("insertPending: nº of pending shops: " + results.size());
+                showToast("insertPending: nï¿½ of pending shops: " + results.size());
 
                 Context context = getApplicationContext();
 
@@ -1288,7 +1288,7 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
             }
             mTVInfo.setText(str_aux);
 
-            // Asegurarme de que no hay listener previo (no hay acción).
+            // Asegurarme de que no hay listener previo (no hay acciï¿½n).
 
             // mDS.setShopListener(null);
             mDS.updateShops(mShops);
@@ -1296,7 +1296,7 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
 
         @Override
         public void onError(IOException exception) {
-            // Asegurarme de que no hay listener previo (no hay acción).
+            // Asegurarme de que no hay listener previo (no hay acciï¿½n).
             // mDS.setShopListener(null);
             mDS.updateShops(mShops);
         }

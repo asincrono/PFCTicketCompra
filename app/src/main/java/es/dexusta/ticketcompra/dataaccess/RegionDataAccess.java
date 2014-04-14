@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra.dataaccess;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
@@ -25,62 +26,9 @@ public class RegionDataAccess extends DataAccess<Region> {
         mHelper = helper;        
     }
     
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Region> listener = getCallback();
-        if (listener != null) { // no point on doing stuff if no one sees it.
-            new RegionAsyncQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void list() {
-        DataAccessCallbacks<Region> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
-            new RegionAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-    
-    @Override
-    public void insert(List<Region> list) {
-        new RegionAsyncInput(mHelper, list, Operation.INSERT, getCallback()).execute();
-    }
-   
-    @Override
-    public void update(List<Region> list) {
-        new RegionAsyncInput(mHelper, list, Operation.UPDATE, getCallback()).execute();
-    }
-        
-
-    // TODO: PROBAR BORRADO REGIONES ESPECÕFICAS.
-    
-    public void delete(List<Region> list) {
-        // we need to check that data != null as we internally use data = null to 
-        // erase ALL THE TABLE. See deleteAll();
-        if (list == null) {            
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }                
-        new RegionAsyncInput(mHelper, list, Operation.DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {
-        new RegionAsyncInput(mHelper, null, Operation.DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Region> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new RegionAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
-    }
-
     public static final Region cursorToData(Cursor c) {
         Region region = null;
-        if (c != null && c.getCount() > 0) {                
+        if (c != null && c.getCount() > 0) {
             region = new Region();
             region.setId(c.getLong(c.getColumnIndexOrThrow(ID)));
             region.setName(c.getColumnName(c.getColumnIndexOrThrow(NAME)));
@@ -107,7 +55,7 @@ public class RegionDataAccess extends DataAccess<Region> {
                 region.setId(c.getLong(idIndex));
                 region.setName(c.getString(nameIndex));
 
-                list.add(region);                    
+                list.add(region);
             } while (c.moveToNext());
 
             c.moveToPosition(currentPosition);
@@ -122,16 +70,69 @@ public class RegionDataAccess extends DataAccess<Region> {
 
         if (data != null) {
             values = new ContentValues();
-            
+
             long id = data.getId();
             if (id > 0) {
-                values.put(ID, data.getId());    
+                values.put(ID, data.getId());
             }
-                                            
-            values.put(NAME, data.getName());    
+
+            values.put(NAME, data.getName());
         }
 
         return values;
+    }
+   
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Region> listener = getCallback();
+        if (listener != null) { // no point on doing stuff if no one sees it.
+            new RegionAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+        
+
+    // TODO: PROBAR BORRADO REGIONES ESPEC√çFICAS.
+    
+    @Override
+    public void list() {
+        DataAccessCallbacks<Region> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
+            new RegionAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Region> list) {
+        new RegionAsyncInput(mHelper, list, Operation.INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Region> list) {
+        new RegionAsyncInput(mHelper, list, Operation.UPDATE, getCallback()).execute();
+    }
+
+    public void delete(List<Region> list) {
+        // we need to check that data != null as we internally use data = null to
+        // erase ALL THE TABLE. See deleteAll();
+        if (list == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new RegionAsyncInput(mHelper, list, Operation.DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new RegionAsyncInput(mHelper, null, Operation.DELETE, getCallback()).execute();
+    }
+    
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Region> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new RegionAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class RegionAsyncQuery extends AsyncQuery<Region> {

@@ -1,17 +1,18 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.DBHelper;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class ChainDataAccess extends DataAccess<Chain> {
     private static final String TAG = "ChainDataAccess";
@@ -28,57 +29,6 @@ public class ChainDataAccess extends DataAccess<Chain> {
         mHelper = helper;
     }
 
-    @Override
-    public void list() {
-        DataAccessCallbacks<Chain> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
-            new ChainAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Chain> listener = getCallback();
-        if (listener != null) {
-            new ChainAsyncQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Chain> dataList) {
-        new ChainAsyncInput(mHelper, dataList, Operation.INSERT, getCallback()).execute();
-
-    }
-
-    @Override
-    public void update(List<Chain> dataList) {
-        new ChainAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
-    }
-
-    @Override
-    public void delete(List<Chain> dataList) {
-        if (dataList == null) {            
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }                
-        new ChainAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {        
-        new ChainAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-       
-        DataAccessCallbacks<Chain> listener = getCallback();
-        if (listener != null) {
-            String sqlStatementStr = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new ChainAsyncStatement(mHelper, sqlStatementStr, Option.LONG, listener).execute();
-        }
-    }
-
     public static ContentValues getValues(Chain data) {
         ContentValues cv = null;
         if (data != null) {
@@ -87,7 +37,7 @@ public class ChainDataAccess extends DataAccess<Chain> {
                 cv.put(ID, data.getId());
             }
             cv.put(NAME, data.getName());
-            cv.put(CODE, data.getCode());        
+            cv.put(CODE, data.getCode());
         }
         return cv;
     }
@@ -135,6 +85,57 @@ public class ChainDataAccess extends DataAccess<Chain> {
         }
 
         return list;
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Chain> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
+            new ChainAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Chain> listener = getCallback();
+        if (listener != null) {
+            new ChainAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Chain> dataList) {
+        new ChainAsyncInput(mHelper, dataList, Operation.INSERT, getCallback()).execute();
+
+    }
+
+    @Override
+    public void update(List<Chain> dataList) {
+        new ChainAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    @Override
+    public void delete(List<Chain> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new ChainAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new ChainAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void getCount() {
+
+        DataAccessCallbacks<Chain> listener = getCallback();
+        if (listener != null) {
+            String sqlStatementStr = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new ChainAsyncStatement(mHelper, sqlStatementStr, Option.LONG, listener).execute();
+        }
     }
 
     class ChainAsyncInput extends AsyncInput<Chain> {

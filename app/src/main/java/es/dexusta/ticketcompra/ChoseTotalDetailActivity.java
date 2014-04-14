@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import es.dexusta.ticketcompra.dataaccess.Keys;
 import es.dexusta.ticketcompra.model.Shop;
 

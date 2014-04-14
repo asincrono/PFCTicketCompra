@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +12,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -198,7 +197,7 @@ public class AddProductActivity extends CloudBackendActivity {
                     
                     mDS.addToProductSubcategoryIdMap(dataList.get(0));
                 } else {
-                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insertó el producto.");
+                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insertÃ³ el producto.");
                 }
 
             }

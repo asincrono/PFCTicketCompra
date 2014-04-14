@@ -1,27 +1,24 @@
 package com.google.cloud.backend.android;
 
-import java.util.List;
-
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+
+import java.util.List;
+
 public class CloudBackendFragmentActivity extends FragmentActivity {
 
     private static final int REQUEST_ACCOUNT_PICKER = 2;
 
     private static final String PREF_KEY_ACCOUNT_NAME = "PREF_KEY_ACCOUNT_NAME";
-
-    private GoogleAccountCredential credential;
-
-    private CloudBackendMessaging cloudBackend;
-
     // is this app subscribed to the Cloud Message?
     private static boolean isSubscribedToBroadcastMessage = false;
+    private GoogleAccountCredential credential;
+    private CloudBackendMessaging cloudBackend;
 
     /**
      * Returns {@link CloudBackendMessaging} instance for this activity.

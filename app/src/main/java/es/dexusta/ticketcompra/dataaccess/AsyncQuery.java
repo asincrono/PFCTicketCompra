@@ -1,9 +1,10 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import java.util.List;
-
 import android.database.Cursor;
 import android.os.AsyncTask;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.DBObject;
 

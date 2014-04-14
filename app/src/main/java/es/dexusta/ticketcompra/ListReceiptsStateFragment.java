@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
 import java.util.HashMap;
 import java.util.List;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Receipt;
 
@@ -18,12 +19,12 @@ public class ListReceiptsStateFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void setReceipts(List<Receipt> receipts) {
-        mReceipts = receipts;
-    }
-
     public List<Receipt> getReceipts() {
         return mReceipts;
+    }
+
+    public void setReceipts(List<Receipt> receipts) {
+        mReceipts = receipts;
     }
 
     public void setDetails(Receipt receipt, List<Detail> details) {

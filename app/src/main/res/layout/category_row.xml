@@ -7,9 +7,9 @@
 
     <TextView
         android:id="@+id/tv_category"
+        style="?android:textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="?android:textAppearanceLarge"
         android:layout_centerVertical="true"
         android:gravity="left|center_vertical"
         android:text="@string/category_example_text" />

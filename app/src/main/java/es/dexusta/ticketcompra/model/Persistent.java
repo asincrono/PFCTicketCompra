@@ -3,9 +3,9 @@ package es.dexusta.ticketcompra.model;
 import android.content.Context;
 
 public interface Persistent {
-    public void setUpdated(boolean updated);
-    
     public boolean isUpdated();
+    
+    public void setUpdated(boolean updated);
     
     public DBOCloudEntity getEntity(Context context);
 }

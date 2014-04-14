@@ -17,12 +17,12 @@ public abstract class DataAccess<D extends DBObject> {
     
     private DataAccessCallbacks<D> mListener;
     
-    public void setCallback(DataAccessCallbacks<D> listener) {
-        mListener = listener;
-    }
-    
     public DataAccessCallbacks<D> getCallback() {
         return mListener;
+    }
+    
+    public void setCallback(DataAccessCallbacks<D> listener) {
+        mListener = listener;
     }
     
     public boolean hasCallback() {

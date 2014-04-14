@@ -1,9 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -22,6 +18,10 @@ import android.widget.Spinner;
 import com.google.cloud.backend.android.CloudBackendActivity;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.control.RegionAdapter;
 import es.dexusta.ticketcompra.control.SubregionAdapter;
@@ -244,7 +244,7 @@ public class AddShopActivity extends CloudBackendActivity {
 
     private void saveData() {
         // TODO Guardar los datos de la tienda online.
-        // 1.- Comprobar si hay conexión a internet.
+        // 1.- Comprobar si hay conexiÃ³n a internet.
         if (isNetworkAvailable()) {
             if (DEBUG)
                 Log.d(TAG, "Network available.");
@@ -261,7 +261,7 @@ public class AddShopActivity extends CloudBackendActivity {
 
                 @Override
                 public void onComplete(CloudEntity result) {
-                    // 2.1.- Si no hubo error. Guardar en local marcando que ya están
+                    // 2.1.- Si no hubo error. Guardar en local marcando que ya estï¿½n
                     // actualizados (actualizados significa que tienen remoteId).
 //                    mShop.setRemoteId(result.getId());
                     

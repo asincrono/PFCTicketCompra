@@ -1,10 +1,10 @@
 package es.dexusta.ticketcompra.util;
 
-import java.io.IOException;
+import android.content.res.XmlResourceParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.content.res.XmlResourceParser;
+import java.io.IOException;
 
 public interface XmlParser {
     Object parse (XmlResourceParser parser) throws XmlPullParserException, IOException;

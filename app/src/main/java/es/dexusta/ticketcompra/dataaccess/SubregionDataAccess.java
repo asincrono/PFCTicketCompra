@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra.dataaccess;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
@@ -24,6 +25,61 @@ public class SubregionDataAccess extends DataAccess<Subregion> {
 
     public SubregionDataAccess(DBHelper helper) {
         mHelper = helper;
+    }
+
+    public static final Subregion cursorToData(Cursor c) {
+        Subregion subregion = null;
+
+        if (c !=null && c.getCount() > 0) {
+            subregion = new Subregion();
+            subregion.setId(c.getLong(c.getColumnIndexOrThrow(ID)));
+            subregion.setRegionId(c.getLong(c.getColumnIndexOrThrow(REGION_ID)));
+            subregion.setName(c.getString(c.getColumnIndexOrThrow(NAME)));
+        }
+
+        return subregion;
+    }
+
+    public static final List<Subregion> cursorToDataList(Cursor c) {
+        List<Subregion> list = null;
+
+        if (c != null && c.getCount() > 0) {
+            int currentPosition = c.getPosition();
+
+            int idIndex = c.getColumnIndexOrThrow(ID);
+            int regionIdIndex = c.getColumnIndexOrThrow(REGION_ID);
+            int nameIndex = c.getColumnIndexOrThrow(NAME);
+
+            Subregion subregion;
+            list = new ArrayList<Subregion>();
+
+            c.moveToFirst();
+            do {
+                subregion = new Subregion();
+                subregion.setId(c.getLong(idIndex));
+                subregion.setRegionId(c.getLong(regionIdIndex));
+                subregion.setName(c.getString(nameIndex));
+                list.add(subregion);
+            } while (c.moveToNext());
+
+            c.moveToPosition(currentPosition);
+        }
+
+        return list;
+    }
+
+    public static final ContentValues getValues(Subregion data) {
+        ContentValues cv = new ContentValues();
+
+        long id = data.getId();
+        if (id > 0) {
+            cv.put(ID, data.getId());
+        }
+
+        cv.put(REGION_ID, data.getRegionId());
+        cv.put(NAME, data.getName());
+
+        return cv;
     }
 
     public void setCallback(DataAccessCallbacks<Subregion> listener) {
@@ -60,17 +116,17 @@ public class SubregionDataAccess extends DataAccess<Subregion> {
 
     @Override
     public void update(List<Subregion> dataList) {
-        new SubregionAsyncInput(mHelper, dataList, Operation.UPDATE, mListener).execute();    
-       
+        new SubregionAsyncInput(mHelper, dataList, Operation.UPDATE, mListener).execute();
+
     }
 
-    @Override    
+    @Override
     public void delete(List<Subregion> dataList) {
         if (dataList == null) {// would trigger a deleteAll()
             throw new IllegalArgumentException("Data suplied to delete can't be null (would trigger a deleteAll()).");
         }
         new SubregionAsyncInput(mHelper, dataList, Operation.DELETE, mListener).execute();
-        
+
     }
 
     @Override
@@ -84,61 +140,6 @@ public class SubregionDataAccess extends DataAccess<Subregion> {
             String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
             new SubregionAsyncStatment(mHelper, sqlStatement, Option.LONG, mListener).execute();
         }
-    }
-
-    public static final Subregion cursorToData(Cursor c) {
-        Subregion subregion = null;
-
-        if (c !=null && c.getCount() > 0) {
-            subregion = new Subregion();
-            subregion.setId(c.getLong(c.getColumnIndexOrThrow(ID)));
-            subregion.setRegionId(c.getLong(c.getColumnIndexOrThrow(REGION_ID)));
-            subregion.setName(c.getString(c.getColumnIndexOrThrow(NAME)));
-        }
-
-        return subregion;
-    }
-
-    public static final List<Subregion> cursorToDataList(Cursor c) {
-        List<Subregion> list = null;
-
-        if (c != null && c.getCount() > 0) {
-            int currentPosition = c.getPosition();
-
-            int idIndex = c.getColumnIndexOrThrow(ID);
-            int regionIdIndex = c.getColumnIndexOrThrow(REGION_ID);
-            int nameIndex = c.getColumnIndexOrThrow(NAME);
-
-            Subregion subregion;
-            list = new ArrayList<Subregion>();
-
-            c.moveToFirst();
-            do {
-                subregion = new Subregion();
-                subregion.setId(c.getLong(idIndex));
-                subregion.setRegionId(c.getLong(regionIdIndex));
-                subregion.setName(c.getString(nameIndex));
-                list.add(subregion);                
-            } while (c.moveToNext());
-
-            c.moveToPosition(currentPosition);
-        }
-
-        return list;
-    }
-
-    public static final ContentValues getValues(Subregion data) {
-        ContentValues cv = new ContentValues();
-        
-        long id = data.getId();
-        if (id > 0) {
-            cv.put(ID, data.getId());    
-        }
-
-        cv.put(REGION_ID, data.getRegionId());
-        cv.put(NAME, data.getName());
-
-        return cv;
     }
 
     class SubregionAsyncQuery extends AsyncQuery<Subregion> {

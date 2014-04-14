@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,15 +13,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.RegionAdapter;
-import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.control.SubregionAdapter;
 import es.dexusta.ticketcompra.control.TownAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
-import es.dexusta.ticketcompra.dataaccess.Keys;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Region;
@@ -48,23 +47,13 @@ public class AddShopFragment extends Fragment {
 
     private EditText             mEdtAddress;
 
-    private Chain                mChain;
-
     public static AddShopFragment newInstance(Chain chain) {
-        AddShopFragment fragment = new AddShopFragment();
-        fragment.mChain = chain;
-        return fragment;
-    }
-
-    public void setChain(Chain chain) {
-        mChain = chain;
+        return new AddShopFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mChain = savedInstanceState.getParcelable(Keys.KEY_CHAIN);
-        }
+
         View v = inflater.inflate(R.layout.add_shop_fragment, container, false);
 
         mDS = DataSource.getInstance(getActivity().getApplicationContext());
@@ -202,7 +191,7 @@ public class AddShopFragment extends Fragment {
                 // 2.- Do the callback.
                 Shop shop = new Shop();
 
-                shop.setChainId(mChain.getId());
+                shop.setChainId(mCallbacks.getSelectedChain().getId());
 
                 Town town = (Town) mSpnTown.getItemAtPosition(mSpnTown.getSelectedItemPosition());
                 shop.setTownName(town.getName());
@@ -211,6 +200,7 @@ public class AddShopFragment extends Fragment {
                 shop.setAddress(mEdtAddress.getText().toString());
 
                 if (DEBUG) Log.d(TAG, "onClickAccept.");
+
                 mCallbacks.onAcceptAddShop(shop);
             }
         }, new OnClickListener() {
@@ -225,12 +215,6 @@ public class AddShopFragment extends Fragment {
             }
         });
         mDS.listRegions();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Keys.KEY_CHAIN, mChain);
     }
 
     @Override

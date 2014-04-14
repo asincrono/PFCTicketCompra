@@ -1,12 +1,13 @@
 package es.dexusta.ticketcompra.control;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.model.Receipt;

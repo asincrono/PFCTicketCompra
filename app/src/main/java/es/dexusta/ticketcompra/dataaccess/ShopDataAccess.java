@@ -1,18 +1,19 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Shop;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class ShopDataAccess extends DataAccess<Shop> {
     private static final String  TAG        = "ShopDataAccess";
@@ -36,55 +37,6 @@ public class ShopDataAccess extends DataAccess<Shop> {
         mHelper = helper;
     }
 
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Shop> listener = getCallback();
-        if (listener != null) {
-            new ShopAsyncQuery(mHelper, rawQuery, args, listener).execute();
-        }
-    }
-
-    @Override
-    public void list() {
-        DataAccessCallbacks<Shop> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME;
-            new ShopAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Shop> dataList) {
-        new ShopAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
-    }
-
-    @Override
-    public void update(List<Shop> dataList) {
-        new ShopAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
-    }
-
-    @Override
-    public void delete(List<Shop> dataList) {
-        if (dataList == null) {
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }
-        new ShopAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {
-        new ShopAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Shop> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new ShopAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
-    }
-
     public static ContentValues getValues(Shop data) {
         ContentValues cv = null;
         if (data != null) {
@@ -93,7 +45,7 @@ public class ShopDataAccess extends DataAccess<Shop> {
             if (id > 0) {
                 cv.put(ID, id);
             }
-            
+
             String univId = data.getUniversalId();
             if (univId != null) {
                 cv.put(UNIV_ID, univId);
@@ -172,6 +124,55 @@ public class ShopDataAccess extends DataAccess<Shop> {
         }
 
         return list;
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Shop> listener = getCallback();
+        if (listener != null) {
+            new ShopAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Shop> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME;
+            new ShopAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Shop> dataList) {
+        new ShopAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+    }
+
+    @Override
+    public void update(List<Shop> dataList) {
+        new ShopAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    @Override
+    public void delete(List<Shop> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new ShopAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new ShopAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Shop> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new ShopAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class ShopAsyncQuery extends AsyncQuery<Shop> {

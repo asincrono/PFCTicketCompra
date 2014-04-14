@@ -1,11 +1,12 @@
 package es.dexusta.ticketcompra.control;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.model.Category;
 
 public   

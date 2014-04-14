@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.cloud.backend.android.CloudBackendAsync;
@@ -40,6 +39,10 @@ public class GCMIntentService extends GCMBaseIntentService {
   private final static CountDownLatch latch = new CountDownLatch(1);
 
   protected static String regId;
+
+  public GCMIntentService() {
+    super(Consts.PROJECT_NUMBER);
+  }
 
   /**
    * Register the device for GCM.
@@ -99,10 +102,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
   }
 
-  public GCMIntentService() {
-    super(Consts.PROJECT_NUMBER);
-  }
-
   /**
    * Called on registration error. This is called in the application of a
    * Service - no dialog or UI.
@@ -138,7 +137,7 @@ public class GCMIntentService extends GCMBaseIntentService {
   /**
    * Called when a registration token has been received.
    *
-   * @param application
+   * @param context
    *          the Context
    */
   @Override
@@ -153,7 +152,7 @@ public class GCMIntentService extends GCMBaseIntentService {
   /**
    * Called when the device has been unregistered.
    *
-   * @param application
+   * @param context
    *          the Context
    */
   @Override

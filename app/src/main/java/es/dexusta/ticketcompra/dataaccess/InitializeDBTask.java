@@ -1,7 +1,8 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import es.dexusta.ticketcompra.model.DBHelper;
 import android.os.AsyncTask;
+
+import es.dexusta.ticketcompra.model.DBHelper;
 
 public class InitializeDBTask extends AsyncTask<Void, Void, Void> {
     private DBHelper mHelper;

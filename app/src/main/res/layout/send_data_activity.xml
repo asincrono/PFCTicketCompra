@@ -27,8 +27,8 @@
         android:id="@+id/edtDataName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"        
-        android:layout_below="@+id/tvDataName"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvDataName"
         android:ems="10"
         android:inputType="text" >
 
@@ -51,8 +51,8 @@
         android:id="@+id/edtDataValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvValue"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvValue"
         android:ems="10"
         android:inputType="text" />
 
@@ -60,10 +60,10 @@
         android:id="@+id/bttSendData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/edtDataValue"
-        android:onClick="onClickSendData"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
+        android:onClick="onClickSendData"
         android:text="Send" />
 
 </RelativeLayout>

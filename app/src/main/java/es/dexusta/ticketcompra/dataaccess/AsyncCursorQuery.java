@@ -2,6 +2,7 @@ package es.dexusta.ticketcompra.dataaccess;
 
 import android.database.Cursor;
 import android.os.AsyncTask;
+
 import es.dexusta.ticketcompra.model.DBHelper;
 
 public class AsyncCursorQuery extends AsyncTask<Void, Void, Cursor>{

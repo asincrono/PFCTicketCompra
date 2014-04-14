@@ -35,12 +35,12 @@ public class SubregionList {
         }
     }
     
-    public void setRegionId(long id) {
-        mSubregion.setRegionId(id);
-    }
-    
     public long getRegionId() {
         return mSubregion.getRegionId();
+    }
+    
+    public void setRegionId(long id) {
+        mSubregion.setRegionId(id);
     }
     
     public String getName() {

@@ -9,8 +9,8 @@
         style="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
         android:layout_marginLeft="8dp"
+        android:gravity="left|center_vertical"
         android:text="@string/shop_example_text" />
 
     <TextView

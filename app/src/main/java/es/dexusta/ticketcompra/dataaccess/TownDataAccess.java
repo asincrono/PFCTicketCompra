@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra.dataaccess;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
@@ -24,6 +25,66 @@ public class TownDataAccess extends DataAccess<Town> {
 
     public TownDataAccess(DBHelper helper) {
         mHelper = helper;
+    }
+
+    public static final Town cursorToData(Cursor c) {
+        Town town = null;
+
+        if (c != null && c.getCount() > 0) {
+            town = new Town();
+            town.setId(c.getLong(c.getColumnIndexOrThrow(ID)));
+            town.setSubregionId(c.getLong(c.getColumnIndexOrThrow(SUBREGION_ID)));
+            town.setName(c.getString(c.getColumnIndexOrThrow(NAME)));
+        }
+
+        return town;
+    }
+
+    public static final List<Town> cursorToDataList(Cursor c) {
+        List<Town> list = null;
+
+        if (c != null && c.getCount() > 0) {
+            int idIndex = c.getColumnIndexOrThrow(ID);
+            int subregionIdIndex = c.getColumnIndexOrThrow(SUBREGION_ID);
+            int nameIndex = c.getColumnIndexOrThrow(NAME);
+
+            int currentPosition = c.getPosition();
+            c.moveToFirst();
+
+
+            Town town;
+            list = new ArrayList<Town>();
+            do {
+                town = new Town();
+                town.setId(c.getLong(idIndex));
+                town.setSubregionId(c.getLong(subregionIdIndex));
+                town.setName(c.getString(nameIndex));
+
+                list.add(town);
+            } while (c.moveToNext());
+
+            c.moveToPosition(currentPosition);
+        }
+
+        return list;
+    }
+
+    public static final ContentValues getValues(Town data) {
+        ContentValues cv = null;
+
+        if (data != null) {
+            cv = new ContentValues();
+
+            long id = data.getId();
+            if (id > 0) {
+                cv.put(ID, data.getId());
+            }
+
+            cv.put(SUBREGION_ID, data.getSubregionId());
+            cv.put(NAME, data.getName());
+        }
+
+        return cv;
     }
 
     public void setCallback(DataAccessCallbacks<Town> listener) {
@@ -60,7 +121,7 @@ public class TownDataAccess extends DataAccess<Town> {
 
     @Override
     public void update(List<Town> dataList) {
-        new TownAsyncInput(mHelper, dataList, Operation.UPDATE, mListener).execute();        
+        new TownAsyncInput(mHelper, dataList, Operation.UPDATE, mListener).execute();
     }
 
     @Override
@@ -68,12 +129,12 @@ public class TownDataAccess extends DataAccess<Town> {
         if (dataList == null) {// would trigger a deleteAll()
             throw new IllegalArgumentException("Data suplied to delete can't be null.");
         }
-        new TownAsyncInput(mHelper, dataList, Operation.DELETE, mListener).execute();        
+        new TownAsyncInput(mHelper, dataList, Operation.DELETE, mListener).execute();
     }
 
     @Override
     public void deleteAll() {
-        new TownAsyncInput(mHelper, null, Operation.DELETE, mListener).execute();                
+        new TownAsyncInput(mHelper, null, Operation.DELETE, mListener).execute();
     }
 
     @Override
@@ -82,66 +143,6 @@ public class TownDataAccess extends DataAccess<Town> {
             String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
             new TownAsyncStatement(mHelper, sqlStatement, Option.LONG, mListener).execute();
         }
-    }
-
-    public static final Town cursorToData(Cursor c) {
-        Town town = null;
-
-        if (c != null && c.getCount() > 0) {
-            town = new Town();
-            town.setId(c.getLong(c.getColumnIndexOrThrow(ID)));
-            town.setSubregionId(c.getLong(c.getColumnIndexOrThrow(SUBREGION_ID)));
-            town.setName(c.getString(c.getColumnIndexOrThrow(NAME)));
-        }
-
-        return town;
-    }
-
-    public static final List<Town> cursorToDataList(Cursor c) {
-        List<Town> list = null;
-
-        if (c != null && c.getCount() > 0) {
-            int idIndex = c.getColumnIndexOrThrow(ID);
-            int subregionIdIndex = c.getColumnIndexOrThrow(SUBREGION_ID);
-            int nameIndex = c.getColumnIndexOrThrow(NAME);
-
-            int currentPosition = c.getPosition();
-            c.moveToFirst();
-
-
-            Town town;
-            list = new ArrayList<Town>();
-            do {
-                town = new Town();                
-                town.setId(c.getLong(idIndex));
-                town.setSubregionId(c.getLong(subregionIdIndex));
-                town.setName(c.getString(nameIndex));
-
-                list.add(town);
-            } while (c.moveToNext());
-
-            c.moveToPosition(currentPosition);            
-        }
-
-        return list;
-    }
-
-    public static final ContentValues getValues(Town data) {
-        ContentValues cv = null;
-
-        if (data != null) {
-            cv = new ContentValues();
-
-            long id = data.getId();
-            if (id > 0) {
-                cv.put(ID, data.getId());
-            }
-
-            cv.put(SUBREGION_ID, data.getSubregionId());
-            cv.put(NAME, data.getName());
-        }
-
-        return cv;
     }
 
     class TownAsyncQuery extends AsyncQuery<Town> {

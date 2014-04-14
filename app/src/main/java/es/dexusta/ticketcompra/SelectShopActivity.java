@@ -1,11 +1,11 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
-import es.dexusta.ticketcompra.R;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
 import es.dexusta.ticketcompra.control.ChainShopPagerAdapter;
@@ -21,11 +21,11 @@ import es.dexusta.ticketcompra.view.NoSwipeViewPager;
 
 public class SelectShopActivity extends FragmentActivity implements ChainSelectionCallback, ShopSelectionCallback{
     private static final String TAG = "SelectShopAcitivty";
-    private static final boolean DEBUG = true; 
-    
+    private static final boolean DEBUG = true;
+
     private ChainAdapter mChainAdapter;
     private ShopAdapter mShopAdapter;
-    
+
     private DataAccessCallbacks<Chain> mChainListener;
     private DataAccessCallbacks<Shop> mShopListener;
     
@@ -33,16 +33,16 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     
     private boolean mListening;
     
-    private NoSwipeViewPager mPager;
+    //private NoSwipeViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);        
-        setContentView(R.layout.shop_selection_activity);        
-        
+        setContentView(R.layout.shop_selection_activity);
+
         // Create the adapters for the two ListFragments
-        mChainAdapter = new ChainAdapter(this);        
+        mChainAdapter = new ChainAdapter(this);
         mShopAdapter = new ShopAdapter(this);
         
         mDS = DataSource.getInstance(getApplicationContext());
@@ -100,8 +100,9 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
         mListening = true;
         
         // Get and set pager and pagerAdapter.
-        mPager = (NoSwipeViewPager) findViewById(R.id.pager);       
-        mPager.setAdapter(new ChainShopPagerAdapter(getSupportFragmentManager(), this, this));
+        NoSwipeViewPager vp = (NoSwipeViewPager) findViewById(R.id.pager);
+        vp.setAdapter(new ChainShopPagerAdapter(getSupportFragmentManager()));
+
         setProgressBarIndeterminateVisibility(true);
         mDS.listChains();
     }
@@ -126,21 +127,10 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
         }
     }
 
-    public ChainAdapter getChainAdapter() {
-        return mChainAdapter;
-    }
-    
-    public ShopAdapter getShopAdapter() {
-        return mShopAdapter;
-    }
     
     public void queryShops(Chain chain) {
         setProgressBarIndeterminateVisibility(true);
         mDS.getShopsBy(chain);
-    }
-    
-    public void setShopView() {
-        mPager.setCurrentItem(ChainShopPagerAdapter.SHOP_FRAGMENT);
     }
 
     @Override
@@ -151,8 +141,7 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
 
     @Override
     public void onChainSelected(Chain chain) {
-        // TODO Auto-generated method stub
-        
+        queryShops(chain);
     }
 
     @Override
@@ -168,9 +157,19 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     }
 
     @Override
+    public ChainAdapter getChainAdapter() {
+        return mChainAdapter;
+    }
+
+    @Override
     public void onClickAddShop() {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public ShopAdapter getShopAdapter() {
+        return mShopAdapter;
     }
 
 }

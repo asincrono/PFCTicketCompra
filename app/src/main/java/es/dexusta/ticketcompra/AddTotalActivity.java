@@ -1,9 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +16,10 @@ import android.widget.Toast;
 import com.google.cloud.backend.android.CloudBackendActivity;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -189,6 +189,29 @@ public class AddTotalActivity extends CloudBackendActivity {
         return result;
     }
 
+    private void showAcceptCancelActionBar(OnClickListener onClickAccept,
+            OnClickListener onClickCancel) {
+        final ActionBar actionBar = getActionBar();
+
+        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
+
+        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null);
+
+        actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
+        actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
+
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM
+                | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        // Previous line is equivalent to:
+        // actionBar.setDisplayShowTitleEnabled(false);
+        // actionBar.setDisplayShowHomeEnabled(false);
+        // actionBar.setDisplayUseLogoEnabled(false);
+        // actionBar.setDisplayShowCustomEnabled(true);
+
+        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
     class DecimalFilter implements InputFilter {
         private int    mDecimals;
         private String mRegex;
@@ -248,28 +271,5 @@ public class AddTotalActivity extends CloudBackendActivity {
             Toast.makeText(mContext, "Total NOT inserted in the cloud", Toast.LENGTH_SHORT).show();
             mContext = null;
         }
-    }
-
-    private void showAcceptCancelActionBar(OnClickListener onClickAccept,
-            OnClickListener onClickCancel) {
-        final ActionBar actionBar = getActionBar();
-
-        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-
-        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null);
-
-        actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-        actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM
-                | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        // Previous line is equivalent to:
-        // actionBar.setDisplayShowTitleEnabled(false);
-        // actionBar.setDisplayShowHomeEnabled(false);
-        // actionBar.setDisplayUseLogoEnabled(false);
-        // actionBar.setDisplayShowCustomEnabled(true);
-
-        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 }

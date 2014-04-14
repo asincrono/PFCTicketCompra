@@ -26,338 +26,137 @@ public final class R {
         public static final int towns_albacete=0x7f05000e;
     }
     public static final class attr {
-        /** 
-    The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
-    MEDIUM_RECTANGLE, SMART_BANNER, WIDE_SKYSCRAPER, or
-    &lt;width&gt;x&lt;height&gt;.
-        
-         <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int adSize=0x7f010000;
-        /** 
-    A comma-separated list of the supported ad sizes. The sizes must be one of
-    BANNER, FULL_BANNER, LEADERBOARD, MEDIUM_RECTANGLE, SMART_BANNER,
-    WIDE_SKYSCRAPER, or &lt;width&gt;x&lt;height&gt;.
-        
-         <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int adSizes=0x7f010001;
-        /**  The ad unit ID. 
-         <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int adUnitId=0x7f010002;
-        /** <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int cameraBearing=0x7f010004;
-        /** <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int cameraTargetLat=0x7f010005;
-        /** <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int cameraTargetLng=0x7f010006;
-        /** <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int cameraTilt=0x7f010007;
-        /** <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int cameraZoom=0x7f010008;
-        /** <p>Must be one of the following constant values.</p>
-<table>
-<colgroup align="left" />
-<colgroup align="left" />
-<colgroup align="left" />
-<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
-<tr><td><code>none</code></td><td>0</td><td></td></tr>
-<tr><td><code>normal</code></td><td>1</td><td></td></tr>
-<tr><td><code>satellite</code></td><td>2</td><td></td></tr>
-<tr><td><code>terrain</code></td><td>3</td><td></td></tr>
-<tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
-</table>
-         */
-        public static final int mapType=0x7f010003;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiCompass=0x7f010009;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiRotateGestures=0x7f01000a;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiScrollGestures=0x7f01000b;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiTiltGestures=0x7f01000c;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiZoomControls=0x7f01000d;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int uiZoomGestures=0x7f01000e;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int useViewLifecycle=0x7f01000f;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int zOrderOnTop=0x7f010010;
-    }
-    public static final class color {
-        public static final int common_action_bar_splitter=0x7f060000;
-        public static final int common_signin_btn_dark_text_default=0x7f060001;
-        public static final int common_signin_btn_dark_text_disabled=0x7f060002;
-        public static final int common_signin_btn_dark_text_focused=0x7f060003;
-        public static final int common_signin_btn_dark_text_pressed=0x7f060004;
-        public static final int common_signin_btn_default_background=0x7f060005;
-        public static final int common_signin_btn_light_text_default=0x7f060006;
-        public static final int common_signin_btn_light_text_disabled=0x7f060007;
-        public static final int common_signin_btn_light_text_focused=0x7f060008;
-        public static final int common_signin_btn_light_text_pressed=0x7f060009;
-        public static final int common_signin_btn_text_dark=0x7f06000a;
-        public static final int common_signin_btn_text_light=0x7f06000b;
     }
     public static final class drawable {
-        public static final int common_signin_btn_icon_dark=0x7f020000;
-        public static final int common_signin_btn_icon_disabled_dark=0x7f020001;
-        public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020002;
-        public static final int common_signin_btn_icon_disabled_focus_light=0x7f020003;
-        public static final int common_signin_btn_icon_disabled_light=0x7f020004;
-        public static final int common_signin_btn_icon_focus_dark=0x7f020005;
-        public static final int common_signin_btn_icon_focus_light=0x7f020006;
-        public static final int common_signin_btn_icon_light=0x7f020007;
-        public static final int common_signin_btn_icon_normal_dark=0x7f020008;
-        public static final int common_signin_btn_icon_normal_light=0x7f020009;
-        public static final int common_signin_btn_icon_pressed_dark=0x7f02000a;
-        public static final int common_signin_btn_icon_pressed_light=0x7f02000b;
-        public static final int common_signin_btn_text_dark=0x7f02000c;
-        public static final int common_signin_btn_text_disabled_dark=0x7f02000d;
-        public static final int common_signin_btn_text_disabled_focus_dark=0x7f02000e;
-        public static final int common_signin_btn_text_disabled_focus_light=0x7f02000f;
-        public static final int common_signin_btn_text_disabled_light=0x7f020010;
-        public static final int common_signin_btn_text_focus_dark=0x7f020011;
-        public static final int common_signin_btn_text_focus_light=0x7f020012;
-        public static final int common_signin_btn_text_light=0x7f020013;
-        public static final int common_signin_btn_text_normal_dark=0x7f020014;
-        public static final int common_signin_btn_text_normal_light=0x7f020015;
-        public static final int common_signin_btn_text_pressed_dark=0x7f020016;
-        public static final int common_signin_btn_text_pressed_light=0x7f020017;
-        public static final int drawer_shadow=0x7f020018;
-        public static final int green_yellow_red_background=0x7f020019;
-        public static final int ic_action_accept=0x7f02001a;
-        public static final int ic_action_cancel=0x7f02001b;
-        public static final int ic_drawer=0x7f02001c;
-        public static final int ic_launcher=0x7f02001d;
-        public static final int ic_plusone_medium_off_client=0x7f02001e;
-        public static final int ic_plusone_small_off_client=0x7f02001f;
-        public static final int ic_plusone_standard_off_client=0x7f020020;
-        public static final int ic_plusone_tall_off_client=0x7f020021;
-        public static final int row_arrow=0x7f020022;
-        public static final int row_background=0x7f020023;
+        public static final int drawer_shadow=0x7f020000;
+        public static final int green_yellow_red_background=0x7f020001;
+        public static final int ic_action_accept=0x7f020002;
+        public static final int ic_action_cancel=0x7f020003;
+        public static final int ic_drawer=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int row_arrow=0x7f020006;
+        public static final int row_background=0x7f020007;
     }
     public static final class id {
-        public static final int actionbar_accept=0x7f070006;
-        public static final int actionbar_cancel=0x7f070005;
-        public static final int anchor=0x7f07003f;
-        public static final int btSend=0x7f070008;
-        public static final int bttChoseDetail=0x7f070040;
-        public static final int bttChoseTotal=0x7f07003e;
-        public static final int bttGetData=0x7f070044;
-        public static final int bttSendData=0x7f07005c;
-        public static final int btt_accept=0x7f07003b;
-        public static final int btt_add_detail=0x7f070047;
-        public static final int btt_add_product=0x7f07004a;
-        public static final int btt_add_shop=0x7f070060;
-        public static final int btt_back=0x7f070029;
-        public static final int btt_cancel=0x7f07003a;
-        public static final int btt_check=0x7f070072;
-        public static final int btt_download=0x7f070071;
-        public static final int btt_insert_db=0x7f07006f;
-        public static final int btt_next=0x7f070056;
-        public static final int btt_set_total=0x7f07004b;
-        public static final int btt_show_graph=0x7f07006c;
-        public static final int btt_test=0x7f07006e;
-        public static final int btt_upload=0x7f070070;
-        public static final int bttbar_cancel_accept=0x7f07004c;
-        public static final int div_address=0x7f070035;
-        public static final int div_category=0x7f07001b;
-        public static final int div_description=0x7f070024;
-        public static final int div_dp_end=0x7f070066;
-        public static final int div_dp_start=0x7f070062;
-        public static final int div_h1=0x7f070038;
-        public static final int div_product=0x7f070021;
-        public static final int div_region=0x7f07002c;
-        public static final int div_spn_periodicity=0x7f07006a;
-        public static final int div_subcategory=0x7f07001e;
-        public static final int div_subregion=0x7f07002f;
-        public static final int div_town=0x7f070032;
-        public static final int divider_h1=0x7f07000c;
-        public static final int divider_h2=0x7f07000e;
-        public static final int divider_h3=0x7f070011;
-        public static final int dp_end=0x7f070067;
-        public static final int dp_start=0x7f070063;
-        public static final int drawer_layout=0x7f070074;
-        public static final int edtDataName=0x7f070059;
-        public static final int edtDataValue=0x7f07005b;
-        public static final int edtTotal=0x7f070039;
-        public static final int edt_address=0x7f070036;
-        public static final int edt_description=0x7f070025;
-        public static final int edt_price=0x7f07000f;
-        public static final int edt_product_name=0x7f070022;
-        public static final int edt_second_unit=0x7f070014;
-        public static final int edt_units=0x7f070012;
-        public static final int etMessage=0x7f070007;
-        public static final int fl_content_frame=0x7f070075;
-        public static final int hybrid=0x7f070004;
-        public static final int imageView1=0x7f07003c;
-        public static final int image_right_arrow=0x7f07005f;
-        public static final int item1=0x7f070078;
-        public static final int iv_divider=0x7f070042;
-        public static final int lblDetail=0x7f070057;
-        public static final int lbl_address=0x7f070034;
-        public static final int lbl_category=0x7f07001a;
-        public static final int lbl_description=0x7f070023;
-        public static final int lbl_dp_end=0x7f070065;
-        public static final int lbl_dp_start=0x7f070061;
-        public static final int lbl_price_summary_div=0x7f070017;
-        public static final int lbl_product=0x7f070020;
-        public static final int lbl_region=0x7f07002b;
-        public static final int lbl_spn_periodicity=0x7f070069;
-        public static final int lbl_subcategory=0x7f07001d;
-        public static final int lbl_subregion=0x7f07002e;
-        public static final int lbl_town=0x7f070031;
-        public static final int ll_second_unit=0x7f070013;
-        public static final int lv_drawer_list=0x7f070076;
-        public static final int menu_show_number_of_chains=0x7f070077;
-        public static final int none=0x7f070000;
-        public static final int normal=0x7f070001;
-        public static final int pager=0x7f07002a;
-        public static final int progressBar=0x7f07006d;
-        public static final int satellite=0x7f070002;
-        public static final int scrollView1=0x7f070009;
-        public static final int spn_category=0x7f07001c;
-        public static final int spn_periocidity=0x7f07006b;
-        public static final int spn_region=0x7f07002d;
-        public static final int spn_second_unit=0x7f070015;
-        public static final int spn_subcategory=0x7f07001f;
-        public static final int spn_subregion=0x7f070030;
-        public static final int spn_town=0x7f070033;
-        public static final int terrain=0x7f070003;
-        public static final int textView1=0x7f070028;
-        public static final int tvData=0x7f070045;
-        public static final int tvDataName=0x7f070058;
-        public static final int tvLblTotal=0x7f070037;
-        public static final int tvPosts=0x7f07000a;
-        public static final int tvValue=0x7f07005a;
-        public static final int tv_amount=0x7f070053;
-        public static final int tv_category=0x7f070026;
-        public static final int tv_chain=0x7f07003d;
-        public static final int tv_chain_name=0x7f070051;
-        public static final int tv_date=0x7f070052;
-        public static final int tv_ending_date=0x7f070068;
-        public static final int tv_header=0x7f070041;
-        public static final int tv_info=0x7f070073;
-        public static final int tv_lbl_chain=0x7f070046;
-        public static final int tv_lbl_price=0x7f07000d;
-        public static final int tv_lbl_price_summary=0x7f070016;
-        public static final int tv_lbl_product_name=0x7f07000b;
-        public static final int tv_lbl_total=0x7f070054;
-        public static final int tv_lbl_units=0x7f070010;
-        public static final int tv_menu_item=0x7f070043;
-        public static final int tv_price=0x7f070050;
-        public static final int tv_price_per_unit=0x7f070018;
-        public static final int tv_price_per_weight_volume=0x7f070019;
-        public static final int tv_product=0x7f070049;
-        public static final int tv_product_name=0x7f07004d;
-        public static final int tv_shop_address=0x7f07005e;
-        public static final int tv_shop_town=0x7f07005d;
-        public static final int tv_start_date=0x7f070064;
-        public static final int tv_subcategory=0x7f070027;
-        public static final int tv_total=0x7f070055;
-        public static final int tv_units=0x7f07004e;
-        public static final int tv_weight=0x7f07004f;
-        public static final int view_pager=0x7f070048;
+        public static final int actionbar_accept=0x7f0a0001;
+        public static final int actionbar_cancel=0x7f0a0000;
+        public static final int anchor=0x7f0a003a;
+        public static final int btSend=0x7f0a0003;
+        public static final int bttChoseDetail=0x7f0a003b;
+        public static final int bttChoseTotal=0x7f0a0039;
+        public static final int bttGetData=0x7f0a003f;
+        public static final int bttSendData=0x7f0a0057;
+        public static final int btt_accept=0x7f0a0036;
+        public static final int btt_add_detail=0x7f0a0042;
+        public static final int btt_add_product=0x7f0a0045;
+        public static final int btt_add_shop=0x7f0a005b;
+        public static final int btt_back=0x7f0a0024;
+        public static final int btt_cancel=0x7f0a0035;
+        public static final int btt_check=0x7f0a006d;
+        public static final int btt_download=0x7f0a006c;
+        public static final int btt_insert_db=0x7f0a006a;
+        public static final int btt_next=0x7f0a0051;
+        public static final int btt_set_total=0x7f0a0046;
+        public static final int btt_show_graph=0x7f0a0067;
+        public static final int btt_test=0x7f0a0069;
+        public static final int btt_upload=0x7f0a006b;
+        public static final int bttbar_cancel_accept=0x7f0a0047;
+        public static final int div_address=0x7f0a0030;
+        public static final int div_category=0x7f0a0016;
+        public static final int div_description=0x7f0a001f;
+        public static final int div_dp_end=0x7f0a0061;
+        public static final int div_dp_start=0x7f0a005d;
+        public static final int div_h1=0x7f0a0033;
+        public static final int div_product=0x7f0a001c;
+        public static final int div_region=0x7f0a0027;
+        public static final int div_spn_periodicity=0x7f0a0065;
+        public static final int div_subcategory=0x7f0a0019;
+        public static final int div_subregion=0x7f0a002a;
+        public static final int div_town=0x7f0a002d;
+        public static final int divider_h1=0x7f0a0007;
+        public static final int divider_h2=0x7f0a0009;
+        public static final int divider_h3=0x7f0a000c;
+        public static final int dp_end=0x7f0a0062;
+        public static final int dp_start=0x7f0a005e;
+        public static final int drawer_layout=0x7f0a006f;
+        public static final int edtDataName=0x7f0a0054;
+        public static final int edtDataValue=0x7f0a0056;
+        public static final int edtTotal=0x7f0a0034;
+        public static final int edt_address=0x7f0a0031;
+        public static final int edt_description=0x7f0a0020;
+        public static final int edt_price=0x7f0a000a;
+        public static final int edt_product_name=0x7f0a001d;
+        public static final int edt_second_unit=0x7f0a000f;
+        public static final int edt_units=0x7f0a000d;
+        public static final int etMessage=0x7f0a0002;
+        public static final int fl_content_frame=0x7f0a0070;
+        public static final int imageView1=0x7f0a0037;
+        public static final int image_right_arrow=0x7f0a005a;
+        public static final int item1=0x7f0a0073;
+        public static final int iv_divider=0x7f0a003d;
+        public static final int lblDetail=0x7f0a0052;
+        public static final int lbl_address=0x7f0a002f;
+        public static final int lbl_category=0x7f0a0015;
+        public static final int lbl_description=0x7f0a001e;
+        public static final int lbl_dp_end=0x7f0a0060;
+        public static final int lbl_dp_start=0x7f0a005c;
+        public static final int lbl_price_summary_div=0x7f0a0012;
+        public static final int lbl_product=0x7f0a001b;
+        public static final int lbl_region=0x7f0a0026;
+        public static final int lbl_spn_periodicity=0x7f0a0064;
+        public static final int lbl_subcategory=0x7f0a0018;
+        public static final int lbl_subregion=0x7f0a0029;
+        public static final int lbl_town=0x7f0a002c;
+        public static final int ll_second_unit=0x7f0a000e;
+        public static final int lv_drawer_list=0x7f0a0071;
+        public static final int menu_show_number_of_chains=0x7f0a0072;
+        public static final int pager=0x7f0a0025;
+        public static final int progressBar=0x7f0a0068;
+        public static final int scrollView1=0x7f0a0004;
+        public static final int spn_category=0x7f0a0017;
+        public static final int spn_periocidity=0x7f0a0066;
+        public static final int spn_region=0x7f0a0028;
+        public static final int spn_second_unit=0x7f0a0010;
+        public static final int spn_subcategory=0x7f0a001a;
+        public static final int spn_subregion=0x7f0a002b;
+        public static final int spn_town=0x7f0a002e;
+        public static final int textView1=0x7f0a0023;
+        public static final int tvData=0x7f0a0040;
+        public static final int tvDataName=0x7f0a0053;
+        public static final int tvLblTotal=0x7f0a0032;
+        public static final int tvPosts=0x7f0a0005;
+        public static final int tvValue=0x7f0a0055;
+        public static final int tv_amount=0x7f0a004e;
+        public static final int tv_category=0x7f0a0021;
+        public static final int tv_chain=0x7f0a0038;
+        public static final int tv_chain_name=0x7f0a004c;
+        public static final int tv_date=0x7f0a004d;
+        public static final int tv_ending_date=0x7f0a0063;
+        public static final int tv_header=0x7f0a003c;
+        public static final int tv_info=0x7f0a006e;
+        public static final int tv_lbl_chain=0x7f0a0041;
+        public static final int tv_lbl_price=0x7f0a0008;
+        public static final int tv_lbl_price_summary=0x7f0a0011;
+        public static final int tv_lbl_product_name=0x7f0a0006;
+        public static final int tv_lbl_total=0x7f0a004f;
+        public static final int tv_lbl_units=0x7f0a000b;
+        public static final int tv_menu_item=0x7f0a003e;
+        public static final int tv_price=0x7f0a004b;
+        public static final int tv_price_per_unit=0x7f0a0013;
+        public static final int tv_price_per_weight_volume=0x7f0a0014;
+        public static final int tv_product=0x7f0a0044;
+        public static final int tv_product_name=0x7f0a0048;
+        public static final int tv_shop_address=0x7f0a0059;
+        public static final int tv_shop_town=0x7f0a0058;
+        public static final int tv_start_date=0x7f0a005f;
+        public static final int tv_subcategory=0x7f0a0022;
+        public static final int tv_total=0x7f0a0050;
+        public static final int tv_units=0x7f0a0049;
+        public static final int tv_weight=0x7f0a004a;
+        public static final int view_pager=0x7f0a0043;
     }
     public static final class integer {
-        public static final int google_play_services_version=0x7f080000;
-        public static final int single_line=0x7f080001;
+        public static final int single_line=0x7f060000;
     }
     public static final class layout {
         public static final int actionbar_cancel_accept=0x7f030000;
@@ -406,130 +205,104 @@ containing a value of this type.
         public static final int ticket_compra_activity=0x7f03002b;
     }
     public static final class menu {
-        public static final int chain_selection_menu=0x7f0b0000;
-        public static final int main=0x7f0b0001;
+        public static final int chain_selection_menu=0x7f090000;
+        public static final int main=0x7f090001;
     }
     public static final class string {
-        public static final int action_settings=0x7f090000;
-        public static final int add_shop_fragment_title=0x7f090001;
-        public static final int address_example_text=0x7f090002;
-        public static final int app_name=0x7f090003;
-        public static final int auth_client_needs_enabling_title=0x7f090004;
-        public static final int auth_client_needs_installation_title=0x7f090005;
-        public static final int auth_client_needs_update_title=0x7f090006;
-        public static final int auth_client_play_services_err_notification_msg=0x7f090007;
-        public static final int auth_client_requested_by_msg=0x7f090008;
-        public static final int auth_client_using_bad_version_title=0x7f090009;
-        public static final int btt_accept=0x7f09000a;
-        public static final int btt_add_chain=0x7f09000b;
-        public static final int btt_add_detail=0x7f09000c;
-        public static final int btt_add_product=0x7f09000d;
-        public static final int btt_add_shop=0x7f09000e;
-        public static final int btt_cancel=0x7f09000f;
-        public static final int btt_check=0x7f090010;
-        public static final int btt_chose_detail=0x7f090011;
-        public static final int btt_chose_total=0x7f090012;
-        public static final int btt_delete=0x7f090013;
-        public static final int btt_get_address=0x7f090014;
-        public static final int btt_insert=0x7f090015;
-        public static final int btt_insert_category=0x7f090016;
-        public static final int btt_new_graph=0x7f090017;
-        public static final int btt_new_receipt=0x7f090018;
-        public static final int btt_new_report=0x7f090019;
-        public static final int btt_read=0x7f09001a;
-        public static final int btt_test=0x7f09001b;
-        public static final int btt_update=0x7f09001c;
-        public static final int category_example_text=0x7f09001d;
-        public static final int chain_example_text=0x7f09001e;
-        public static final int common_google_play_services_enable_button=0x7f09001f;
-        public static final int common_google_play_services_enable_text=0x7f090020;
-        public static final int common_google_play_services_enable_title=0x7f090021;
-        public static final int common_google_play_services_install_button=0x7f090022;
-        public static final int common_google_play_services_install_text_phone=0x7f090023;
-        public static final int common_google_play_services_install_text_tablet=0x7f090024;
-        public static final int common_google_play_services_install_title=0x7f090025;
-        public static final int common_google_play_services_invalid_account_text=0x7f090026;
-        public static final int common_google_play_services_invalid_account_title=0x7f090027;
-        public static final int common_google_play_services_network_error_text=0x7f090028;
-        public static final int common_google_play_services_network_error_title=0x7f090029;
-        public static final int common_google_play_services_unknown_issue=0x7f09002a;
-        public static final int common_google_play_services_unsupported_date_text=0x7f09002b;
-        public static final int common_google_play_services_unsupported_text=0x7f09002c;
-        public static final int common_google_play_services_unsupported_title=0x7f09002d;
-        public static final int common_google_play_services_update_button=0x7f09002e;
-        public static final int common_google_play_services_update_text=0x7f09002f;
-        public static final int common_google_play_services_update_title=0x7f090030;
-        public static final int common_signin_button_text=0x7f090031;
-        public static final int common_signin_button_text_long=0x7f090032;
-        public static final int cumulative_spending_title=0x7f090033;
-        public static final int currency=0x7f090034;
-        public static final int desc_h_divisor=0x7f090035;
-        public static final int desc_right_arrow=0x7f090036;
-        public static final int drawer_close=0x7f090037;
-        public static final int drawer_open=0x7f090038;
-        public static final int emptystring=0x7f090039;
-        public static final int first_receipt=0x7f09003a;
-        public static final int hello_world=0x7f09003b;
-        public static final int hint_address=0x7f09003c;
-        public static final int hint_description=0x7f09003d;
-        public static final int hint_name=0x7f09003e;
-        public static final int hint_price=0x7f09003f;
-        public static final int hint_spn_region=0x7f090040;
-        public static final int hint_spn_town=0x7f090041;
-        public static final int hint_subcategory=0x7f090042;
-        public static final int hint_units=0x7f090043;
-        public static final int hint_weight=0x7f090044;
-        public static final int last_receipt=0x7f090045;
-        public static final int lbl_address=0x7f090046;
-        public static final int lbl_barcode_number=0x7f090047;
-        public static final int lbl_category=0x7f090048;
-        public static final int lbl_city=0x7f090049;
-        public static final int lbl_description=0x7f09004a;
-        public static final int lbl_fraction_of_time=0x7f09004b;
-        public static final int lbl_kind_of_product=0x7f09004c;
-        public static final int lbl_name=0x7f09004d;
-        public static final int lbl_price=0x7f09004e;
-        public static final int lbl_price_summary=0x7f09004f;
-        public static final int lbl_product=0x7f090050;
-        public static final int lbl_region=0x7f090051;
-        public static final int lbl_shop_or_chain=0x7f090052;
-        public static final int lbl_subcategory=0x7f090053;
-        public static final int lbl_subregion=0x7f090054;
-        public static final int lbl_total=0x7f090055;
-        public static final int lbl_town=0x7f090056;
-        public static final int lbl_units=0x7f090057;
-        public static final int lbl_volume=0x7f090058;
-        public static final int lbl_weight=0x7f090059;
-        public static final int location_client_powered_by_google=0x7f09005a;
-        public static final int menu_settings=0x7f09005b;
-        public static final int menu_show_chain_number=0x7f09005c;
-        public static final int msg_empty_detail_list=0x7f09005d;
-        public static final int product_name=0x7f09005e;
-        public static final int prompt_spn_category=0x7f09005f;
-        public static final int prompt_spn_subcategory=0x7f090060;
-        public static final int select_chain_fragment_title=0x7f090061;
-        public static final int select_shop_fragment_title=0x7f090062;
-        public static final int send=0x7f090063;
-        public static final int sendMessage=0x7f090064;
-        public static final int shop_example_text=0x7f090065;
-        public static final int spending_by_category_title=0x7f090066;
-        public static final int spending_in_time_title=0x7f090067;
-        public static final int subcategory_example_test=0x7f090068;
-        public static final int tv_example_amount=0x7f090069;
-        public static final int tv_example_chain=0x7f09006a;
-        public static final int tv_example_date=0x7f09006b;
-        public static final int tv_example_price=0x7f09006c;
-        public static final int tv_example_price_per_unit=0x7f09006d;
-        public static final int tv_example_price_per_weight=0x7f09006e;
-        public static final int tv_example_product_name=0x7f09006f;
-        public static final int tv_example_shop=0x7f090070;
-        public static final int tv_example_text=0x7f090071;
-        public static final int tv_example_total=0x7f090072;
-        public static final int tv_example_units=0x7f090073;
-        public static final int tv_info=0x7f090074;
-        public static final int tv_lbl_group_by=0x7f090075;
-        public static final int tv_weight_example_text=0x7f090076;
-        public static final int warning_product_name_not_null=0x7f090077;
+        public static final int action_settings=0x7f070000;
+        public static final int add_shop_fragment_title=0x7f070001;
+        public static final int address_example_text=0x7f070002;
+        public static final int app_name=0x7f070003;
+        public static final int btt_accept=0x7f070004;
+        public static final int btt_add_chain=0x7f070005;
+        public static final int btt_add_detail=0x7f070006;
+        public static final int btt_add_product=0x7f070007;
+        public static final int btt_add_shop=0x7f070008;
+        public static final int btt_cancel=0x7f070009;
+        public static final int btt_check=0x7f07000a;
+        public static final int btt_chose_detail=0x7f07000b;
+        public static final int btt_chose_total=0x7f07000c;
+        public static final int btt_delete=0x7f07000d;
+        public static final int btt_get_address=0x7f07000e;
+        public static final int btt_insert=0x7f07000f;
+        public static final int btt_insert_category=0x7f070010;
+        public static final int btt_new_graph=0x7f070011;
+        public static final int btt_new_receipt=0x7f070012;
+        public static final int btt_new_report=0x7f070013;
+        public static final int btt_read=0x7f070014;
+        public static final int btt_test=0x7f070015;
+        public static final int btt_update=0x7f070016;
+        public static final int category_example_text=0x7f070017;
+        public static final int chain_example_text=0x7f070018;
+        public static final int cumulative_spending_title=0x7f070019;
+        public static final int currency=0x7f07001a;
+        public static final int desc_h_divisor=0x7f07001b;
+        public static final int desc_right_arrow=0x7f07001c;
+        public static final int drawer_close=0x7f07001d;
+        public static final int drawer_open=0x7f07001e;
+        public static final int emptystring=0x7f07001f;
+        public static final int first_receipt=0x7f070020;
+        public static final int hello_blank_fragment=0x7f070021;
+        public static final int hello_world=0x7f070022;
+        public static final int hint_address=0x7f070023;
+        public static final int hint_description=0x7f070024;
+        public static final int hint_name=0x7f070025;
+        public static final int hint_price=0x7f070026;
+        public static final int hint_spn_region=0x7f070027;
+        public static final int hint_spn_town=0x7f070028;
+        public static final int hint_subcategory=0x7f070029;
+        public static final int hint_units=0x7f07002a;
+        public static final int hint_weight=0x7f07002b;
+        public static final int last_receipt=0x7f07002c;
+        public static final int lbl_address=0x7f07002d;
+        public static final int lbl_barcode_number=0x7f07002e;
+        public static final int lbl_category=0x7f07002f;
+        public static final int lbl_city=0x7f070030;
+        public static final int lbl_description=0x7f070031;
+        public static final int lbl_fraction_of_time=0x7f070032;
+        public static final int lbl_kind_of_product=0x7f070033;
+        public static final int lbl_name=0x7f070034;
+        public static final int lbl_price=0x7f070035;
+        public static final int lbl_price_summary=0x7f070036;
+        public static final int lbl_product=0x7f070037;
+        public static final int lbl_region=0x7f070038;
+        public static final int lbl_shop_or_chain=0x7f070039;
+        public static final int lbl_subcategory=0x7f07003a;
+        public static final int lbl_subregion=0x7f07003b;
+        public static final int lbl_total=0x7f07003c;
+        public static final int lbl_town=0x7f07003d;
+        public static final int lbl_units=0x7f07003e;
+        public static final int lbl_volume=0x7f07003f;
+        public static final int lbl_weight=0x7f070040;
+        public static final int menu_settings=0x7f070041;
+        public static final int menu_show_chain_number=0x7f070042;
+        public static final int msg_empty_detail_list=0x7f070043;
+        public static final int product_name=0x7f070044;
+        public static final int prompt_spn_category=0x7f070045;
+        public static final int prompt_spn_subcategory=0x7f070046;
+        public static final int select_chain_fragment_title=0x7f070047;
+        public static final int select_shop_fragment_title=0x7f070048;
+        public static final int send=0x7f070049;
+        public static final int sendMessage=0x7f07004a;
+        public static final int shop_example_text=0x7f07004b;
+        public static final int spending_by_category_title=0x7f07004c;
+        public static final int spending_in_time_title=0x7f07004d;
+        public static final int subcategory_example_test=0x7f07004e;
+        public static final int tv_example_amount=0x7f07004f;
+        public static final int tv_example_chain=0x7f070050;
+        public static final int tv_example_date=0x7f070051;
+        public static final int tv_example_price=0x7f070052;
+        public static final int tv_example_price_per_unit=0x7f070053;
+        public static final int tv_example_price_per_weight=0x7f070054;
+        public static final int tv_example_product_name=0x7f070055;
+        public static final int tv_example_shop=0x7f070056;
+        public static final int tv_example_text=0x7f070057;
+        public static final int tv_example_total=0x7f070058;
+        public static final int tv_example_units=0x7f070059;
+        public static final int tv_info=0x7f07005a;
+        public static final int tv_lbl_group_by=0x7f07005b;
+        public static final int tv_weight_example_text=0x7f07005c;
+        public static final int warning_product_name_not_null=0x7f07005d;
     }
     public static final class style {
         /** 
@@ -540,343 +313,22 @@ containing a value of this type.
  API 11 theme customizations can go here. 
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a0000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f0a0001;
-        public static final int DefaultDiv=0x7f0a0002;
-        public static final int DefaultLabel=0x7f0a0003;
-        public static final int EditTextMultiline=0x7f0a0004;
-        public static final int SectionDiv=0x7f0a0005;
-        public static final int SectionLabel=0x7f0a0006;
-        public static final int TitleDiv=0x7f0a0007;
-        public static final int TitleLabel=0x7f0a0008;
-        public static final int base_margin=0x7f0a0009;
+        public static final int AppTheme=0x7f080001;
+        public static final int DefaultDiv=0x7f080002;
+        public static final int DefaultLabel=0x7f080003;
+        public static final int EditTextMultiline=0x7f080004;
+        public static final int SectionDiv=0x7f080005;
+        public static final int SectionLabel=0x7f080006;
+        public static final int TitleDiv=0x7f080007;
+        public static final int TitleLabel=0x7f080008;
+        public static final int base_margin=0x7f080009;
     }
     public static final class xml {
         public static final int cat_subcat_structure=0x7f040000;
         public static final int chains=0x7f040001;
         public static final int spain=0x7f040002;
     }
-    public static final class styleable {
-        /** Attributes that can be used with a AdsAttrs.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #AdsAttrs_adSize es.dexusta.ticketcompra:adSize}</code></td><td>
-    The size of the ad.</td></tr>
-           <tr><td><code>{@link #AdsAttrs_adSizes es.dexusta.ticketcompra:adSizes}</code></td><td>
-    A comma-separated list of the supported ad sizes.</td></tr>
-           <tr><td><code>{@link #AdsAttrs_adUnitId es.dexusta.ticketcompra:adUnitId}</code></td><td> The ad unit ID.</td></tr>
-           </table>
-           @see #AdsAttrs_adSize
-           @see #AdsAttrs_adSizes
-           @see #AdsAttrs_adUnitId
-         */
-        public static final int[] AdsAttrs = {
-            0x7f010000, 0x7f010001, 0x7f010002
-        };
-        /**
-          <p>
-          @attr description
-          
-    The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
-    MEDIUM_RECTANGLE, SMART_BANNER, WIDE_SKYSCRAPER, or
-    &lt;width&gt;x&lt;height&gt;.
-        
-
-
-          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name es.dexusta.ticketcompra:adSize
-        */
-        public static final int AdsAttrs_adSize = 0;
-        /**
-          <p>
-          @attr description
-          
-    A comma-separated list of the supported ad sizes. The sizes must be one of
-    BANNER, FULL_BANNER, LEADERBOARD, MEDIUM_RECTANGLE, SMART_BANNER,
-    WIDE_SKYSCRAPER, or &lt;width&gt;x&lt;height&gt;.
-        
-
-
-          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name es.dexusta.ticketcompra:adSizes
-        */
-        public static final int AdsAttrs_adSizes = 1;
-        /**
-          <p>
-          @attr description
-           The ad unit ID. 
-
-
-          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name es.dexusta.ticketcompra:adUnitId
-        */
-        public static final int AdsAttrs_adUnitId = 2;
-        /** Attributes that can be used with a MapAttrs.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #MapAttrs_cameraBearing es.dexusta.ticketcompra:cameraBearing}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLat es.dexusta.ticketcompra:cameraTargetLat}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLng es.dexusta.ticketcompra:cameraTargetLng}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTilt es.dexusta.ticketcompra:cameraTilt}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraZoom es.dexusta.ticketcompra:cameraZoom}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_mapType es.dexusta.ticketcompra:mapType}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiCompass es.dexusta.ticketcompra:uiCompass}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiRotateGestures es.dexusta.ticketcompra:uiRotateGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiScrollGestures es.dexusta.ticketcompra:uiScrollGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiTiltGestures es.dexusta.ticketcompra:uiTiltGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomControls es.dexusta.ticketcompra:uiZoomControls}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomGestures es.dexusta.ticketcompra:uiZoomGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_useViewLifecycle es.dexusta.ticketcompra:useViewLifecycle}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_zOrderOnTop es.dexusta.ticketcompra:zOrderOnTop}</code></td><td></td></tr>
-           </table>
-           @see #MapAttrs_cameraBearing
-           @see #MapAttrs_cameraTargetLat
-           @see #MapAttrs_cameraTargetLng
-           @see #MapAttrs_cameraTilt
-           @see #MapAttrs_cameraZoom
-           @see #MapAttrs_mapType
-           @see #MapAttrs_uiCompass
-           @see #MapAttrs_uiRotateGestures
-           @see #MapAttrs_uiScrollGestures
-           @see #MapAttrs_uiTiltGestures
-           @see #MapAttrs_uiZoomControls
-           @see #MapAttrs_uiZoomGestures
-           @see #MapAttrs_useViewLifecycle
-           @see #MapAttrs_zOrderOnTop
-         */
-        public static final int[] MapAttrs = {
-            0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006,
-            0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a,
-            0x7f01000b, 0x7f01000c, 0x7f01000d, 0x7f01000e,
-            0x7f01000f, 0x7f010010
-        };
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#cameraBearing}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:cameraBearing
-        */
-        public static final int MapAttrs_cameraBearing = 1;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#cameraTargetLat}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:cameraTargetLat
-        */
-        public static final int MapAttrs_cameraTargetLat = 2;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#cameraTargetLng}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:cameraTargetLng
-        */
-        public static final int MapAttrs_cameraTargetLng = 3;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#cameraTilt}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:cameraTilt
-        */
-        public static final int MapAttrs_cameraTilt = 4;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#cameraZoom}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:cameraZoom
-        */
-        public static final int MapAttrs_cameraZoom = 5;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#mapType}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be one of the following constant values.</p>
-<table>
-<colgroup align="left" />
-<colgroup align="left" />
-<colgroup align="left" />
-<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
-<tr><td><code>none</code></td><td>0</td><td></td></tr>
-<tr><td><code>normal</code></td><td>1</td><td></td></tr>
-<tr><td><code>satellite</code></td><td>2</td><td></td></tr>
-<tr><td><code>terrain</code></td><td>3</td><td></td></tr>
-<tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
-</table>
-          @attr name es.dexusta.ticketcompra:mapType
-        */
-        public static final int MapAttrs_mapType = 0;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiCompass}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiCompass
-        */
-        public static final int MapAttrs_uiCompass = 6;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiRotateGestures}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiRotateGestures
-        */
-        public static final int MapAttrs_uiRotateGestures = 7;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiScrollGestures}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiScrollGestures
-        */
-        public static final int MapAttrs_uiScrollGestures = 8;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiTiltGestures}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiTiltGestures
-        */
-        public static final int MapAttrs_uiTiltGestures = 9;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiZoomControls}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiZoomControls
-        */
-        public static final int MapAttrs_uiZoomControls = 10;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#uiZoomGestures}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:uiZoomGestures
-        */
-        public static final int MapAttrs_uiZoomGestures = 11;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#useViewLifecycle}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:useViewLifecycle
-        */
-        public static final int MapAttrs_useViewLifecycle = 12;
-        /**
-          <p>This symbol is the offset where the {@link es.dexusta.ticketcompra.R.attr#zOrderOnTop}
-          attribute's value can be found in the {@link #MapAttrs} array.
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name es.dexusta.ticketcompra:zOrderOnTop
-        */
-        public static final int MapAttrs_zOrderOnTop = 13;
-    };
 }

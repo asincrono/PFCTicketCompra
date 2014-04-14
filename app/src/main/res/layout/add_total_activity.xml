@@ -27,8 +27,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/div_h1"
         android:ems="7"        
-        android:maxLength="7"
-        android:inputType="numberDecimal" >
+        android:inputType="numberDecimal"
+        android:maxLength="7" >
 
         <requestFocus />
     </EditText>

@@ -4,11 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Town extends DBObject {
+    public static final Parcelable.Creator<Town> CREATOR = new Parcelable.Creator<Town>() {
+
+        @Override
+        public Town createFromParcel(Parcel source) {
+            return new Town(source);
+        }
+
+        @Override
+        public Town[] newArray(int size) {
+            return new Town[size];
+        }
+    };
     private long subregionId;
     private String name;
     
     public Town() {
-        
+
     }
     
     private Town(Parcel in) {
@@ -16,7 +28,7 @@ public class Town extends DBObject {
         subregionId = in.readLong();
         name = in.readString();
     }
-    
+
     public long getSubregionId() {
         return subregionId;
     }
@@ -32,12 +44,12 @@ public class Town extends DBObject {
     public void setName(String name) {
         this.name = name;
     }
-
+    
     @Override
     public String toString() {
         return name;
     }
-    
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -49,17 +61,4 @@ public class Town extends DBObject {
     public int describeContents() {
         return 0;
     }
-
-    public static final Parcelable.Creator<Town> CREATOR = new Parcelable.Creator<Town>() {
-
-        @Override
-        public Town createFromParcel(Parcel source) {
-            return new Town(source);
-        }
-
-        @Override
-        public Town[] newArray(int size) {
-            return new Town[size];
-        }
-    };    
 }

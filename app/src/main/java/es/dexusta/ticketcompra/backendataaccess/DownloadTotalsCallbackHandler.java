@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -13,6 +10,9 @@ import com.google.api.client.util.DateTime;
 import com.google.cloud.backend.android.CloudBackendMessaging;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.DataSource;

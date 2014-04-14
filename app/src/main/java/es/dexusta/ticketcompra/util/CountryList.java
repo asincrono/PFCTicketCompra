@@ -7,15 +7,15 @@ import es.dexusta.ticketcompra.model.Region;
 import es.dexusta.ticketcompra.model.Subregion;
 
 public class CountryList {
-    private String mName;
     private final List<RegionList> mRegions = new ArrayList<RegionList>();
+    private String mName;
 
-    public void setName(String name) {
-        mName = name;
-    }
-    
     public String getName() {
         return mName;
+    }
+    
+    public void setName(String name) {
+        mName = name;
     }
     
     public int getRegionCount() {

@@ -1,13 +1,14 @@
 package es.dexusta.ticketcompra.util;
 
+import android.content.res.XmlResourceParser;
+import android.util.Log;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.content.res.XmlResourceParser;
-import android.util.Log;
 import es.dexusta.ticketcompra.model.Chain;
 
 public class ChainsXmlParser implements XmlParser {

@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +11,10 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+
 import es.dexusta.ticketcompra.ListDetailsFragment.ListDetailsCallback;
 import es.dexusta.ticketcompra.ListReceiptsFragment.ListReceiptsCallback;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;

@@ -60,7 +60,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity {
         // TODO Auto-generated method stub
         super.onPostCreate();
     }
-    // Debe permitir elegir categoría, subcategoria y producto.
-    // Si no se encuentra el producto debería de poder añadirlo.
+    // Debe permitir elegir categorï¿½a, subcategoria y producto.
+    // Si no se encuentra el producto deberÃ­a de poder aÃ±adirlo.
 
 }

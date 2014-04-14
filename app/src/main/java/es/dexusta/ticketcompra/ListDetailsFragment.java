@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -13,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.ReceiptDetailListAdapter;
 import es.dexusta.ticketcompra.model.Detail;
 
@@ -77,7 +78,7 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
         if (activity != null) {
             ReceiptDetailListAdapter adapter = (ReceiptDetailListAdapter) getListAdapter();
             if (adapter != null) {
-                adapter.sawpList(list);
+                adapter.swapList(list);
             } else {
                 setListAdapter(new ReceiptDetailListAdapter(activity, list));
             }

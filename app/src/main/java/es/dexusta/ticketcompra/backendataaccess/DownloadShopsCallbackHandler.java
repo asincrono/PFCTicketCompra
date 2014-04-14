@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +11,9 @@ import com.google.cloud.backend.android.CloudBackendMessaging;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -23,9 +23,8 @@ import es.dexusta.ticketcompra.model.Shop;
 import es.dexusta.ticketcompra.util.Installation;
 
 public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<CloudEntity>> {
-    private static boolean        DEBUG  = true;
     private static final String   TAG    = "DownloadShopsCallbacksHandler";
-
+    private static boolean        DEBUG  = true;
     private static String         mInstallation;
     private SharedPreferences     mSP;
     private DataSource            mDS;

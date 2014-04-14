@@ -128,7 +128,7 @@ public class TicketCompraActivity extends CloudBackendActivity {
     protected void onPostCreate() {
         mDS = DataSource.getInstance(getApplicationContext());
         // Puede que se entretejan download y upload.
-        // En cualquier caso no debería de representar un problema a no ser
+        // En cualquier caso no deberÃ­a de representar un problema a no ser
         // que "sobreescriban". Para evitarlo: encadenarlas.
         mDS.downloadData(getCloudBackend());
         mDS.uploadData(getCloudBackend());
@@ -190,51 +190,6 @@ public class TicketCompraActivity extends CloudBackendActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private class DrawerItemClickListener implements OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent;
-            switch (position) { // item id -> position.
-            case DETAILED_RECEIPT:
-                // call detailed ticket sequence.
-                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
-                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddDetailedReceiptActivity.class);
-                startActivity(intent);
-                break;
-            case TOTAL_TICKET:
-                // call total ticket sequence.
-                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
-                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddTotalActivity.class);
-                startActivity(intent);
-                break;
-            case ADD_SHOP:
-                intent = new Intent(TicketCompraActivity.this, AddShopV2Activity.class);
-                startActivity(intent);
-                break;
-            case ADD_PRODUCT:
-                intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
-                startActivity(intent);
-                break;
-            case CUMULATIVE_SPENDING:
-                showCumulativeSpending();
-                break;
-            case SPENDING_IN_TIME:
-                showSpendingInTime();
-                break;
-            case SPENDING_BY_CATEGORY:
-                showSpendingByCategory();
-                break;
-            default:
-                break;
-            }
-
-            Toast.makeText(TicketCompraActivity.this, "Selected: " + position, Toast.LENGTH_SHORT)
-                    .show();
-        }
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -261,6 +216,53 @@ public class TicketCompraActivity extends CloudBackendActivity {
             }
             break;
         }
+    }
+
+    private class DrawerItemClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent;
+            switch (position) { // item id -> position.
+            case DETAILED_RECEIPT:
+                // call detailed ticket sequence.
+                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
+                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddDetailedReceiptActivity.class);
+                startActivity(intent);
+                break;
+            case TOTAL_TICKET:
+                // call total ticket sequence.
+                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
+                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddTotalActivity.class);
+                startActivity(intent);
+                break;
+            case ADD_SHOP:
+                if (DEBUG)
+                    Log.d(TAG, "Seleccionado add shop!");
+                intent = new Intent(TicketCompraActivity.this, AddShopV2Activity.class);
+                startActivity(intent);
+                break;
+            case ADD_PRODUCT:
+                intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
+                startActivity(intent);
+                break;
+            case CUMULATIVE_SPENDING:
+                showCumulativeSpending();
+                break;
+            case SPENDING_IN_TIME:
+                showSpendingInTime();
+                break;
+            case SPENDING_BY_CATEGORY:
+                showSpendingByCategory();
+                break;
+            default:
+                break;
+            }
+
+            Toast.makeText(TicketCompraActivity.this, "Selected: " + position, Toast.LENGTH_SHORT)
+                    .show();
+        }
+
     }
 
     private class DawerListAdapter extends BaseAdapter {
