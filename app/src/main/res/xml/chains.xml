@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chains>
+
+    <chain name="GADIS" />
+    <chain name="DIA" />
+    <chain name="Carrefour" />
+    <chain name="Condis" />
+    <chain name="El corte inglés" />
+    <chain name="Froiz" />
+    <chain name="Hipercor" />
+    <chain name="Eroski" />
+    <chain name="Leclerc" />
+    <chain name="Lidl" />
+    <chain name="Makro" />
+    <chain name="Mas" />
+    <chain name="Mercadona" />
+    <chain name="Open 25" />
+    <chain name="Dani" />
+    <chain name="Hiber" />
+    <chain name="Sanchez Romero" />
+    <chain name="Simpy Market" />
+    <chain name="MasyMas" />
+    <chain name="Veritas" />
+
+</chains>

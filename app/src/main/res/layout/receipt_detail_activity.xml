@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/tv_lbl_chain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dp"
+            android:text="@string/lbl_product"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_lbl_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_lbl_chain"
+            android:layout_alignBottom="@+id/tv_lbl_chain"
+            android:layout_alignRight="@android:id/list"
+            android:layout_marginRight="8dp"
+            android:text="@string/lbl_price"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:id="@+id/div_h1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/tv_lbl_chain"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray" />
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tv_lbl_chain"
+            android:layout_marginTop="8dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btt_add_detail"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="left|center_vertical"
+            android:onClick="onClickAddDetail"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/btt_add_detail" />
+        <Button
+            android:id="@+id/btt_set_total"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="left|center_vertical"
+            android:onClick="onClickAddDetail"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="or set receipt total..." />
+
+        <include
+            android:id="@+id/bttbar_cancel_accept"
+            layout="@layout/buttonbar_cancel_accept" />
+    </LinearLayout>
+
+</LinearLayout>

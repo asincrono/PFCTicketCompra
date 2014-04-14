@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp" >
+
+    <TextView
+        android:id="@+id/lbl_dp_start"
+        style="@style/DefaultLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Chose the start date" />
+
+    <View
+        android:id="@+id/div_dp_start"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/lbl_dp_start" />
+
+    <LinearLayout
+        android:id="@+id/dp_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/div_dp_start"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="onClickSetStartDate"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set the start date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="dd/mm/yyyy" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lbl_dp_end"
+        style="@style/DefaultLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dp_start"
+        android:layout_marginTop="4dp"
+        android:text="Chose the ending date" />
+
+    <View
+        android:id="@+id/div_dp_end"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/lbl_dp_end" />
+
+    <LinearLayout
+        android:id="@+id/dp_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/div_dp_end"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="onClickSetEndingDate"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set the ending date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/tv_ending_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="dd/mm/yyyy" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lbl_spn_periodicity"
+        style="@style/DefaultLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dp_end"
+        android:text="Select a periodicity" />
+
+    <View
+        android:id="@+id/div_spn_periodicity"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/lbl_spn_periodicity" />
+
+    <Spinner
+        android:id="@+id/spn_periocidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lbl_spn_periodicity" />
+
+    <Button
+        android:id="@+id/btt_show_graph"
+        style="?android:borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="onClickShowGraph"
+        android:text="Show graph" />
+
+</RelativeLayout>

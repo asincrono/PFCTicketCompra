@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="4dp" >
+
+    <Button
+        android:id="@+id/btt_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickTest"
+        android:text="Test" />
+
+    <Button
+        android:id="@+id/btt_insert_db"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btt_test"
+        android:onClick="onClickInsertDB"
+        android:text="Insert DB" />
+
+    <Button
+        android:id="@+id/btt_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btt_insert_db"
+        android:onClick="onClickUpload"
+        android:text="Upload" />
+
+    <Button
+        android:id="@+id/btt_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btt_upload"
+        android:onClick="onClickDownload"
+        android:text="Download" />
+
+    <Button
+        android:id="@+id/btt_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btt_download"
+        android:onClick="onClickCheck"
+        android:text="Check" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/btt_check"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" >
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickUpdate"
+            android:text="Hola mundo cruel." />
+    </ScrollView>
+
+</RelativeLayout>

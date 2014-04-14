@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"	
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1" >
+
+        <RelativeLayout
+             
+            android:layout_width="match_parent"            
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_region"
+                style="@style/DefaultLabel"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/lbl_region" />
+
+            <View
+                android:id="@+id/div_region"
+                style="@style/DefaultDiv"
+                android:layout_below="@+id/lbl_region"
+                android:contentDescription="@string/desc_h_divisor" />
+
+            <Spinner
+                android:id="@+id/spn_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div_region"
+                android:prompt="@string/hint_spn_region" />
+
+            <TextView
+                android:id="@+id/lbl_subregion"
+                style="@style/DefaultLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spn_region"
+                android:text="@string/lbl_subregion" />
+
+            <View
+                android:id="@+id/div_subregion"
+                style="@style/DefaultDiv"
+                android:layout_below="@+id/lbl_subregion"
+                android:contentDescription="@string/desc_h_divisor" />
+
+            <Spinner
+                android:id="@+id/spn_subregion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div_subregion"
+                android:prompt="@string/hint_spn_region" />
+
+            <TextView
+                android:id="@+id/lbl_town"
+                style="@style/DefaultLabel"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/spn_subregion"
+                android:layout_marginTop="16dp"
+                android:text="@string/lbl_town" />
+
+            <View
+                android:id="@+id/div_town"
+                style="@style/DefaultDiv"
+                android:layout_below="@+id/lbl_town"
+                android:contentDescription="@string/desc_h_divisor" />
+
+            <Spinner
+                android:id="@+id/spn_town"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/div_town"
+                android:layout_margin="4dp" />
+
+            <TextView
+                android:id="@+id/lbl_address"
+                style="@style/DefaultLabel"
+                android:layout_below="@+id/spn_town"
+                android:layout_marginTop="16dp"
+                android:text="@string/lbl_address" />
+
+            <View
+                android:id="@+id/div_address"
+                style="@style/DefaultDiv"
+                android:layout_below="@+id/lbl_address"
+                android:contentDescription="@string/desc_h_divisor" />
+
+            <EditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/div_address"
+                android:gravity="top|left"
+                android:hint="@string/hint_address"
+                android:inputType="textPostalAddress|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                android:minLines="3" />
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

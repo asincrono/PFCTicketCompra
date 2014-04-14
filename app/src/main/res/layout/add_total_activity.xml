@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="16dp" >
+
+    <TextView
+        android:id="@+id/tvLblTotal"
+        style="@style/DefaultLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="8dp"
+        android:text="@string/lbl_total"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <View
+        android:id="@+id/div_h1"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/tvLblTotal" />
+
+    <EditText
+        android:id="@+id/edtTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/div_h1"
+        android:ems="7"        
+        android:maxLength="7"
+        android:inputType="numberDecimal" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/edtTotal"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/edtTotal"
+        android:text="@string/currency"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

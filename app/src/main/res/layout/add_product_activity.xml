@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/lbl_category"
+            style="@style/DefaultLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/lbl_category" />
+
+        <View
+            android:id="@+id/div_category"
+            style="@style/DefaultDiv"
+            android:layout_below="@+id/lbl_category" />
+
+        <Spinner
+            android:id="@+id/spn_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/div_category"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:prompt="@string/prompt_spn_category"
+            android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/lbl_subcategory"
+            style="@style/DefaultLabel"
+            android:layout_below="@+id/spn_category"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_subcategory" />
+
+        <View
+            android:id="@+id/div_subcategory"
+            style="@style/DefaultDiv"
+            android:layout_below="@+id/lbl_subcategory" />
+
+        <Spinner
+            android:id="@+id/spn_subcategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/div_subcategory"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:prompt="@string/prompt_spn_subcategory"
+            android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/lbl_product"
+            style="@style/DefaultLabel"
+            android:layout_below="@+id/spn_subcategory"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_product" />
+
+        <View
+            android:id="@+id/div_product"
+            style="@style/DefaultDiv"
+            android:layout_below="@+id/lbl_product" />
+
+        <EditText
+            android:id="@+id/edt_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/div_product"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:hint="@string/hint_name"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/lbl_description"
+            style="@style/DefaultLabel"
+            android:layout_below="@+id/edt_product_name"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_description" />
+
+        <View
+            android:id="@+id/div_description"
+            style="@style/DefaultDiv"
+            android:layout_below="@+id/lbl_description" />
+
+        <EditText
+            android:id="@+id/edt_description"
+            style="@style/EditTextMultiline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/div_description"
+            android:hint="@string/hint_description" />
+    </RelativeLayout>
+
+</ScrollView>

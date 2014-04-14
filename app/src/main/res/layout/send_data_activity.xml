@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp" >
+
+    <TextView
+        android:id="@+id/lblDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tvDataName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lblDetail"
+        android:layout_marginTop="10dp"
+        android:text="Product name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+     <EditText
+        android:id="@+id/edtDataName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:layout_below="@+id/tvDataName"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/tvValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/edtDataName"
+        android:layout_marginTop="10dp"
+        android:text="Price"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+   
+
+    <EditText
+        android:id="@+id/edtDataValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvValue"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/bttSendData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/edtDataValue"
+        android:onClick="onClickSendData"
+        android:layout_marginTop="45dp"
+        android:text="Send" />
+
+</RelativeLayout>

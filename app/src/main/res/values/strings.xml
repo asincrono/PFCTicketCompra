@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CloudBackendAndroidClient</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="send">Send</string>
+    <string name="sendMessage">sendMessage</string>
+    <string name="emptystring"></string>    
+    <string name="category_example_text">A category</string>
+    <string name="btt_insert_category">Insert category</string>
+    <string name="btt_read">Read</string>
+    <string name="btt_update">Update</string>
+    <string name="btt_insert">Insert</string>
+    <string name="btt_delete">Delete</string>
+    <string name="tv_example_text">La razón de la sinrazón que a mi razón se hace, de tal manera mi razón enflaquece que con razón me quejo de la vuestra fermosura.</string>
+    <string name="btt_new_receipt">New receipt</string>
+    <string name="btt_new_report">New report</string>
+    <string name="btt_new_graph">New graphic</string>
+    <string name="btt_add_chain">New chain&#8230;</string>
+    <string name="btt_add_shop">New shop&#8230;</string>
+    <string name="btt_add_product">new product&#8230;</string>
+    <string name="btt_add_detail">New detail line&#8230;</string>
+    <string name="btt_cancel">Cancel</string>
+    <string name="btt_accept">Accept</string>
+    <string name="lbl_address">Address</string>
+    <string name="lbl_barcode_number">Barcode number</string>
+    <string name="lbl_description">Description</string>
+    <string name="lbl_name">Name</string>
+    <string name="lbl_total">Total</string>
+    <string name="msg_empty_detail_list">There are not details to save</string>
+    <string name="product_name">product name</string>
+    <string name="btt_get_address">Get address from location provider</string>
+    <string name="tv_example_total">999.99 €</string>
+    <string name="tv_example_price">61.59 €</string>
+    <string name="tv_example_units">X 2</string>
+    <string name="tv_example_product_name">A product</string>
+    <string name="tv_example_chain">A chain</string>
+    <string name="tv_example_shop">A shop</string>
+    <string name="tv_example_price_per_unit">Price per unit 50.00 €</string>
+    <string name="tv_example_price_per_weight">Price per kilo 50.00 €</string>
+    <string name="lbl_category">Category</string>
+    <string name="lbl_subcategory">Subcategory</string>
+    <string name="lbl_price">Price</string>
+    <string name="lbl_units">Units</string>
+    <string name="lbl_weight">Weight</string>
+    <string name="lbl_price_summary">Price summary</string>
+    <string name="hint_weight">9999 g.</string>
+    <string name="hint_units">1</string>
+    <string name="hint_price">999.99 €</string>
+    <string name="first_receipt">first receipt</string>
+    <string name="last_receipt">last receipt</string>
+
+    <string-array name="chose_weight_volume">
+        <item>weight</item>
+        <item>volume</item>
+    </string-array>
+    <string-array name="graph_agrupation">
+        <item>by time</item>
+        <item>by chain</item>
+        <item>by category</item>
+    </string-array>
+    <string-array name="time_agrupation">
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
+    <string-array name="shop_agrupation">
+        <item>chain</item>
+        <item>shop</item>
+    </string-array>
+    <string-array name="product_agrupation">
+        <item>category</item>
+        <item>subcategory</item>
+        <item>product</item>
+    </string-array>
+    <string-array name="periodicity">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Annual</item>
+    </string-array>
+
+    <string name="lbl_fraction_of_time">fraction of time</string>
+    <string name="tv_lbl_group_by">GROUP BY&#8230;</string>
+    <string name="lbl_shop_or_chain">shop or chain</string>
+    <string name="lbl_kind_of_product">kind of product</string>
+    <string name="lbl_product">Product</string>
+    <string name="tv_example_amount">123.45 €</string>
+    <string name="tv_example_date">7/5/1977 6:45</string>
+    <string name="desc_right_arrow">right arrow</string>
+    <string name="subcategory_example_test">subcategory</string>
+    <string name="chain_example_text">A chain</string>
+    <string name="menu_show_chain_number">Show number of chains</string>
+    <string name="shop_example_text">A shop</string>
+    <string name="address_example_text">Pardaces de abaixo, nº 39. Santiago de Compostela</string>
+    <string name="tv_weight_example_text">(1.250g)</string>
+    <string name="warning_product_name_not_null">The product name can\'t be empty</string>
+    <string name="btt_chose_total">Add total</string>
+    <string name="btt_chose_detail">Add detail</string>
+    <string name="lbl_volume">Volume</string>
+
+    <string-array name="drawer_first_menu">
+        <item>New detailed ticket</item>
+        <item>New total ticket</item>
+        <item>New shop</item>
+        <item>New product</item>
+    </string-array>
+    <string-array name="drawer_second_menu">
+        <item>Cumulative expense</item>
+        <item>Spending in time</item>
+        <item>Spending by category</item>
+    </string-array>
+    <string-array name="drawer_third_menu">
+        <item>Purchasing suggestions</item>
+        <item>Common products better prices</item>
+    </string-array>
+    <string-array name="drawer_menu_titles">
+        <item>New data</item>
+        <item>Check spending</item>
+        <item>Reports &amp; suggestions</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string-array name="regions_spain">
+        <item>Andalucía</item>
+        <item>Aragón</item>
+        <item>Asturias, Principado de</item>
+        <item>Balears, Illes</item>
+        <item>Canarias</item>
+        <item>Cantabria</item>
+        <item>Castilla y León</item>
+        <item>Castilla - La Mancha</item>
+        <item>Cataluña</item>
+        <item>Comunitat Valenciana</item>
+        <item>Extremadura</item>
+        <item>Madrid, Comunidad de</item>
+        <item>Murcia, Región de</item>
+        <item>Navarra, Comunidad Foral de</item>
+        <item>País Vasco</item>
+        <item>Rioja, La</item>
+        <item>Ceuta</item>
+        <item>Melilla</item>
+    </string-array>
+    <string-array name="provinces_andalucia">
+        <item>Almería</item>
+        <item>Cádiz</item>
+        <item>Córdoba</item>
+        <item>Granada</item>
+        <item>Huelva</item>
+        <item>Jaén</item>
+        <item>Málaga</item>
+        <item>Sevilla</item>
+    </string-array>
+    <string-array name="provinces_galicia">
+        <item>Coruña, A</item>
+        <item>Lugo</item>
+        <item>Ourense</item>
+        <item>Pontevedra</item>
+    </string-array>
+    <string-array name="towns_a_coruna">
+        <item>Abegondo</item>
+        <item>Ames</item>
+        <item>Aranga</item>
+        <item>Ares</item>
+        <item>Arteixo</item>
+        <item>Arzúa</item>
+        <item>Baña, A</item>
+        <item>Bergondo</item>
+        <item>Betanzos</item>
+        <item>Boimorto</item>
+        <item>Boiro</item>
+        <item>Boqueixón</item>
+        <item>Brión</item>
+        <item>Cabana de Bergantiños</item>
+        <item>Cabanas</item>
+        <item>Camariñas</item>
+        <item>Cambre</item>
+        <item>Capela, A</item>
+        <item>Carballo</item>
+        <item>Cariño</item>
+        <item>Carnota</item>
+        <item>Carral</item>
+        <item>Cedeira</item>
+        <item>Cee</item>
+        <item>Cerceda</item>
+        <item>Cerdido</item>
+        <item>Cesuras</item>
+        <item>Coirós</item>
+        <item>Corcubión</item>
+        <item>Coristanco</item>
+        <item>Coruña, A</item>
+        <item>Culleredo</item>
+        <item>Curtis</item>
+        <item>Dodro</item>
+        <item>Dumbría</item>
+        <item>Fene</item>
+        <item>Ferrol</item>
+        <item>Fisterra</item>
+        <item>Frades</item>
+        <item>Irixoa</item>
+        <item>Laracha, A</item>
+        <item>Laxe</item>
+        <item>Lousame</item>
+        <item>Malpica de Bergantiños</item>
+        <item>Mañón</item>
+        <item>Mazaricos</item>
+        <item>Melide</item>
+        <item>Mesía</item>
+        <item>Miño</item>
+        <item>Moeche</item>
+        <item>Monfero</item>
+        <item>Mugardos</item>
+        <item>Muros</item>
+        <item>Muxía</item>
+        <item>Narón</item>
+        <item>Neda</item>
+        <item>Negreira</item>
+        <item>Noia</item>
+        <item>Oleiros</item>
+        <item>Ordes</item>
+        <item>Oroso</item>
+        <item>Ortigueira</item>
+        <item>Outes</item>
+        <item>Oza dos Ríos</item>
+        <item>Paderne</item>
+        <item>Padrón</item>
+        <item>Pino, O</item>
+        <item>Pobra do Caramiñal, A</item>
+        <item>Ponteceso</item>
+        <item>Pontedeume</item>
+        <item>Pontes de García Rodríguez, As</item>
+        <item>Porto do Son</item>
+        <item>Rianxo</item>
+        <item>Ribeira</item>
+        <item>Rois</item>
+        <item>Sada</item>
+        <item>San Sadurniño</item>
+        <item>Santa Comba</item>
+        <item>Santiago de Compostela</item>
+        <item>Santiso</item>
+        <item>Sobrado</item>
+        <item>Somozas, As</item>
+        <item>Teo</item>
+        <item>Toques</item>
+        <item>Tordoia</item>
+        <item>Touro</item>
+        <item>Trazo</item>
+        <item>Val do Dubra</item>
+        <item>Valdoviño</item>
+        <item>Vedra</item>
+        <item>Vilarmaior</item>
+        <item>Vilasantar</item>
+        <item>Vimianzo</item>
+        <item>Zas</item>
+    </string-array>
+    <string-array name="towns_albacete">
+        <item>Abengibre</item>
+        <item>Alatoz</item>
+        <item>Albacete</item>
+        <item>Albatana</item>
+        <item>Alborea</item>
+        <item>Alcadozo</item>
+        <item>Alcalá del Júcar</item>
+        <item>Alcaraz</item>
+        <item>Almansa</item>
+        <item>Alpera</item>
+        <item>Ayna</item>
+        <item>Balazote</item>
+        <item>Ballestero, El</item>
+        <item>Balsa de Ves</item>
+        <item>Barrax</item>
+        <item>Bienservida</item>
+        <item>Bogarra</item>
+        <item>Bonete</item>
+        <item>Bonillo, El</item>
+        <item>Carcelén</item>
+        <item>Casas de Juan Núñez</item>
+        <item>Casas de Lázaro</item>
+        <item>Casas de Ves</item>
+        <item>Casas-Ibáñez</item>
+        <item>Caudete</item>
+        <item>Cenizate</item>
+        <item>Chinchilla de Monte-Aragón</item>
+        <item>Corral-Rubio</item>
+        <item>Cotillas</item>
+        <item>Elche de la Sierra</item>
+        <item>Férez</item>
+        <item>Fuensanta</item>
+        <item>Fuente-Álamo</item>
+        <item>Fuentealbilla</item>
+        <item>Gineta, La</item>
+        <item>Golosalvo</item>
+        <item>Hellín</item>
+        <item>Herrera, La</item>
+        <item>Higueruela</item>
+        <item>Hoya-Gonzalo</item>
+        <item>Jorquera</item>
+        <item>Lezuza</item>
+        <item>Liétor</item>
+        <item>Madrigueras</item>
+        <item>Mahora</item>
+        <item>Masegoso</item>
+        <item>Minaya</item>
+        <item>Molinicos</item>
+        <item>Montalvos</item>
+        <item>Montealegre del Castillo</item>
+        <item>Motilleja</item>
+        <item>Munera</item>
+        <item>Navas de Jorquera</item>
+        <item>Nerpio</item>
+        <item>Ontur</item>
+        <item>Ossa de Montiel</item>
+        <item>Paterna del Madera</item>
+        <item>Peñas de San Pedro</item>
+        <item>Peñascosa</item>
+        <item>Pétrola</item>
+        <item>Povedilla</item>
+        <item>Pozo Cañada</item>
+        <item>Pozohondo</item>
+        <item>Pozo-Lorente</item>
+        <item>Pozuelo</item>
+        <item>Recueja, La</item>
+        <item>Riópar</item>
+        <item>Robledo</item>
+        <item>Roda, La</item>
+        <item>Salobre</item>
+        <item>San Pedro</item>
+        <item>Socovos</item>
+        <item>Tarazona de la Mancha</item>
+        <item>Tobarra</item>
+        <item>Valdeganga</item>
+        <item>Vianos</item>
+        <item>Villa de Ves</item>
+        <item>Villalgordo del Júcar</item>
+        <item>Villamalea</item>
+        <item>Villapalacios</item>
+        <item>Villarrobledo</item>
+        <item>Villatoya</item>
+        <item>Villavaliente</item>
+        <item>Villaverde de Guadalimar</item>
+        <item>Viveros</item>
+        <item>Yeste</item>
+    </string-array>
+
+    <string name="lbl_region">Region</string>
+    <string name="lbl_city">City</string>
+    <string name="desc_h_divisor">Horizontal divisor</string>
+    <string name="hint_spn_region">Select a region</string>
+    <string name="hint_spn_town">Select a town</string>
+    <string name="lbl_town">Town</string>
+    <string name="prompt_spn_category">Select a category</string>
+    <string name="prompt_spn_subcategory">Select a subcategory</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_description">Description</string>
+    <string name="currency">€</string>
+    <string name="btt_check">Check!</string>
+    <string name="hint_subcategory">Subcategory</string>
+    <string name="btt_test">Test!</string>
+    <string name="tv_info">Info</string>
+    <string name="lbl_subregion">Subregion</string>
+    <string name="select_chain_fragment_title">Chain selection</string>
+    <string name="select_shop_fragment_title">Shop selection</string>
+    <string name="add_shop_fragment_title">Add shop</string>
+    <string name="cumulative_spending_title">Cumulative Spending</string>
+    <string name="spending_in_time_title">Spending in time</string>
+    <string name="spending_by_category_title">Spending by category</string>
+
+</resources>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp" >
+
+    <TextView
+        android:id="@+id/tv_lbl_product_name"
+        style="@style/TitleLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/tv_example_product_name" />
+
+    <View
+        android:id="@+id/divider_h1"
+        style="@style/TitleDiv"
+        android:layout_below="@+id/tv_lbl_product_name" />
+
+    <TextView
+        android:id="@+id/tv_lbl_price"
+        style="@style/DefaultLabel"
+        android:layout_alignLeft="@+id/tv_lbl_product_name"
+        android:layout_below="@+id/divider_h1"
+        android:layout_marginTop="16dp"
+        android:text="@string/lbl_price" />
+
+    <View
+        android:id="@+id/divider_h2"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/tv_lbl_price" />
+
+    <EditText
+        android:id="@+id/edt_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_h2"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:ems="5"
+        android:gravity="right|center_vertical"
+        android:hint="@string/hint_price"
+        android:inputType="numberDecimal" >
+
+        <requestFocus android:layout_width="wrap_content" />
+    </EditText>
+
+    <TextView
+        android:id="@+id/tv_lbl_units"
+        style="@style/DefaultLabel"
+        android:layout_alignLeft="@+id/tv_lbl_product_name"
+        android:layout_below="@+id/edt_price"
+        android:layout_marginTop="16dp"
+        android:text="@string/lbl_units" />
+
+    <View
+        android:id="@+id/divider_h3"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/tv_lbl_units" />
+
+    <EditText
+        android:id="@+id/edt_units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_lbl_units"
+        android:ems="3"
+        android:gravity="right|center_vertical"
+        android:hint="@string/hint_units"
+        android:inputType="number"
+        android:maxLength="3" >
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/ll_second_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_units"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/edt_second_unit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="5"
+            android:inputType="numberDecimal"
+            android:maxLength="4" />
+
+        <Spinner
+            android:id="@+id/spn_second_unit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_lbl_price_summary"
+        style="@style/DefaultLabel"
+        android:layout_alignLeft="@+id/edt_units"
+        android:layout_below="@+id/ll_second_unit"
+        android:layout_marginTop="16dp"
+        android:text="@string/lbl_price_summary" />
+
+    <View
+        android:id="@+id/lbl_price_summary_div"
+        style="@style/DefaultDiv"
+        android:layout_below="@+id/tv_lbl_price_summary" />
+
+    <TextView
+        android:id="@+id/tv_price_per_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_lbl_price_summary"
+        android:layout_below="@+id/lbl_price_summary_div"
+        android:layout_marginTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:text="@string/tv_example_price_per_unit" />
+
+    <TextView
+        android:id="@+id/tv_price_per_weight_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_price_per_unit"
+        android:layout_below="@+id/tv_price_per_unit"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:text="@string/tv_example_price_per_weight" />
+
+</RelativeLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<structure>
+
+    <category name="Alimentación" >
+        <subcategory name="Aperitivos y frutos secos" />
+        <subcategory name="Arroz, pastas y legumbres" />
+        <subcategory name="Caldos, sopas y purés" />
+        <subcategory name="Conservas, aceites y condimentos" />
+        <subcategory name="Desayuno, dulces y pan" />
+        <subcategory name="Internacional" />
+        <subcategory name="Lácteos y huevos" />
+    </category>
+    <category name="Animales" >
+        <subcategory name="Accesorios" />
+        <subcategory name="Alimentos gatos" />
+        <subcategory name="Alimentos perros" />
+    </category>
+    <category name="Bebé" >
+        <subcategory name="Alimentación infantil" />
+        <subcategory name="Higiene" />
+        <subcategory name="Leches infantiles" />
+        <subcategory name="Pañales" />
+        <subcategory name="Puericultura" />
+    </category>
+    <category name="Bebidas" >
+        <subcategory name="Aguas" />
+        <subcategory name="Batidos" />
+        <subcategory name="Cavas y sidras" />
+        <subcategory name="Finos y dulces" />
+        <subcategory name="Cervezas" />
+        <subcategory name="Concentrados y sodas" />
+        <subcategory name="Isotónicas y energéticas" />
+        <subcategory name="Licores" />
+        <subcategory name="Refrescos" />
+        <subcategory name="Sangrías y combinados" />
+        <subcategory name="Vermouth y aperitivos" />
+        <subcategory name="Vinos blancos" />
+        <subcategory name="Vinos tintos" />
+        <subcategory name="Vinos rosados" />
+        <subcategory name="Zumos y néctares" />
+    </category>
+    <category name="Congelados y helados" >
+        <subcategory name="Helados" />
+        <subcategory name="Panificación y repostería" />
+        <subcategory name="Pescados y mariscos" />
+        <subcategory name="Pizzas" />
+        <subcategory name="Platos preparados" />
+        <subcategory name="Salteados y revueltos" />
+        <subcategory name="Verduras y frutas" />
+    </category>
+    <category name="Cuidado del hogar" >
+        <subcategory name="Bazar" />
+        <subcategory name="Drogería y limpieza" />
+    </category>
+    <category name="Cuidado personal" >
+        <subcategory name="Parafarmacia" />
+        <subcategory name="Perfumería e higiene" />
+    </category>
+    <category name="Dietéticos" >
+        <subcategory name="Alimentacion dietética básica" />
+        <subcategory name="Bebidas" />
+        <subcategory name="Complementos nutricionales" />
+        <subcategory name="Control de peso" />
+        <subcategory name="Galletas" />
+        <subcategory name="Lacteos y derivados" />
+        <subcategory name="Pan y bollería" />
+        <subcategory name="Para deportistas" />
+        <subcategory name="Tortitas" />
+    </category>
+    <category name="Frescos" >
+        <subcategory name="Carniceria" />
+        <subcategory name="Charcutería" />
+        <subcategory name="Frutas" />
+        <subcategory name="Pescadería" />
+        <subcategory name="Quesos" />
+        <subcategory name="Verduras" />
+    </category>
+    <category name="Platos preparados" >
+        <subcategory name="Bocadillos y sandwich listos" />
+        <subcategory name="En conserva" />
+        <subcategory name="Preparados en sobre" />
+        <subcategory name="Preparados refrigerados" />
+        <subcategory name="Secos" />
+    </category>
+
+</structure>
