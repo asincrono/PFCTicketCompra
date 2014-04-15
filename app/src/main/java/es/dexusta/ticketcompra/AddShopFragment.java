@@ -37,18 +37,30 @@ public class AddShopFragment extends Fragment {
     private AddShopCallbacks     mCallbacks;
     private DataSource           mDS;
 
-    private Spinner              mSpnRegion;
-    private Spinner              mSpnSubregion;
-    private Spinner              mSpnTown;
-
     private RegionAdapter        mRegionAdapter;
     private SubregionAdapter     mSubregionAdapter;
     private TownAdapter          mTownAdapter;
 
+    private Spinner              mSpnRegion;
+    private Spinner              mSpnSubregion;
+    private Spinner              mSpnTown;
+
     private EditText             mEdtAddress;
 
+    private Chain mChain;
+
+
+
+
+
     public static AddShopFragment newInstance(Chain chain) {
-        return new AddShopFragment();
+        AddShopFragment fragment = new AddShopFragment();
+
+        fragment.mChain = chain;
+
+        return fragment;
+
+
     }
 
     @Override
@@ -182,6 +194,8 @@ public class AddShopFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (DEBUG)
+            Log.d(TAG, "onActivityCreated.");
         showAcceptCancelActionBar(new OnClickListener() {
 
             @Override
