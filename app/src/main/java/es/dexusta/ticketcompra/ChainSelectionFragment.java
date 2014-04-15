@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -16,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
 import es.dexusta.ticketcompra.model.Chain;
@@ -28,14 +26,14 @@ public class ChainSelectionFragment extends ListFragment {
     private static final boolean   DEBUG = true;
 
     private ChainSelectionCallback mCallback;
-    private List<Chain>            mList;
+    private ChainAdapter mListAdapter;
 
-    public static ChainSelectionFragment newInstance(List<Chain> list) {
+    public static ChainSelectionFragment newInstance(ChainAdapter adapter) {
         if (DEBUG)
             Log.d(TAG, "newInstance");
 
         ChainSelectionFragment fragment = new ChainSelectionFragment();
-        fragment.mList = list;
+        fragment.mListAdapter = adapter;
 
         return fragment;
     }
@@ -45,19 +43,9 @@ public class ChainSelectionFragment extends ListFragment {
         super.onAttach(activity);
         if (activity instanceof ChainSelectionCallback) {
             mCallback = (ChainSelectionCallback) activity;
-            setList(mList);
         } else {
             throw new ClassCastException(activity.toString()
                     + " must implemenet ChainSelectionCallback");
-        }
-    }
-
-    public void setList(List<Chain> list) {
-        ChainAdapter adapter = (ChainAdapter) getListAdapter();
-        if (adapter != null) {
-            adapter.sawpList(list);
-        } else {
-            setListAdapter(new ChainAdapter(getActivity(), list));
         }
     }
 
@@ -65,13 +53,6 @@ public class ChainSelectionFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.chain_selec_fragment, container, false);
     }
-
-    // @Override
-    // public void onActivityCreated(Bundle savedInstanceState) {
-    // super.onActivityCreated(savedInstanceState);
-    // // ((ShopSelectionActivity)getActivity()).retrieveChainList();
-    // setListAdapter(((SelectShopActivity)getActivity()).getChainAdapter());
-    // }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -94,8 +75,8 @@ public class ChainSelectionFragment extends ListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onViewCreated(view, savedInstanceState);
+        setListAdapter(mListAdapter);
     }
 
     @Override
