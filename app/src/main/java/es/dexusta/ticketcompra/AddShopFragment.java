@@ -1,11 +1,8 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +12,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.RegionAdapter;
-import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.control.SubregionAdapter;
 import es.dexusta.ticketcompra.control.TownAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -50,14 +49,9 @@ public class AddShopFragment extends Fragment {
 
     private Chain                mChain;
 
-    public static AddShopFragment newInstance(Chain chain) {
+    public static AddShopFragment newInstance() {
         AddShopFragment fragment = new AddShopFragment();
-        fragment.mChain = chain;
         return fragment;
-    }
-
-    public void setChain(Chain chain) {
-        mChain = chain;
     }
 
     @Override
@@ -193,13 +187,14 @@ public class AddShopFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        showAcceptCancelActionBar(new OnClickListener() {
+        mCallbacks.showAcceptCancelActionBar(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // Save data =
                 // 1.- Generate shop object.
                 // 2.- Do the callback.
+                mChain = mCallbacks.getChain();
                 Shop shop = new Shop();
 
                 shop.setChainId(mChain.getId());
@@ -242,7 +237,10 @@ public class AddShopFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume.");
+        if (DEBUG)
+            Log.d(TAG, "onResume.");
+        mChain = mCallbacks.getChain();
+        if (mChain == null) throw new AssertionError("Returned chain can't be null");
     }
 
     @Override
@@ -251,29 +249,5 @@ public class AddShopFragment extends Fragment {
         Log.d(TAG, "onPause.");
     }
 
-    private void showAcceptCancelActionBar(OnClickListener onClickAccept,
-            OnClickListener onClickCancel) {
-        final ActionBar actionBar = getActivity().getActionBar();
 
-        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-
-        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null);
-
-        actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-        actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-
-        /*
-         * actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-         * ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME |
-         * ActionBar.DISPLAY_SHOW_TITLE);
-         */
-        // Previous line is equivalent to:
-        // actionBar.setDisplayShowTitleEnabled(false);
-        // actionBar.setDisplayShowHomeEnabled(false);
-        // actionBar.setDisplayUseLogoEnabled(false);
-        // actionBar.setDisplayShowCustomEnabled(true);
-
-        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    }
 }

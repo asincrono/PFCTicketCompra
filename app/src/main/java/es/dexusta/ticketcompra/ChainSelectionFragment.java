@@ -1,8 +1,8 @@
 package es.dexusta.ticketcompra;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,21 +26,19 @@ public class ChainSelectionFragment extends ListFragment {
     private static final boolean   DEBUG = true;
 
     private ChainSelectionCallback mCallback;
-    private ChainAdapter mListAdapter;
 
-    public static ChainSelectionFragment newInstance(ChainAdapter adapter) {
+    public static ChainSelectionFragment newInstance() {
         if (DEBUG)
             Log.d(TAG, "newInstance");
 
-        ChainSelectionFragment fragment = new ChainSelectionFragment();
-        fragment.mListAdapter = adapter;
-
-        return fragment;
+        return new ChainSelectionFragment();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        if (DEBUG)
+            Log.d(TAG, "onAttach.");
         if (activity instanceof ChainSelectionCallback) {
             mCallback = (ChainSelectionCallback) activity;
         } else {
@@ -76,7 +74,8 @@ public class ChainSelectionFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setListAdapter(mListAdapter);
+        if (DEBUG)
+            Log.d(TAG, "onViewCreated.");
     }
 
     @Override
@@ -88,13 +87,16 @@ public class ChainSelectionFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart");       
+        if (DEBUG)
+            Log.d(TAG, "onStart.");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");        
+        if (DEBUG)
+            Log.d(TAG, "onResume.");
+        setListAdapter(mCallback.getChainAdapter());
     }
     
     

@@ -1,20 +1,21 @@
 package es.dexusta.ticketcompra.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import es.dexusta.ticketcompra.model.DBObject;
 
 public abstract class DBObjectAdapter<T extends DBObject> extends BaseAdapter {
+    private final Object mLock = new Object();
     private List<T> mList;
 //    private Context mContext;
     private LayoutInflater mInflater;
-    private final Object mLock = new Object();
 
     public DBObjectAdapter(Context context) {
         init (context, null);
@@ -63,7 +64,7 @@ public abstract class DBObjectAdapter<T extends DBObject> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public List<T> sawpList(List<T> list) {
+    public List<T> swapList(List<T> list) {
         List<T> old = mList;
         
         if (list != null) {

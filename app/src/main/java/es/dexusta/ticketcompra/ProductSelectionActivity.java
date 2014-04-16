@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendFragmentActivity;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.control.AddProductCallback;
@@ -275,6 +275,38 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
 
     }
 
+    @Override
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept, View.OnClickListener onClickCancel) {
+
+    }
+
+    @Override
+    public void hideAcceptCancelActionBar() {
+
+    }
+
+    @Override
+    public void onAddProduct(Product product) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onCancelAddProduct() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Category getCategory() {
+        return mCurrentCategory;
+    }
+
+    @Override
+    public Subcategory getSucategory() {
+        return mCurrentSubcategory;
+    }
+
     private class ProductSelectionPagerAdapter extends FragmentPagerAdapter {
         private static final int                     FRAGMENTS            = 3;
 
@@ -337,27 +369,5 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
             return FRAGMENTS;
         }
 
-    }
-
-    @Override
-    public void onAddProduct(Product product) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onCancelAddProduct() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Category getCategory() {
-        return mCurrentCategory;
-    }
-
-    @Override
-    public Subcategory getSucategory() {
-        return mCurrentSubcategory;
     }
 }

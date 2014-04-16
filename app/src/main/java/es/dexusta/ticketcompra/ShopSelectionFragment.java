@@ -1,11 +1,8 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.ShopAdapter;
 import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.model.Shop;
@@ -28,16 +28,14 @@ public class ShopSelectionFragment extends ListFragment {
     
     private Button mBttNewShop; 
 
-    public static ShopSelectionFragment newInstance(List<Shop> list) {
-        ShopSelectionFragment fragment = new ShopSelectionFragment();
-        fragment.setList(list);
-        return fragment;
+    public static ShopSelectionFragment newInstance() {
+        return new ShopSelectionFragment();
     }
 
     public void setList(List<Shop> list) {
         ShopAdapter adapter = (ShopAdapter) getListAdapter();
         if (adapter != null) {
-            adapter.sawpList(list);
+            adapter.swapList(list);
         } else {
             setListAdapter(new ShopAdapter(getActivity(), list));
         }
@@ -46,6 +44,7 @@ public class ShopSelectionFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shop_selec_fragment, container, false);
+        if (v == null) throw new AssertionError("Inflated view can't be null!");
         mBttNewShop = (Button) v.findViewById(R.id.btt_add_shop);
         mBttNewShop.setOnClickListener(new OnClickListener() {
             
@@ -82,8 +81,9 @@ public class ShopSelectionFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume.");
-        
+        if (DEBUG)
+            Log.d(TAG, "onResume.");
+        setListAdapter(mCallback.getShopAdapter());
     }
 
     @Override
@@ -95,6 +95,6 @@ public class ShopSelectionFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Shop shop = ((ShopAdapter) getListAdapter()).getItem(position);
-        mCallback.onShopSelected(shop);
+        mCallback.onShopSelection(shop);
     }
 }

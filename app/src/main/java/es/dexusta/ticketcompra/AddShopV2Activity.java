@@ -1,10 +1,14 @@
 package es.dexusta.ticketcompra;
 
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendFragmentActivity;
@@ -29,16 +33,17 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
     private static final boolean       DEBUG                     = true;
 
     private static final String KEY_CURRENT_FRAGMENT = "current_page";
-
-    private static final int           CHAIN_SELECTION_FRAGMENT  = 0;
-    private static final int           ADD_SHOP_FRAGMENT         = 1;
+    private static final String KEY_CHAINS = "chains";
+    private static final String KEY_SELECTED_CHAIN = "selected_chain";
 
     private static final String        TAG_SELECT_CHAIN_FRAGMENT = "select_chain";
     private static final String        TAG_ADD_SHOP_FRAGMENT     = "add_shop";
+    private static final String TAG_STATE_FRAGMENT = "state_fragment";
 
-    private String mActiveFragment;
-
-    private ChainAdapter mChainAdapter;
+    private Chain mSelectedChain;
+    private  ChainAdapter mChainAdapter;
+    private StateFragment mStateFragment;
+    private List<Chain> mChains;
 
     private DataSource                 mDS;
     private DataAccessCallbacks<Chain> mChainListener;
@@ -49,13 +54,26 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mActiveFragment = savedInstanceState.getString(KEY_CURRENT_FRAGMENT, TAG_SELECT_CHAIN_FRAGMENT);
+        // Default fragment initialization on first run.
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+            // Add the state fragment for the first time.
+            mStateFragment = new StateFragment();
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
+
+            // Add the initial fragment.
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left);
+            transaction.add(android.R.id.content, ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
+            transaction.commit();
         } else {
-            mActiveFragment = TAG_SELECT_CHAIN_FRAGMENT;
+            mStateFragment = (StateFragment) getFragmentManager().findFragmentByTag(TAG_STATE_FRAGMENT);
+            mChains = (List<Chain>) mStateFragment.get(KEY_CHAINS);
         }
 
-        mChainAdapter = new ChainAdapter(this);
+        // New chain adapter cause it has a reference to the activity who was
+        // destroyed.
+        mChainAdapter = new ChainAdapter(this, mChains);
 
         mDS = DataSource.getInstance(getApplicationContext());
 
@@ -69,12 +87,14 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
 
             @Override
             public void onDataReceived(List<Chain> results) {
-
+                mChains = results;
+                mStateFragment.put(KEY_CHAINS, mChains);
+                mChainAdapter.swapList(results);
             }
 
             @Override
             public void onDataProcessed(int processed, List<Chain> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -96,25 +116,26 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
 
             @Override
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
+                if (DEBUG)
+                    Log.d(TAG, "Shop processed, result = " + result);
+
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
                         BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
                                 getCloudBackend());
-                        if (DEBUG) Log.d(TAG, "Shop processed, result = " + result);
+
                         Toast.makeText(getApplicationContext(), "Shop inserted.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                // if (result) finish();
-
             }
         };
 
         mDS.setChainCallback(mChainListener);
         mDS.setShopCallback(mShopListener);
-        mDS.listChains();
+        if (mChains == null)
+            mDS.listChains();
     }
 
     @Override
@@ -137,17 +158,25 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_CURRENT_FRAGMENT, mActiveFragment);
+
     }
 
     @Override
     public void onChainSelected(Chain chain) {
-       showAddShopFragment();
+        mSelectedChain = chain;
+        mStateFragment.put(KEY_SELECTED_CHAIN, chain);
+        showAddShopFragment();
     }
 
     @Override
     public void onCancelChainSelection() {
-        finish();
+        //finish();
+        onBackPressed();
+    }
+
+    @Override
+    public ChainAdapter getChainAdapter() {
+        return mChainAdapter;
     }
 
     @Override
@@ -165,35 +194,79 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
         onBackPressed();
     }
 
-    private void showAddShopFragment() {
-        if (!mActiveFragment.equals(TAG_ADD_SHOP_FRAGMENT)) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left);
+    @Override
+    public Chain getChain() {
+        return mSelectedChain;
+    }
 
-            Fragment newFragment = manager.findFragmentByTag(TAG_ADD_SHOP_FRAGMENT);
-            if (newFragment == null) {
-                transaction.replace(android.R.id.content, newFragment, TAG_ADD_SHOP_FRAGMENT);
-            } else {
-                transaction.replace(android.R.id.content, newFragment);
-            }
-            mActiveFragment = TAG_ADD_SHOP_FRAGMENT;
+    private void showAddShopFragment() {
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
+                R.animator.enter_from_left, R.animator.exit_to_right);
+
+        Fragment newFragment = manager.findFragmentByTag(TAG_ADD_SHOP_FRAGMENT);
+        if (newFragment == null) {
+            // First transaction with this fragment.
+            newFragment = AddShopFragment.newInstance(mSelectedChain);
+            transaction.replace(android.R.id.content, newFragment, TAG_ADD_SHOP_FRAGMENT);
+        } else {
+            transaction.replace(android.R.id.content, newFragment);
+        }
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
+                                           View.OnClickListener onClickCancel) {
+        final ActionBar actionBar = getActionBar();
+
+        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
+
+        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null, false);
+
+        actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
+        actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
+
+        /*
+         * actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
+         * ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME |
+         * ActionBar.DISPLAY_SHOW_TITLE);
+         */
+        // Previous line is equivalent to:
+
+        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        showCustomAB(actionBar);
+    }
+
+    public void hideAcceptCancelActionBar() {
+        showClassicAB(getActionBar());
+    }
+
+    private void showClassicAB(ActionBar actionBar) {
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE,
+                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+            );
         }
     }
 
-    private void showSelectChainFragment(ChainAdapter adapter) {
-        if (!mActiveFragment.equals(TAG_SELECT_CHAIN_FRAGMENT)) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left);
-            Fragment newFragment = manager.findFragmentByTag(TAG_SELECT_CHAIN_FRAGMENT);
-            if (newFragment == null) {
-                newFragment = ChainSelectionFragment.newInstance(adapter);
-                transaction.add(android.R.id.content, newFragment, TAG_SELECT_CHAIN_FRAGMENT);
-            } else {
-                transaction.replace(android.R.id.content, newFragment);
-            }
-            mActiveFragment = TAG_SELECT_CHAIN_FRAGMENT;
+    private void showCustomAB(ActionBar actionBar) {
+        if (actionBar != null) {
+//            actionBar.setDisplayOptions(
+//                    ActionBar.DISPLAY_SHOW_CUSTOM,
+//                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+//                            | ActionBar.DISPLAY_SHOW_TITLE);
+            // More legible.
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+
         }
     }
 }

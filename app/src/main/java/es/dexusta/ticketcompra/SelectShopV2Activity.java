@@ -1,27 +1,28 @@
 package es.dexusta.ticketcompra;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.util.SparseArray;
-import android.view.ViewGroup;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.cloud.backend.android.CloudBackendFragmentActivity;
+import com.google.cloud.backend.android.CloudBackendActivity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
+import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
+import es.dexusta.ticketcompra.control.ShopAdapter;
 import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -31,37 +32,64 @@ import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Shop;
 
-public class SelectShopV2Activity extends CloudBackendFragmentActivity implements
+public class SelectShopV2Activity extends CloudBackendActivity implements
         ChainSelectionCallback, ShopSelectionCallback, AddShopCallbacks {
     private static final String    TAG                   = "SelectShopV2Activity";
     private static final boolean   DEBUG                 = true;
+
+    private static final String TAG_STATE_FRAGMENT = "state_fragment";
+    private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain_fragment";
+    private static final String TAG_SELECT_SHOP_FRAGMENT = "select_shop_fragment";
+    private static final String TAG_ADD_SHOP_FRAGMENT = "add_shop_fragment";
+
+    private static final String[] ALLOWED_TAGS = {TAG_SELECT_CHAIN_FRAGMENT, TAG_SELECT_SHOP_FRAGMENT, TAG_ADD_SHOP_FRAGMENT};
+
+    private static final String KEY_CHAINS = "chains";
+    private static final String KEY_SHOPS = "shops";
+
 
     private static final int       SELECT_CHAIN_FRAGMENT = 0;
     private static final int       SELECT_SHOP_FRAGMENT  = 1;
     private static final int       ADD_SHOP_FRAGMENT     = 2;
 
     private DataSource             mDS;
-    private ArrayList<Chain>       mChains;
-    private ArrayList<Shop>        mShops;
+    private List<Chain>       mChains;
+    private List<Shop>        mShops;
+
+    private ChainAdapter mChainAdapter;
+    private ShopAdapter mShopAdapter;
 
     private Chain                  mSelectedChain;
 
-    private ViewPager              mViewPager;
-    private SelectShopPagerAdapter mPagerAdapter;
-
-    private int                    mCurrentFragment;
-
     private Class                  mDestinationActivity;
+
+    private StateFragment mStateFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mCurrentFragment = savedInstanceState.getInt(Keys.KEY_CURRENT_FRAGMENT,
-                    SELECT_CHAIN_FRAGMENT);
-            mChains = savedInstanceState.getParcelableArrayList(Keys.KEY_CHAIN_LIST);
-            mShops = savedInstanceState.getParcelableArrayList(Keys.KEY_SHOP_LIST);
+
+        if (savedInstanceState == null) {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
+            transaction.add(android.R.id.content, ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
+            // Add state fragment.
+            mStateFragment = new StateFragment();
+
+            //TODO add initial fragment.
+
+            transaction.commit();
+        } else {
+            mStateFragment = (StateFragment) getFragmentManager().findFragmentByTag(TAG_STATE_FRAGMENT);
+            mChains = (List<Chain>) mStateFragment.get(KEY_CHAINS);
+            mShops = (List<Shop>) mStateFragment.get(KEY_SHOPS);
         }
+
+        // We don't really care if mChains and mShops are null,
+        // DBObjectAdapter can handle that.
+        mChainAdapter = new ChainAdapter(this, mChains);
+        mShopAdapter = new ShopAdapter(this, mShops);
 
         mDestinationActivity = (Class) getIntent().getSerializableExtra(
                 Keys.KEY_DESTINATION_ACTIVITY);
@@ -69,10 +97,6 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         setContentView(R.layout.pager_activity);
-
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mPagerAdapter = new SelectShopPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mPagerAdapter);
 
         mDS = DataSource.getInstance(getApplicationContext());
         mDS.setChainCallback(new DataAccessCallbacks<Chain>() {
@@ -87,16 +111,10 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
             public void onDataReceived(List<Chain> results) {
                 setProgressBarIndeterminateVisibility(false);
 
-                // As we call mPagerAdapter.instantiateItem(...), we will create
-                // the fragment IF it doesn't already exists.
                 mChains = results != null ? new ArrayList<Chain>(results) : null;
+                mChainAdapter.swapList(mChains);
 
-                onShowingFragment(SELECT_CHAIN_FRAGMENT);
-                mViewPager.setCurrentItem(SELECT_CHAIN_FRAGMENT);
-                ChainSelectionFragment fragment = (ChainSelectionFragment) mPagerAdapter
-                        .getFragment(SELECT_CHAIN_FRAGMENT);
-
-                fragment.setList(mChains);
+                mStateFragment.put(KEY_CHAINS, mChains);
             }
 
             @Override
@@ -119,13 +137,9 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
             public void onDataReceived(List<Shop> results) {
                 setProgressBarIndeterminateVisibility(false);
                 mShops = results != null ? new ArrayList<Shop>(results) : null;
+                mShopAdapter.swapList(mShops);
 
-                onShowingFragment(SELECT_SHOP_FRAGMENT);
-                mViewPager.setCurrentItem(SELECT_SHOP_FRAGMENT);
-                ShopSelectionFragment fragment = (ShopSelectionFragment) mPagerAdapter
-                        .getFragment(SELECT_SHOP_FRAGMENT);
-                fragment.setList(mShops);
-
+                mStateFragment.put(KEY_SHOPS, mShops);
             }
 
             @Override
@@ -136,7 +150,8 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
                         BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
                                 getCloudBackend());
                         
-                        if (DEBUG) Log.d(TAG, "Shop inserted: " + dataList.get(0));
+                        if (DEBUG)
+                            Log.d(TAG, "Shop inserted: " + dataList.get(0));
                         Toast.makeText(getApplicationContext(), "Shop inserted.",
                                 Toast.LENGTH_SHORT).show();
                         // TESTING
@@ -151,41 +166,14 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
 
         if (mChains == null) {
             mDS.listChains();
-        } else {
-            onShowingFragment(mCurrentFragment);
-            mViewPager.setCurrentItem(mCurrentFragment);
-            if (mCurrentFragment == SELECT_CHAIN_FRAGMENT) {
-                ChainSelectionFragment fragment = (ChainSelectionFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, SELECT_CHAIN_FRAGMENT);
-                fragment.setList(mChains);
-            } else {
-                ChainSelectionFragment chainSelFragment = (ChainSelectionFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, SELECT_CHAIN_FRAGMENT);
-                chainSelFragment.setList(mChains);
-                ShopSelectionFragment shopSelFragment = (ShopSelectionFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, SELECT_SHOP_FRAGMENT);
-                shopSelFragment.setList(mShops);
-            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Keys.KEY_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
-        outState.putParcelableArrayList(Keys.KEY_CHAIN_LIST, mChains);
-        outState.putParcelableArrayList(Keys.KEY_SHOP_LIST, mShops);
-    }
-
-    @Override
-    public void onBackPressed() {
-        int currentFragment = mViewPager.getCurrentItem();
-        if (currentFragment > 0) {
-            onShowingFragment(currentFragment - 1);
-            mViewPager.setCurrentItem(currentFragment - 1);
-        } else {
-            super.onBackPressed();
-        }
+        if (DEBUG)
+            Log.d(TAG, "onSaveInstanceState");
     }
 
     @Override
@@ -193,29 +181,35 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
         mSelectedChain = chain;
         setProgressBarIndeterminateVisibility(true);
         mDS.getShopsBy(chain);
-        // Toast.makeText(this, " Chain id " + chain.getId() + " selected",
-        // Toast.LENGTH_SHORT).show();
+        showFragment(TAG_SELECT_SHOP_FRAGMENT);
     }
+
+
 
     @Override
     public void onCancelChainSelection() {
         finish();
     }
 
-    // @Override
-    // public void onShopSelected(Shop shop) {
-    // // Return the shop (on activity result).
-    // Toast.makeText(this, " Shop id " + shop.getId() + " selected",
-    // Toast.LENGTH_SHORT).show();
-    // Intent intent = new Intent(this, mDestinationActivity);
-    // intent.putExtra(Keys.KEY_SHOP, shop);
-    // startActivity(intent);
-    // }
+    @Override
+    public void onShopSelection(Shop shop) {
+        // Return the shop (on activity result).
+        // Toast.makeText(this, " Shop id " + shop.getId() + " selected",
+        // Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, mDestinationActivity);
+        intent.putExtra(Keys.KEY_SHOP, shop);
+        startActivity(intent);
+    }
 
-    // @Override
-    // public void onCancelShopSelection() {
-    // mViewPager.setCurrentItem(SELECT_CHAIN_FRAGMENT);
-    // }
+    @Override
+    public void onCancelShopSelection() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onClickAddShop() {
+        showFragment(TAG_ADD_SHOP_FRAGMENT);
+    }
 
     @Override
     public void onAcceptAddShop(Shop shop) {
@@ -226,148 +220,131 @@ public class SelectShopV2Activity extends CloudBackendFragmentActivity implement
 
     @Override
     public void onCancelAddShop() {
-        onShowingFragment(SELECT_SHOP_FRAGMENT);
-        mViewPager.setCurrentItem(SELECT_SHOP_FRAGMENT);
+        onBackPressed();
     }
 
-    @Override
-    public void onShopSelected(Shop shop) {
-        // Return the shop (on activity result).
-        // Toast.makeText(this, " Shop id " + shop.getId() + " selected",
-        // Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, mDestinationActivity);
-        intent.putExtra(Keys.KEY_SHOP, shop);
-        startActivity(intent);
+    private void showShopSelectionFragment() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
 
-    }
-
-    @Override
-    public void onCancelShopSelection() {
-        onShowingFragment(SELECT_CHAIN_FRAGMENT);
-        mViewPager.setCurrentItem(SELECT_CHAIN_FRAGMENT);
-    }
-
-    @Override
-    public void onClickAddShop() {
-        onShowingFragment(ADD_SHOP_FRAGMENT);
-        mViewPager.setCurrentItem(ADD_SHOP_FRAGMENT);
-        AddShopFragment fragment = (AddShopFragment) mPagerAdapter.getFragment(ADD_SHOP_FRAGMENT);
-        fragment.setChain(mSelectedChain);
-    }
-
-    // @Override
-    // public void onShopSelected(Shop shop) {
-    // // Return the shop (on activity result).
-    // Toast.makeText(this, " Shop id " + shop.getId() + " selected",
-    // Toast.LENGTH_SHORT).show();
-    // Intent intent = new Intent(this, mDestinationActivity);
-    // intent.putExtra(Keys.KEY_SHOP, shop);
-    // startActivity(intent);
-    // }
-
-    // @Override
-    // public void onCancelShopSelection() {
-    // mViewPager.setCurrentItem(SELECT_CHAIN_FRAGMENT);
-    // }
-
-    private class SelectShopPagerAdapter extends FragmentPagerAdapter {
-        private static final int                     FRAGMENTS            = 3;
-
-        private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new SparseArray<WeakReference<Fragment>>();
-
-        public SelectShopPagerAdapter(FragmentManager fm) {
-            super(fm);
+        Fragment fragment = manager.findFragmentByTag(TAG_SELECT_SHOP_FRAGMENT);
+        if (fragment == null) {
+            fragment = ShopSelectionFragment.newInstance();
+            transaction.replace(android.R.id.content, fragment, TAG_SELECT_SHOP_FRAGMENT);
+        } else {
+            transaction.replace(android.R.id.content, fragment);
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
-            Fragment fragment = (fw != null) ? fw.get() : null;
+    private void showFragment(String tag) {
+        if (Arrays.asList(ALLOWED_TAGS).contains(tag)) {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+
+            Fragment fragment = manager.findFragmentByTag(tag);
 
             if (fragment == null) {
-                switch (position) {
-                case SELECT_CHAIN_FRAGMENT:
-                    fragment = new ChainSelectionFragment();
-                    break;
-                case SELECT_SHOP_FRAGMENT:
-                    fragment = new ShopSelectionFragment();
-                    break;
+                if (tag.equals(TAG_SELECT_CHAIN_FRAGMENT)) {
+                    fragment = ChainSelectionFragment.newInstance();
+                } else if (tag.equals(TAG_SELECT_SHOP_FRAGMENT)) {
 
-                // TESTING
-                case ADD_SHOP_FRAGMENT:
-                    fragment = new AddShopFragment();
-                    break;
-                default:
-                    fragment = new ChainSelectionFragment();
-                    break;
+                    fragment = ShopSelectionFragment.newInstance();
+                } else if (tag.equals(TAG_ADD_SHOP_FRAGMENT)) {
+                    fragment = AddShopFragment.newInstance();
                 }
+                transaction.replace(android.R.id.content, fragment, tag);
+            } else {
+                transaction.replace(android.R.id.content, fragment);
             }
 
-            return fragment;
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else {
+            throw new IllegalArgumentException("Fragment tag allowed is one in: " + ALLOWED_TAGS);
         }
+    }
 
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-            Fragment fragment = (fw != null) ? fw.get() : null;
-            
-            if (fragment == null) {
-                fragment = (Fragment) super.instantiateItem(container, position);
-                mRegisteredFragments.put(position, new WeakReference<Fragment>(fragment));
-            }
-            
-            return fragment;
+    @Override
+    public ChainAdapter getChainAdapter() {
+        return mChainAdapter;
+    }
+
+    @Override
+    public ShopAdapter getShopAdapter() {
+        return mShopAdapter;
+    }
+
+    @Override
+    public Chain getChain() {
+        return mSelectedChain;
+    }
+
+    @Override
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept, View.OnClickListener onClickCancel) {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+
+            LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
+
+            final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null, false);
+
+            actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
+            actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
+
+            showCustomAB(actionBar);
         }
+    }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            mRegisteredFragments.remove(position);
-            super.destroyItem(container, position, object);
+    @Override
+    public void hideAcceptCancelActionBar() {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            showClassicAB(actionBar);
         }
+    }
 
-        public Fragment getFragment(int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-            return (fw != null) ? fw.get() : null;
+    private void showClassicAB(ActionBar actionBar) {
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE,
+                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+            );
         }
+    }
 
-        @Override
-        public int getCount() {
-            return FRAGMENTS;
+    private void showCustomAB(ActionBar actionBar) {
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE);
         }
     }
 
     private void onShowingFragment(int fragment_code) {
-        switch (fragment_code) {
-        case SELECT_CHAIN_FRAGMENT:
-            getActionBar().setTitle(R.string.select_chain_fragment_title);
-            showClassicAB();
-            break;
-        case SELECT_SHOP_FRAGMENT:
-            getActionBar().setTitle(R.string.select_shop_fragment_title);
-            showClassicAB();
-            break;
-        case ADD_SHOP_FRAGMENT:
-            getActionBar().setTitle(R.string.add_shop_fragment_title);
-            showCustomAB();
-            break;
-        default:
-            showClassicAB();
-            break;
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            switch (fragment_code) {
+                case SELECT_CHAIN_FRAGMENT:
+                    actionBar.setTitle(R.string.select_chain_fragment_title);
+                    showClassicAB(actionBar);
+                    break;
+                case SELECT_SHOP_FRAGMENT:
+                    actionBar.setTitle(R.string.select_shop_fragment_title);
+                    showClassicAB(actionBar);
+                    break;
+                case ADD_SHOP_FRAGMENT:
+                    actionBar.setTitle(R.string.add_shop_fragment_title);
+                    showCustomAB(actionBar);
+                    break;
+                default:
+                    showClassicAB(actionBar);
+                    break;
+            }
         }
-    }
-
-    private void showClassicAB() {
-        getActionBar().setDisplayOptions(
-                ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE,
-                ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                        | ActionBar.DISPLAY_SHOW_TITLE);
-    }
-
-    private void showCustomAB() {
-        getActionBar().setDisplayOptions(
-                ActionBar.DISPLAY_SHOW_CUSTOM,
-                ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                        | ActionBar.DISPLAY_SHOW_TITLE);
     }
 }

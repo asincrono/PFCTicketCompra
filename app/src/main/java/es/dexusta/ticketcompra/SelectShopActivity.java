@@ -1,11 +1,12 @@
 package es.dexusta.ticketcompra;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.view.Window;
-import es.dexusta.ticketcompra.R;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
 import es.dexusta.ticketcompra.control.ChainShopPagerAdapter;
@@ -144,7 +145,7 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     }
 
     @Override
-    public void onShopSelected(Shop shop) {
+    public void onShopSelection(Shop shop) {
         // TODO Auto-generated method stub
         
     }
@@ -173,4 +174,13 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
         
     }
 
+    @Override
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept, View.OnClickListener onClickCancel) {
+
+    }
+
+    @Override
+    public void hideAcceptCancelActionBar() {
+
+    }
 }

@@ -1,14 +1,15 @@
 package es.dexusta.ticketcompra;
 
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.control.ProductAdapter;
 import es.dexusta.ticketcompra.control.ProductSelectionCallback;
 import es.dexusta.ticketcompra.model.Product;
@@ -37,7 +38,7 @@ public class ProductSelectionFragment extends ListFragment {
         ProductAdapter adapter = (ProductAdapter) getListAdapter();
         
         if (adapter != null) {
-            adapter.sawpList(list);
+            adapter.swapList(list);
         }
         else {
             setListAdapter(new ProductAdapter(getActivity(), list));
