@@ -9,7 +9,6 @@ import java.util.List;
 
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
-import es.dexusta.ticketcompra.control.ChainShopPagerAdapter;
 import es.dexusta.ticketcompra.control.ShopAdapter;
 import es.dexusta.ticketcompra.control.ShopSelectionCallback;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -18,7 +17,6 @@ import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Shop;
-import es.dexusta.ticketcompra.view.NoSwipeViewPager;
 
 public class SelectShopActivity extends FragmentActivity implements ChainSelectionCallback, ShopSelectionCallback{
     private static final String TAG = "SelectShopAcitivty";
@@ -33,8 +31,6 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     private DataSource mDS;
     
     private boolean mListening;
-    
-    private NoSwipeViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +96,7 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
         mDS.setShopCallback(mShopListener);
         mListening = true;
         
-        // Get and set pager and pagerAdapter.
-        mPager = (NoSwipeViewPager) findViewById(R.id.pager);       
-        mPager.setAdapter(new ChainShopPagerAdapter(getSupportFragmentManager(), this, this));
+
         setProgressBarIndeterminateVisibility(true);
         mDS.listChains();
     }
@@ -138,10 +132,6 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     public void queryShops(Chain chain) {
         setProgressBarIndeterminateVisibility(true);
         mDS.getShopsBy(chain);
-    }
-    
-    public void setShopView() {
-        mPager.setCurrentItem(ChainShopPagerAdapter.SHOP_FRAGMENT);
     }
 
     @Override

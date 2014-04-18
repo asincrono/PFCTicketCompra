@@ -1,31 +1,30 @@
 package es.dexusta.ticketcompra.control;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.List;
+
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.model.Detail;
 
-public class ReceiptDetailListAdapter extends DBObjectAdapter<Detail> {
+public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
     private static final int TYPE_DETAIL_LINE = 0;
     private static final int TYPE_TOTAL_LINE  = 1;
     
-    // Alt+0164 ¤ stands for currency symbol (according to locale).
-    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00¤");
+    // Alt+0164 ï¿½ stands for currency symbol (according to locale).
+    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00ï¿½");
     private NumberFormat     mWeightFormatter = new DecimalFormat("###.###g");
     
-    private Context mContext;
-    
-    public ReceiptDetailListAdapter(Context context) {
+    public ReceiptDetailAdapter(Context context) {
         super(context);        
     }
     
-    public ReceiptDetailListAdapter(Context context, List<Detail> list) {
+    public ReceiptDetailAdapter(Context context, List<Detail> list) {
         super(context, list);
     }
 

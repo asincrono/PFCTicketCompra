@@ -9,7 +9,7 @@ public interface AddProductCallback {
 
     public void onCancelAddProduct();
 
-    public Category getCategory();
+    public Category getSelectedCategory();
 
-    public Subcategory getSucategory();
+    public Subcategory getSeletedSubcategory();
 }

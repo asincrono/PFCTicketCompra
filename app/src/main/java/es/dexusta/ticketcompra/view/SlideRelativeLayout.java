@@ -7,8 +7,8 @@ import android.widget.RelativeLayout;
 /**
  * Created by asincrono on 13/04/14.
  */
-public class MyRelativeLayout extends RelativeLayout {
-    public MyRelativeLayout(Context context, AttributeSet attrs) {
+public class SlideRelativeLayout extends RelativeLayout {
+    public SlideRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

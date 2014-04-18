@@ -1,8 +1,8 @@
 package es.dexusta.ticketcompra;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +12,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.util.List;
-
-import es.dexusta.ticketcompra.control.ReceiptDetailListAdapter;
-import es.dexusta.ticketcompra.model.Detail;
+import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 
 public class ListDetailsFragment extends ListFragment implements OnClickListener {
     private static final String  TAG   = "ListDetailFragment";
     private static final boolean DEBUG = true;
 
-    private ListDetailsCallback  mListener;
-    private List<Detail>         mDetails;
-    private boolean              mPendingUpdate;
+    private ListDetailsCallback mCallbacks;
 
     private Button               mBttAddDetail;
 
@@ -32,7 +27,7 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
         View view = inflater.inflate(R.layout.list_details_fragment, container, false);
         
         mBttAddDetail = (Button) view.findViewById(R.id.btt_add_detail);
-        if (mListener.isInsertionActive()) {           
+        if (mCallbacks.isInsertionActive()) {
             mBttAddDetail.setOnClickListener(this);
         } else {
             mBttAddDetail.setVisibility(View.GONE);
@@ -56,7 +51,7 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), TAG + " accept pressed", Toast.LENGTH_SHORT).show();
-                mListener.onListDetailsAccepted(mDetails);
+                mCallbacks.onListDetailsAccepted();
             }
 
         });
@@ -66,51 +61,33 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), TAG + " cancel pressed", Toast.LENGTH_SHORT).show();
-                mListener.onListDetailsCanceled();
+                mCallbacks.onListDetailsCanceled();
             }
         });
 
-    }
-
-    public void setList(List<Detail> list) {
-        mDetails = list;
-        Activity activity = getActivity();
-        if (activity != null) {
-            ReceiptDetailListAdapter adapter = (ReceiptDetailListAdapter) getListAdapter();
-            if (adapter != null) {
-                adapter.swapList(list);
-            } else {
-                setListAdapter(new ReceiptDetailListAdapter(activity, list));
-            }
-            mPendingUpdate = false;
-        } else {
-            mPendingUpdate = true;
-        }
+        setListAdapter(mCallbacks.getReceiptDetailListAdapter());
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof ListDetailsCallback) {
-            mListener = (ListDetailsCallback) activity;
+            mCallbacks = (ListDetailsCallback) activity;
         } else {
             throw new ClassCastException(activity.toString()
                     + " must implement ListDetailsFragment.ListDetailsCallback");
-        }
-        if (mPendingUpdate) {            
-            setList(mDetails);
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mCallbacks = null;
     }
 
     @Override
     public void onClick(View v) {
-        mListener.onAddDetail();
+        mCallbacks.onAddDetail();
     }
 
 //    private void showAcceptCancelActionBar(OnClickListener onClickAccept,
@@ -141,7 +118,9 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
 
         public void onAddDetail();
 
-        public void onListDetailsAccepted(List<Detail> details);
+        public ReceiptDetailAdapter getReceiptDetailListAdapter();
+
+        public void onListDetailsAccepted();
 
         public void onListDetailsCanceled();
     }

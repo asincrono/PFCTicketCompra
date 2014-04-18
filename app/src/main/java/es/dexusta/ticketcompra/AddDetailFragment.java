@@ -2,9 +2,9 @@ package es.dexusta.ticketcompra;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 

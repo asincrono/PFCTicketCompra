@@ -1,8 +1,7 @@
 package es.dexusta.ticketcompra;
 
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.List;
-
-import es.dexusta.ticketcompra.control.CategoryAdapter;
 import es.dexusta.ticketcompra.control.CategorySelectionCallback;
 import es.dexusta.ticketcompra.model.Category;
 
@@ -30,31 +26,6 @@ public class CategorySelectionFragment extends ListFragment {
 //        }
 //        return fragment;
 //    }
-
-    public static CategorySelectionFragment newInstance(CategorySelectionCallback callback) {        
-        CategorySelectionFragment fragment = new CategorySelectionFragment();
-        fragment.mCallback = callback;
-        return fragment;
-    }
-    public static CategorySelectionFragment newInstance(List<Category> list, CategorySelectionCallback callback) {        
-        CategorySelectionFragment fragment = new CategorySelectionFragment(); 
-        fragment.setList(list);
-        fragment.mCallback = callback;
-        return fragment;
-    }
-    
-    public void setList(List<Category> list) {    
-        CategoryAdapter adapter = (CategoryAdapter) getListAdapter();
-        if (adapter != null) {
-            adapter.swapList(list);
-        }
-        else {
-            FragmentActivity fragAct = getActivity();
-            if (fragAct != null) {
-                setListAdapter(new CategoryAdapter(getActivity(), list));
-            }
-        }
-    }
     
     public void setPostion(int position) {
         getListView().setSelectionFromTop(position, 0);
@@ -70,14 +41,13 @@ public class CategorySelectionFragment extends ListFragment {
         
         if (DEBUG) Log.d(TAG, "onCreate");
     }
-    
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-////        ((ShopSelectionActivity)getActivity()).retrieveChainList();
-//        setListAdapter(((SelectProductActivity)getActivity()).getCategoryAdapter());
-//    }
-    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setListAdapter(mCallback.getCategoryAdapter());
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub

@@ -1,13 +1,11 @@
 package es.dexusta.ticketcompra;
 
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
-import java.util.List;
 
 import es.dexusta.ticketcompra.control.SubcategoryAdapter;
 import es.dexusta.ticketcompra.control.SubcategorySelectionCallback;
@@ -31,26 +29,6 @@ public class SubcategorySelectionFragment extends ListFragment {
         
         return fragment;
     }
-    
-    public static SubcategorySelectionFragment newInstance(List<Subcategory> list, SubcategorySelectionCallback callback) {
-        SubcategorySelectionFragment fragment = new SubcategorySelectionFragment();
-        
-        fragment.setList(list);
-        fragment.mCallback = callback;
-        
-        return fragment;
-    }
-    
-    public void setList(List<Subcategory> list) {
-        SubcategoryAdapter adapter = (SubcategoryAdapter) getListAdapter();
-        
-        if (adapter != null) {
-            adapter.swapList(list);
-        }
-        else {
-            setListAdapter(new SubcategoryAdapter(getActivity(), list));
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +36,12 @@ public class SubcategorySelectionFragment extends ListFragment {
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setListAdapter(mCallback.getSubcategoryAdapter());
     }
 
     @Override

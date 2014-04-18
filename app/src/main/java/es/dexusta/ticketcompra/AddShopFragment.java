@@ -50,8 +50,7 @@ public class AddShopFragment extends Fragment {
     private Chain                mChain;
 
     public static AddShopFragment newInstance() {
-        AddShopFragment fragment = new AddShopFragment();
-        return fragment;
+        return new AddShopFragment();
     }
 
     @Override
@@ -191,6 +190,7 @@ public class AddShopFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 // Save data =
                 // 1.- Generate shop object.
                 // 2.- Do the callback.
@@ -205,13 +205,16 @@ public class AddShopFragment extends Fragment {
 
                 shop.setAddress(mEdtAddress.getText().toString());
 
-                if (DEBUG) Log.d(TAG, "onClickAccept.");
+                if (DEBUG)
+                    Log.d(TAG, "onClickAccept.");
                 mCallbacks.onAcceptAddShop(shop);
             }
         }, new OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                if (DEBUG)
+                    Log.d(TAG, "onClickCancel.");
                 // back to the previous fragment.
 
                 // getFragmentManager().popBackStack();

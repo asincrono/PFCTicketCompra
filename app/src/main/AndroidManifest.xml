@@ -59,7 +59,8 @@
         </activity>
         <activity
             android:name="es.dexusta.ticketcompra.AddShopV2Activity"
-            android:label="Add shop" />
+            android:label="Add shop"
+            android:parentActivityName=".TicketCompraActivity" />
         <activity
             android:name="es.dexusta.ticketcompra.AddDetailedReceiptActivity"
             android:label="Add detailed receipt" />

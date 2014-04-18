@@ -1,8 +1,8 @@
 package es.dexusta.ticketcompra;
 
 
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +51,12 @@ public class ProductSelectionFragment extends ListFragment {
         setHasOptionsMenu(true);
         setRetainInstance(true);        
     }
-    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setListAdapter(mCallback.getProductAdapter());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        

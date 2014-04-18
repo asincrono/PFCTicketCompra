@@ -298,12 +298,12 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
     }
 
     @Override
-    public Category getCategory() {
+    public Category getSelectedCategory() {
         return mCurrentCategory;
     }
 
     @Override
-    public Subcategory getSucategory() {
+    public Subcategory getSeletedSubcategory() {
         return mCurrentSubcategory;
     }
 

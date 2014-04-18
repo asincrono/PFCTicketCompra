@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.cloud.backend.android.CloudBackendFragmentActivity;
+import com.google.cloud.backend.android.CloudBackendActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +27,16 @@ import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Shop;
 
-public class AddShopV2Activity extends CloudBackendFragmentActivity implements
+public class AddShopV2Activity extends CloudBackendActivity implements
         ChainSelectionCallback, AddShopCallbacks {
     private static final String        TAG                       = "AddShopV2Activity";
     private static final boolean       DEBUG                     = true;
 
-    private static final String KEY_CURRENT_FRAGMENT = "current_page";
     private static final String KEY_CHAINS = "chains";
     private static final String KEY_SELECTED_CHAIN = "selected_chain";
 
-    private static final String        TAG_SELECT_CHAIN_FRAGMENT = "select_chain";
-    private static final String        TAG_ADD_SHOP_FRAGMENT     = "add_shop";
+    private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain";
+    private static final String TAG_ADD_SHOP_FRAGMENT     = "add_shop";
     private static final String TAG_STATE_FRAGMENT = "state_fragment";
 
     private Chain mSelectedChain;
@@ -63,8 +62,9 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
             transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
 
             // Add the initial fragment.
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left);
-            transaction.add(android.R.id.content, ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
+            //transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left);
+            transaction.replace(android.R.id.content, ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
+            transaction.addToBackStack(null);
             transaction.commit();
         } else {
             mStateFragment = (StateFragment) getFragmentManager().findFragmentByTag(TAG_STATE_FRAGMENT);
@@ -175,6 +175,13 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (DEBUG)
+            Log.d(TAG, "onBackPressed, items on backstack: " + getFragmentManager().getBackStackEntryCount());
+    }
+
+    @Override
     public ChainAdapter getChainAdapter() {
         return mChainAdapter;
     }
@@ -209,7 +216,7 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
         Fragment newFragment = manager.findFragmentByTag(TAG_ADD_SHOP_FRAGMENT);
         if (newFragment == null) {
             // First transaction with this fragment.
-            newFragment = AddShopFragment.newInstance(mSelectedChain);
+            newFragment = AddShopFragment.newInstance();
             transaction.replace(android.R.id.content, newFragment, TAG_ADD_SHOP_FRAGMENT);
         } else {
             transaction.replace(android.R.id.content, newFragment);
@@ -219,7 +226,7 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
     }
 
     public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
-                                           View.OnClickListener onClickCancel) {
+                                          View.OnClickListener onClickCancel) {
         final ActionBar actionBar = getActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
@@ -266,7 +273,6 @@ public class AddShopV2Activity extends CloudBackendFragmentActivity implements
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
-
         }
     }
 }
