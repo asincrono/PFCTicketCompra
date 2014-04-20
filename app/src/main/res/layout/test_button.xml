@@ -1,6 +1,6 @@
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/btt_cancel"
+<Button android:id="@+id/btt_cancel"
     style="?android:attr/borderlessButtonStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:onClick="onClickCheck"

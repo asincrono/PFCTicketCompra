@@ -342,7 +342,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             listReceipt.add(mReceipt);
             mDS.insertReceipts(listReceipt);
 
-            // TODO: �Mostrar una lista con los receipts insertados donde figure
+            // TODO: Mostrar una lista con los receipts insertados donde figure
             // el
             // presente?
             Intent intent = new Intent(this, TicketCompraActivity.class);

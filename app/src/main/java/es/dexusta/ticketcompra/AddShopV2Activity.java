@@ -1,14 +1,12 @@
 package es.dexusta.ticketcompra;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
@@ -47,6 +46,9 @@ public class AddShopV2Activity extends CloudBackendActivity implements
     private DataSource                 mDS;
     private DataAccessCallbacks<Chain> mChainListener;
     private DataAccessCallbacks<Shop>  mShopListener;
+
+    private boolean mShowMenu = true;
+
     private boolean                    mPaused;
 
     @Override
@@ -162,6 +164,12 @@ public class AddShopV2Activity extends CloudBackendActivity implements
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        ActionBarController.showMenu(menu, mShowMenu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onChainSelected(Chain chain) {
         mSelectedChain = chain;
         mStateFragment.put(KEY_SELECTED_CHAIN, chain);
@@ -227,52 +235,15 @@ public class AddShopV2Activity extends CloudBackendActivity implements
 
     public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
                                           View.OnClickListener onClickCancel) {
-        final ActionBar actionBar = getActionBar();
-
-        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-
-        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null, false);
-
-        actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-        actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-
-        /*
-         * actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-         * ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME |
-         * ActionBar.DISPLAY_SHOW_TITLE);
-         */
-        // Previous line is equivalent to:
-
-        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        showCustomAB(actionBar);
+        mShowMenu = false;
+        invalidateOptionsMenu();
+        ActionBarController.showAcceptCancelActionBar(getActionBar(), onClickAccept, onClickCancel);
     }
 
+    @Override
     public void hideAcceptCancelActionBar() {
-        showClassicAB(getActionBar());
-    }
-
-    private void showClassicAB(ActionBar actionBar) {
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE,
-                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-        }
-    }
-
-    private void showCustomAB(ActionBar actionBar) {
-        if (actionBar != null) {
-//            actionBar.setDisplayOptions(
-//                    ActionBar.DISPLAY_SHOW_CUSTOM,
-//                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-//                            | ActionBar.DISPLAY_SHOW_TITLE);
-            // More legible.
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayUseLogoEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-        }
+        mShowMenu = true;
+        invalidateOptionsMenu();
+        ActionBarController.setDisplayDefault(getActionBar());
     }
 }
