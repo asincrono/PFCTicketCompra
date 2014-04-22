@@ -20,12 +20,12 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
 
     private ListDetailsCallback mCallbacks;
 
-    private Button               mBttAddDetail;
+    private Button mBttAddDetail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_details_fragment, container, false);
-        
+
         mBttAddDetail = (Button) view.findViewById(R.id.btt_add_detail);
         if (mCallbacks.isInsertionActive()) {
             mBttAddDetail.setOnClickListener(this);

@@ -77,11 +77,9 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
 
-            transaction.add(android.R.id.content,
-                    new CategorySelectionFragment(),
+            transaction.add(android.R.id.content, new CategorySelectionFragment(),
                     TAG_SELECT_CATEGORY_FRAGMENT);
 
-            transaction.addToBackStack(null);
             transaction.commit();
         } else {
             mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
@@ -101,7 +99,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
 
         mDS.setCategoryCallback(new DataAccessCallbacks<Category>() {
             @Override
-            public void onDataProcessed(int processed, List<Category> dataList, Types.Operation operation, boolean result) {
+            public void onDataProcessed(int processed, List<Category> dataList,
+                                        Types.Operation operation, boolean result) {
 
             }
 
@@ -121,7 +120,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         });
         mDS.setSubcategoryCallback(new DataAccessCallbacks<Subcategory>() {
             @Override
-            public void onDataProcessed(int processed, List<Subcategory> dataList, Types.Operation operation, boolean result) {
+            public void onDataProcessed(int processed, List<Subcategory> dataList,
+                                        Types.Operation operation, boolean result) {
 
             }
 
@@ -142,7 +142,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         });
         mDS.setProductCallback(new DataAccessCallbacks<Product>() {
             @Override
-            public void onDataProcessed(int processed, List<Product> dataList, Types.Operation operation, boolean result) {
+            public void onDataProcessed(int processed, List<Product> dataList,
+                                        Types.Operation operation, boolean result) {
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
                         BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend());
@@ -179,7 +180,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     private void showSubcategorySelection() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        setTransactionAnimator(transaction);
+        applyTransactionAnimator(transaction);
 
         Fragment fragment = manager.findFragmentByTag(TAG_SELECT_SUBCATEGORY_FRAGEMT);
 
@@ -197,7 +198,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     private void showProductSelection() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        setTransactionAnimator(transaction);
+        applyTransactionAnimator(transaction);
 
         Fragment fragment = manager.findFragmentByTag(TAG_SELECT_PRODUCT_FRAGMENT);
 
@@ -214,7 +215,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     private void showAddProduct() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        setTransactionAnimator(transaction);
+        applyTransactionAnimator(transaction);
 
         Fragment fragment = manager.findFragmentByTag(TAG_ADD_PRODUCT_FRAGMENT);
 
@@ -229,7 +230,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         transaction.commit();
     }
 
-    private void setTransactionAnimator(FragmentTransaction transaction) {
+    private void applyTransactionAnimator(FragmentTransaction transaction) {
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
                 R.animator.enter_from_left, R.animator.exit_to_right);
     }
@@ -279,6 +280,11 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     }
 
     @Override
+    public int getSelectedCategoryPosition() {
+        return mSelectedCategoryPosition;
+    }
+
+    @Override
     public void onCancelCategorySelection() {
         onBackPressed();
     }
@@ -296,6 +302,11 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     }
 
     @Override
+    public int getSelectedSubcategoryPostion() {
+        return mSelectedSubcategoryPosition;
+    }
+
+    @Override
     public void onCancelSubcategorySelection() {
         onBackPressed();
     }
@@ -310,6 +321,11 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     @Override
     public ProductAdapter getProductAdapter() {
         return mProductAdapter;
+    }
+
+    @Override
+    public int getSelectedProductPosition() {
+        return mSelectedProductPosition;
     }
 
     @Override

@@ -23,6 +23,7 @@ public final class Keys {
     public static final String KEY_SUBCATEGORY_LIST = "subcategory_list";
 
     public static final String KEY_RECEIPT           = "receipt";
+    public static final String KEY_RECEIPT_LIST      = "receipt_list";
     public static final String KEY_RECEIPT_ID        = "receipt_id";
     public static final String KEY_RECEIPT_SHOP_ID   = "receipt_shop_id";
     public static final String KEY_RECEIPT_USER_ID   = "receipt_user_id";
@@ -37,9 +38,11 @@ public final class Keys {
     public static final String KEY_SHOP_LATITUDE  = "shop_latitude";
     public static final String KEY_SHOP_ADDRESS   = "shop_address";
 
-    public static final String KEY_CHAIN      = "chain";
-    public static final String KEY_CHAIN_LIST = "chain_list";
+    public static final String KEY_CHAIN          = "chain";
+    public static final String KEY_CHAIN_LIST     = "chain_list";
+    public static final String KEY_SELECTED_CHAIN = "selected_chain";
 
     public static final String KEY_DETAIL_LIST = "detail_list";
 
+    public static final String KEY_RECEIPT_DETAIL_MAP = "receipt_detail_map";
 }

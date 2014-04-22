@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="es.dexusta.ticketcompra"
+<manifest package="es.dexusta.ticketcompra"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -58,7 +58,7 @@
         <activity android:name="org.achartengine.GraphicalActivity" >
         </activity>
         <activity
-            android:name="es.dexusta.ticketcompra.AddShopV2Activity"
+            android:name=".AddShopActivity"
             android:label="Add shop"
             android:parentActivityName=".TicketCompraActivity" />
         <activity

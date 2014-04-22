@@ -1,21 +1,18 @@
 package es.dexusta.ticketcompra;
 
-import java.lang.ref.WeakReference;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+
+import java.util.HashMap;
 import java.util.List;
 
-import android.app.ActionBar;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import es.dexusta.ticketcompra.ListDetailsFragment.ListDetailsCallback;
 import es.dexusta.ticketcompra.ListReceiptsFragment.ListReceiptsCallback;
+import es.dexusta.ticketcompra.control.ReceiptAdapter;
+import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
@@ -23,47 +20,70 @@ import es.dexusta.ticketcompra.dataaccess.Keys;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Receipt;
-import es.dexusta.ticketcompra.view.NoSwipeViewPager;
 
-public class ListReceiptsActivity extends FragmentActivity implements ListDetailsCallback,
+
+public class ListReceiptsActivity extends Activity implements ListDetailsCallback,
         ListReceiptsCallback {
-    private static final boolean      DEBUG                  = true;
-    private static final String       TAG                    = "ListReceiptsActivity";
+    private static final boolean DEBUG = true;
+    private static final String  TAG   = "ListReceiptsActivity";
 
-    private static final int          LIST_RECEIPTS_FRAGMENT = 0;
-    private static final int          LIST_DETAILS_FRAGMENT  = 1;
+    private static final String TAG_STATE_FRAGMENT         = "state_fragment";
+    private static final String TAG_LIST_RECEIPTS_FRAGMENT = "list_receipts_fragment";
+    private static final String TAG_LIST_DETAILS_FRAGMENT  = "list_details_fragment";
 
-    private static final String       STATE_FRAGMENT         = "state_fragment";
+    private Receipt mSelectedReceipt;
+    private List<Receipt> mReceipts;
+    private HashMap<Receipt, List<Detail>> mReceiptDetailMap;
 
-    private int                       mCurrentFragment;
-    private Receipt                   mSelectedReceipt;
 
-    private ViewPager                 mViewPager;
-    private ListReceiptsPagerAdapter  mPagerAdapter;
+    private ReceiptAdapter       mReceiptAdapter;
+    private ReceiptDetailAdapter mReceiptDetailAdapter;
 
-    private ListReceiptsStateFragment mStateFragment;
+    private StateFragment mStateFragment;
 
-    private DataSource                mDS;
+
+    private DataSource mDS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mCurrentFragment = savedInstanceState.getInt(Keys.KEY_CURRENT_FRAGMENT,
-                    LIST_RECEIPTS_FRAGMENT);
-            mSelectedReceipt = (Receipt) savedInstanceState.get(Keys.KEY_CURRENT_RECEIPT);
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        if (savedInstanceState == null) {
+            // Cold start of this activity.
+
+            // Creation of the Fragment to store data between
+            // configuration changes.
+            Fragment fragment = new StateFragment();
+            transaction.add(fragment, TAG_STATE_FRAGMENT);
+            transaction.commit();
+
+            // We show the first fragment.
+            fragment = new ListReceiptsFragment();
+            transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
+                    R.animator.enter_from_left, R.animator.exit_to_right);
+            transaction.add(android.R.id.content, fragment, TAG_LIST_RECEIPTS_FRAGMENT);
+            transaction.commit();
+        } else {
+            // We retrieve all the possible data stored.
+            mSelectedReceipt = (Receipt) mStateFragment.get(Keys.KEY_CURRENT_RECEIPT);
+            mReceipts = (List<Receipt>) mStateFragment.get(Keys.KEY_RECEIPT_LIST);
+            mReceiptDetailMap = (HashMap<Receipt, List<Detail>>) mStateFragment.get(Keys.KEY_DETAIL_LIST);
+            mSelectedReceipt = (Receipt) mStateFragment.get(Keys.KEY_RECEIPT);
+            // We don't need to show any fragment, FragmentManager should take care of that.
         }
 
-        setContentView(R.layout.pager_activity);
+        // We create the adapters that will transfer (made available) the data to do the fragments.
+        mReceiptAdapter = new ReceiptAdapter(this, mReceipts);
+        mReceiptDetailAdapter = new ReceiptDetailAdapter(this, mReceiptDetailMap.get(mSelectedReceipt));
 
-        mViewPager = (NoSwipeViewPager) findViewById(R.id.view_pager);
+        mDS = DataSource.getInstance(getApplicationContext());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        mPagerAdapter = new ListReceiptsPagerAdapter(fragmentManager);
-        mViewPager.setAdapter(mPagerAdapter);
-
-        DataAccessCallbacks<Receipt> receiptCallbacks = new DataAccessCallbacks<Receipt>() {
+        // We set up the callbacks to get Receipts and Details from de DB.
+        mDS.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
 
             @Override
             public void onInfoReceived(Object result, Option option) {
@@ -73,23 +93,26 @@ public class ListReceiptsActivity extends FragmentActivity implements ListDetail
 
             @Override
             public void onDataReceived(List<Receipt> results) {
-                mStateFragment.setReceipts(results);
-                mViewPager.setCurrentItem(LIST_RECEIPTS_FRAGMENT);
-                ListReceiptsFragment fragment = (ListReceiptsFragment) mPagerAdapter
-                        .getFragment(LIST_RECEIPTS_FRAGMENT);
-                mCurrentFragment = LIST_RECEIPTS_FRAGMENT;
-                fragment.setList(results);
+                if (results != null) {
+                    // We don't need to check if (or when) a fragment is created. The fragment
+                    // itself will get the ListAdapter.
+                    mReceipts = results;
+                    mStateFragment.put(Keys.KEY_RECEIPT_LIST, mReceipts);
+                    // As we update de list in the ListAdapter, the ListView in the fragment will
+                    // be automatically updated.
+                    mReceiptAdapter.swapList(mReceipts);
+                }
             }
 
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
-        };
+        });
 
-        DataAccessCallbacks<Detail> detailCallbacks = new DataAccessCallbacks<Detail>() {
+        mDS.setDetailCallback(new DataAccessCallbacks<Detail>() {
 
             @Override
             public void onInfoReceived(Object result, Option option) {
@@ -99,80 +122,30 @@ public class ListReceiptsActivity extends FragmentActivity implements ListDetail
 
             @Override
             public void onDataReceived(List<Detail> results) {
-                mStateFragment.setDetails(mSelectedReceipt, results);
-                ListDetailsFragment fragment = (ListDetailsFragment) mPagerAdapter
-                        .getFragment(LIST_DETAILS_FRAGMENT);
-                mViewPager.setCurrentItem(LIST_DETAILS_FRAGMENT);
-                mCurrentFragment = LIST_DETAILS_FRAGMENT;
-                fragment.setList(results);
-
+                mReceiptDetailMap.put(mSelectedReceipt, results);
+                // To avoid as many access to de DB as possible, we save all the accesses to the
+                // details in a HashMap using the Receipt as key.
+                mStateFragment.put(Keys.KEY_RECEIPT_DETAIL_MAP, mReceiptDetailMap);
+                mReceiptDetailAdapter.swapList(results);
             }
 
             @Override
             public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
-        };
-
-        mDS = DataSource.getInstance(getApplicationContext());
-
-        mDS.setReceiptCallback(receiptCallbacks);
-        mDS.setDetailCallback(detailCallbacks);
-
-        /*
-         * If there isn't state fragment (a fragment without UI to hold the DB
-         * data) we create one.
-         */
-
-        mStateFragment = (ListReceiptsStateFragment) fragmentManager
-                .findFragmentByTag(STATE_FRAGMENT);
-        if (mStateFragment == null) {
-            mStateFragment = new ListReceiptsStateFragment();
-            fragmentManager.beginTransaction().add(mStateFragment, STATE_FRAGMENT).commit();
-        }
-
-        List<Receipt> receipts = mStateFragment.getReceipts();
-
-        if (receipts == null) {
-            mDS.listReceipts();
-        } else {
-            if (mCurrentFragment == LIST_RECEIPTS_FRAGMENT) {
-                ListReceiptsFragment fragment = (ListReceiptsFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, mCurrentFragment);
-                mViewPager.setCurrentItem(LIST_RECEIPTS_FRAGMENT);
-                fragment.setList(receipts);
-            } else {
-                List<Detail> details = mStateFragment.getDetails(mSelectedReceipt);
-                ListReceiptsFragment listRcptFragment = (ListReceiptsFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, LIST_RECEIPTS_FRAGMENT);
-                listRcptFragment.setList(receipts);
-                ListDetailsFragment listDetFragment = (ListDetailsFragment) mPagerAdapter
-                        .instantiateItem(mViewPager, LIST_DETAILS_FRAGMENT);
-                listDetFragment.setList(details);
-            }
-        }
-
-        showAcceptCancelActionBar();
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Keys.KEY_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
-        outState.putParcelable(Keys.KEY_CURRENT_RECEIPT, mSelectedReceipt);
     }
 
     @Override
     public void onBackPressed() {
-        mCurrentFragment = mCurrentFragment - 1;
-        if (mCurrentFragment < 0) {
-            super.onBackPressed();
-        } else {
-            mViewPager.setCurrentItem(mCurrentFragment);
-        }
-
+        super.onBackPressed();
     }
 
     @Override
@@ -187,114 +160,64 @@ public class ListReceiptsActivity extends FragmentActivity implements ListDetail
     }
 
     @Override
-    public void onListDetailsAccepted(List<Detail> details) {
-        // TODO Auto-generated method stub
+    public ReceiptDetailAdapter getReceiptDetailListAdapter() {
+        return mReceiptDetailAdapter;
+    }
+
+    @Override
+    public void onListDetailsAccepted() {
 
     }
 
     @Override
     public void onListDetailsCanceled() {
         // TODO Auto-generated method stub
-
+        onBackPressed();
     }
 
     @Override
     public void onReceiptSelected(Receipt receipt) {
         mSelectedReceipt = receipt;
-        List<Detail> details = mStateFragment.getDetails(receipt);
+
+        List<Detail> details = mReceiptDetailMap.get(receipt);
+
         if (details != null) {
-            ListDetailsFragment fragment = (ListDetailsFragment) mPagerAdapter
-                    .getFragment(LIST_DETAILS_FRAGMENT);
-            mViewPager.setCurrentItem(LIST_DETAILS_FRAGMENT);
-            mCurrentFragment = LIST_DETAILS_FRAGMENT;
-            fragment.setList(details);
+            mReceiptDetailAdapter.swapList(details);
         } else {
             mDS.getDetailsBy(receipt);
         }
+
+        showReceiptDetails();
     }
 
     @Override
     public void onCancelReceiptSelection() {
-        // TODO Auto-generated method stub
-
+        onBackPressed();
     }
 
-    private void showAcceptCancelActionBar() {
-        final ActionBar actionBar = getActionBar();
-
-        LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-
-        final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null);
-
-        // actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-        // actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM
-                | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        // Previous line is equivalent to:
-        // actionBar.setDisplayShowTitleEnabled(false);
-        // actionBar.setDisplayShowHomeEnabled(false);
-        // actionBar.setDisplayUseLogoEnabled(false);
-        // actionBar.setDisplayShowCustomEnabled(true);
-
-        actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    @Override
+    public ReceiptAdapter getReceiptAdapter() {
+        return mReceiptAdapter;
     }
 
-    private class ListReceiptsPagerAdapter extends FragmentPagerAdapter {
-        private static final int                     FRAGMENTS            = 2;
+    private void showReceiptDetails() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
 
-        private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new SparseArray<WeakReference<Fragment>>();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
+                R.animator.enter_from_left, R.animator.exit_to_right);
 
-        public ListReceiptsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        Fragment fragment = manager.findFragmentByTag(TAG_LIST_DETAILS_FRAGMENT);
+        if (fragment == null) {
+            fragment = new ListDetailsFragment();
+            transaction.replace(android.R.id.content, fragment, TAG_LIST_DETAILS_FRAGMENT);
+        } else {
+            transaction.replace(android.R.id.content, fragment);
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment;
-
-            switch (position) {
-            case LIST_RECEIPTS_FRAGMENT:
-                fragment = new ListReceiptsFragment();
-                break;
-            case LIST_DETAILS_FRAGMENT:
-                fragment = new ListDetailsFragment();
-                break;
-            default:
-                fragment = new ListReceiptsFragment();
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-            Fragment fragment = (fw != null) ? fw.get() : null;
-            if (fragment == null) {
-                fragment = (Fragment) super.instantiateItem(container, position);
-                mRegisteredFragments.put(position, new WeakReference<Fragment>(fragment));
-            }
-            return fragment;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            mRegisteredFragments.remove(position);
-            super.destroyItem(container, position, object);
-        }
-
-        public Fragment getFragment(int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-            return (fw != null) ? fw.get() : null;
-        }
-
-        @Override
-        public int getCount() {
-            return FRAGMENTS;
-        }
-
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
+
 
 }

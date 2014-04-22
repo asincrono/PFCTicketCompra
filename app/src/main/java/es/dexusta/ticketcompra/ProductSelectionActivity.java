@@ -1,26 +1,26 @@
 package es.dexusta.ticketcompra;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.cloud.backend.android.CloudBackendFragmentActivity;
+import com.google.cloud.backend.android.CloudBackendActivity;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.control.AddProductCallback;
+import es.dexusta.ticketcompra.control.CategoryAdapter;
 import es.dexusta.ticketcompra.control.CategorySelectionCallback;
+import es.dexusta.ticketcompra.control.ProductAdapter;
 import es.dexusta.ticketcompra.control.ProductSelectionCallback;
+import es.dexusta.ticketcompra.control.SubcategoryAdapter;
 import es.dexusta.ticketcompra.control.SubcategorySelectionCallback;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -30,35 +30,40 @@ import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Category;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Subcategory;
-import es.dexusta.ticketcompra.view.NoSwipeViewPager;
 
-public class ProductSelectionActivity extends CloudBackendFragmentActivity implements
+public class ProductSelectionActivity extends CloudBackendActivity implements
         CategorySelectionCallback, SubcategorySelectionCallback, ProductSelectionCallback,
         AddProductCallback {
-    private static final String              TAG                         = "ProductSelectionActivity";
-    private static final boolean             DEBUG                       = true;
+    private static final String  TAG   = "ProductSelectionActivity";
+    private static final boolean DEBUG = true;
 
-    private static final int                 SELECT_CATEGORY_FRAGMENT    = 0;
-    private static final int                 SELECT_SUBCATEGORY_FRAGMENT = 1;
-    private static final int                 SELECT_PRODUCT_FRAGMENT     = 2;
+    private static final String TAG_STATE_FRAGMENT              = "state_fragment";
+    private static final String TAG_SELECT_CATEGORY_FRAGMENT    = "select_category_fragment";
+    private static final String TAG_SELECT_SUBCATEGORY_FRAGMENT = "select_subcategory_fragment";
+    private static final String TAG_SELECT_PRODUCT_FRAGMENT     = "select_product_fragment";
 
-    private int                              mCurrentCategoryId;
-    private int                              mCurrentSubacategoryId;
-    private int                              mCurrentProductId;
-    private int                              mCurrentFragment;
+    private int mSelectedCategoryPosition;
+    private int mSelectedSubcategoryPosition;
+    private int mSelectedProductPosition;
+    private int mCurrentFragment;
 
-    private Category                         mCurrentCategory;
-    private Subcategory                      mCurrentSubcategory;
+    private StateFragment mStateFragment;
 
-    private DataSource                       mDS;
-    private DataAccessCallbacks<Category>    mCategoryListener;
-    private DataAccessCallbacks<Subcategory> mSubcategoryListener;
-    private DataAccessCallbacks<Product>     mProductListener;
+    private List<Category>    mCategories;
+    private List<Subcategory> mSubcategories;
+    private List<Product>     mProducts;
 
-    private boolean                          mPaused;
+    private CategoryAdapter    mCategoryAdapter;
+    private SubcategoryAdapter mSubcategoryAdapter;
+    private ProductAdapter     mProductAdapter;
 
-    private NoSwipeViewPager                 mViewPager;
-    private ProductSelectionPagerAdapter     mPagerAdapter;
+    private Category    mSelectedCategory;
+    private Subcategory mSelectedSubcategory;
+
+    private DataSource mDS;
+
+    private boolean mPaused;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,23 +75,41 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
             actionBar.hide();
         }
 
-        if (savedInstanceState != null) {
-            mCurrentFragment = savedInstanceState.getInt(Keys.KEY_CURRENT_FRAGMENT,
-                    SELECT_CATEGORY_FRAGMENT);
-            mCurrentCategoryId = savedInstanceState.getInt(Keys.KEY_CURRENT_CATEGORY);
-            mCurrentSubacategoryId = savedInstanceState.getInt(Keys.KEY_CURRENT_SUBCATEGORY);
-            mCurrentProductId = savedInstanceState.getInt(Keys.KEY_CURRENT_PRODUCT);
+        FragmentManager manager = getFragmentManager();
+
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = manager.beginTransaction();
+
+            Fragment fragment = new StateFragment();
+            transaction.add(fragment, TAG_STATE_FRAGMENT);
+            transaction.commit();
+
+            fragment = new SelectCategoryFragment();
+            transaction = manager.beginTransaction();
+            transaction.add(android.R.id.content, fragment, TAG_SELECT_CATEGORY_FRAGMENT);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else {
+            mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
+            mSelectedCategory = (Category) mStateFragment.get(Keys.KEY_CATEGORY);
+            mSelectedSubcategory = (Subcategory) mStateFragment.get(Keys.KEY_SUBCATEGORY);
+
+            mCategories = (List<Category>) mStateFragment.get(Keys.KEY_CATEGORY_LIST);
+            mSubcategories = (List<Subcategory>) mStateFragment.get(Keys.KEY_SUBCATEGORY_LIST);
+            mProducts = (List<Product>) mStateFragment.get(Keys.KEY_PRODUCT_LIST);
+
+            mSelectedCategoryPosition = (Integer) mStateFragment.get(Keys.KEY_CURRENT_CATEGORY);
+            mSelectedSubcategoryPosition = (Integer) mStateFragment.get(Keys.KEY_CURRENT_SUBCATEGORY);
+            mSelectedProductPosition  = (Integer) mStateFragment.get(Keys.KEY_CURRENT_PRODUCT);
         }
 
-        // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        mCategoryAdapter = new CategoryAdapter(this, mCategories);
+        mSubcategoryAdapter = new SubcategoryAdapter(this, mSubcategories);
+        mProductAdapter = new ProductAdapter(this, mProducts);
 
-        setContentView(R.layout.pager_activity);
+        mDS = DataSource.getInstance(getApplicationContext());
 
-        mViewPager = (NoSwipeViewPager) findViewById(R.id.view_pager);
-        mPagerAdapter = new ProductSelectionPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mPagerAdapter);
-
-        mCategoryListener = new DataAccessCallbacks<Category>() {
+        mDS.setCategoryCallback(new DataAccessCallbacks<Category>() {
 
             @Override
             public void onInfoReceived(Object result, Option option) {
@@ -97,25 +120,20 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
             @Override
             public void onDataReceived(List<Category> results) {
                 // setProgressBarIndeterminateVisibility(false);
-                mViewPager.setCurrentItem(SELECT_CATEGORY_FRAGMENT);
-                CategorySelectionFragment fragment = (CategorySelectionFragment) mPagerAdapter
-                        .getItem(SELECT_CATEGORY_FRAGMENT);
-
-                fragment.setList(results);
-                // fragment.getListView().setSelectionFromTop(mCurrentCategory,
-                // 0);
-
+                mCategories = results;
+                mStateFragment.put(Keys.KEY_CATEGORY_LIST, mCategories);
+                mCategoryAdapter.swapList(mCategories);
             }
 
             @Override
             public void onDataProcessed(int processed, List<Category> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
-        };
+        });
 
-        mSubcategoryListener = new DataAccessCallbacks<Subcategory>() {
+        mDS.setSubcategoryCallback(new DataAccessCallbacks<Subcategory>() {
 
             @Override
             public void onInfoReceived(Object result, Option option) {
@@ -126,24 +144,20 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
             @Override
             public void onDataReceived(List<Subcategory> results) {
                 // setProgressBarIndeterminateVisibility(false);
-                mViewPager.setCurrentItem(SELECT_SUBCATEGORY_FRAGMENT);
-                SubcategorySelectionFragment fragment = (SubcategorySelectionFragment) mPagerAdapter
-                        .getItem(SELECT_SUBCATEGORY_FRAGMENT);
-
-                fragment.setList(results);
-                fragment.getListView().setSelectionFromTop(mCurrentSubacategoryId, 0);
-
+                mSubcategories = results;
+                mStateFragment.put(Keys.KEY_SUBCATEGORY_LIST, mSubcategories);
+                mSubcategoryAdapter.swapList(mSubcategories);
             }
 
             @Override
             public void onDataProcessed(int processed, List<Subcategory> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
-        };
+        });
 
-        mProductListener = new DataAccessCallbacks<Product>() {
+        mDS.setProductCallback(new DataAccessCallbacks<Product>() {
             @Override
             public void onInfoReceived(Object result, Option option) {
                 // TODO Auto-generated method stub
@@ -154,35 +168,25 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
             public void onDataReceived(List<Product> results) {
                 setProgressBarIndeterminateVisibility(false);
 
-                mViewPager.setCurrentItem(SELECT_PRODUCT_FRAGMENT);
-                ProductSelectionFragment fragment = (ProductSelectionFragment) mPagerAdapter
-                        .getItem(SELECT_PRODUCT_FRAGMENT);
-                fragment.setList(results);
-                fragment.getListView().setSelectionFromTop(mCurrentProductId, 0);
-
+                mProducts = results;
+                mStateFragment.put(Keys.KEY_PRODUCT_LIST, mProducts);
+                mProductAdapter.swapList(mProducts);
             }
 
             @Override
             public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // Try to insert in the datastore.
                 if (result) {
-                   if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                       BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend());
-                       if (DEBUG) Log.d(TAG, "Product inserted :" + dataList.get(0));
-                       Toast.makeText(ProductSelectionActivity.this, "Product inserted", Toast.LENGTH_SHORT).show();
-                       mDS.getProductsBy(mCurrentSubcategory);
-                   }
+                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
+                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend());
+                        if (DEBUG) Log.d(TAG, "Product inserted :" + dataList.get(0));
+                        Toast.makeText(ProductSelectionActivity.this, "Product inserted", Toast.LENGTH_SHORT).show();
+                        mDS.getProductsBy(mSelectedSubcategory);
+                    }
                 }
-
             }
-        };
-
-        mDS = DataSource.getInstance(getApplicationContext());
-
-        mDS.setCategoryCallback(mCategoryListener);
-        mDS.setSubcategoryCallback(mSubcategoryListener);
-        mDS.setProductCallback(mProductListener);
+        });
 
         setProgressBarIndeterminateVisibility(true);
         mDS.listCategories();
@@ -191,48 +195,39 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Keys.KEY_CURRENT_FRAGMENT, mCurrentFragment);
-        outState.putInt(Keys.KEY_CURRENT_CATEGORY, mCurrentCategoryId);
-        outState.putInt(Keys.KEY_CURRENT_SUBCATEGORY, mCurrentSubacategoryId);
-        outState.putInt(Keys.KEY_CURRENT_PRODUCT, mCurrentProductId);
+        mStateFragment.put(Keys.KEY_CURRENT_CATEGORY, mSelectedCategoryPosition);
+        mStateFragment.put(Keys.KEY_CURRENT_SUBCATEGORY, mSelectedSubcategoryPosition);
+        mStateFragment.put(Keys.KEY_CURRENT_PRODUCT, mSelectedProductPosition);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mPaused) {
-            mPaused = false;
-            mDS.setCategoryCallback(mCategoryListener);
-            mDS.setSubcategoryCallback(mSubcategoryListener);
-            mDS.setProductCallback(mProductListener);
-        }
+    private void showSubcategorySelection() {
+
     }
 
-    @Override
-    protected void onPause() {
-        mPaused = true;
-        mDS.setCategoryCallback(null);
-        mDS.setSubcategoryCallback(null);
-        mDS.setProductCallback(null);
-        super.onPause();
+    private void showProductSelection() {
+
     }
 
-    @Override
-    public void onBackPressed() {
-        int currentFragment = mViewPager.getCurrentItem();
-        if (currentFragment > 0) {
-            mViewPager.setCurrentItem(currentFragment - 1);
-        } else {
-            super.onBackPressed();
-        }
+    private void showAddProduct() {
+
     }
 
     @Override
     public void onCategorySelected(Category category, int position) {
         setProgressBarIndeterminateVisibility(true);
-        mCurrentCategoryId = position;
-        mCurrentCategory = category;
+        mSelectedCategoryPosition = position;
+        mSelectedCategory = category;
         mDS.getSubcategoriesBy(category);
+    }
+
+    @Override
+    public CategoryAdapter getCategoryAdapter() {
+        return mCategoryAdapter;
+    }
+
+    @Override
+    public int getSelectedCategoryPosition() {
+        return mSelectedCategoryPosition;
     }
 
     @Override
@@ -244,9 +239,19 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
     @Override
     public void onSubcategorySelected(Subcategory subcategory, int position) {
         setProgressBarIndeterminateVisibility(true);
-        mCurrentSubacategoryId = position;
-        mCurrentSubcategory = subcategory;
+        mSelectedSubcategoryPosition = position;
+        mSelectedSubcategory = subcategory;
         mDS.getProductsBy(subcategory);
+    }
+
+    @Override
+    public SubcategoryAdapter getSubcategoryAdapter() {
+        return mSubcategoryAdapter;
+    }
+
+    @Override
+    public int getSelectedSubcategoryPostion() {
+        return mSelectedSubcategoryPosition;
     }
 
     @Override
@@ -257,8 +262,9 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
 
     @Override
     public void onProductSelected(Product product, int position) {
-        mCurrentProductId = position;
-        // Siguiente actividad.
+        mSelectedProductPosition = position;
+
+        // Go to next activity.
         Intent intent = new Intent();
         intent.putExtra(Keys.KEY_PRODUCT, product);
         setResult(RESULT_OK, intent);
@@ -266,8 +272,23 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
     }
 
     @Override
+    public ProductAdapter getProductAdapter() {
+        return mProductAdapter;
+    }
+
+    @Override
+    public int getSelectedProductPosition() {
+        return mSelectedProductPosition;
+    }
+
+    @Override
+    public void onClickAddProduct() {
+
+    }
+
+    @Override
     public void onCancelProductSelection() {
-        // TODO Auto-generated method stub
+        onBackPressed();
 
     }
 
@@ -299,75 +320,11 @@ public class ProductSelectionActivity extends CloudBackendFragmentActivity imple
 
     @Override
     public Category getSelectedCategory() {
-        return mCurrentCategory;
+        return mSelectedCategory;
     }
 
     @Override
     public Subcategory getSeletedSubcategory() {
-        return mCurrentSubcategory;
-    }
-
-    private class ProductSelectionPagerAdapter extends FragmentPagerAdapter {
-        private static final int                     FRAGMENTS            = 3;
-
-        private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new SparseArray<WeakReference<Fragment>>();
-
-        public ProductSelectionPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-
-            Fragment fragment = (fw != null) ? fw.get() : null;
-
-            if (fragment == null) {
-                switch (position) {
-                case SELECT_CATEGORY_FRAGMENT:
-                    fragment = CategorySelectionFragment.newInstance(ProductSelectionActivity.this);
-                    break;
-                case SELECT_SUBCATEGORY_FRAGMENT:
-                    fragment = SubcategorySelectionFragment
-                            .newInstance(ProductSelectionActivity.this);
-                    break;
-                case SELECT_PRODUCT_FRAGMENT:
-                    fragment = ProductSelectionFragment.newInstance(ProductSelectionActivity.this);
-                    break;
-                }
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-            Fragment fragment = (fw != null) ? fw.get() : null;
-
-            if (fragment == null) {
-                fragment = (Fragment) super.instantiateItem(container, position);
-                mRegisteredFragments.put(position, new WeakReference<Fragment>(fragment));
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            mRegisteredFragments.remove(position);
-            super.destroyItem(container, position, object);
-        }
-
-        // public Fragment getFragment(int position) {
-        // WeakReference<Fragment> fw = mRegisteredFragments.get(position);
-        // return (fw != null) ? fw.get() : null;
-        // }
-
-        @Override
-        public int getCount() {
-            return FRAGMENTS;
-        }
-
+        return mSelectedSubcategory;
     }
 }

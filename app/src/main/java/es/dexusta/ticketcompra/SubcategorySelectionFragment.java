@@ -1,5 +1,6 @@
 package es.dexusta.ticketcompra;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,14 +23,6 @@ public class SubcategorySelectionFragment extends ListFragment {
     // return fragment;
     // }
 
-    public static SubcategorySelectionFragment newInstance(SubcategorySelectionCallback callback) {
-        SubcategorySelectionFragment fragment = new SubcategorySelectionFragment();
-        
-        fragment.mCallback = callback;
-        
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +32,37 @@ public class SubcategorySelectionFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof SubcategorySelectionCallback) {
+            mCallback = (SubcategorySelectionCallback) activity;
+        } else {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SubcategorySelectionCallback");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         setListAdapter(mCallback.getSubcategoryAdapter());
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ListView lv = getListView();
+//        if (lv != null) {
+//            lv.setSelection(mCallback.getSelectedSubcategoryPostion());
+//        }
+        setSelection(mCallback.getSelectedSubcategoryPostion());
     }
 
     @Override

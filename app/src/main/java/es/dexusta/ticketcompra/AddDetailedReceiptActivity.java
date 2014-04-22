@@ -47,7 +47,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     private static final int REQUEST_PRODUCT_SELECTION = 0;
 
     private Shop         mShop;
-    private Product      mProduct;
+    private Product      mSelectedProduct;
     private Receipt      mReceipt;
     private List<Detail> mDetails;
 
@@ -87,7 +87,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             if (BuildConfig.DEBUG && (mStateFragment == null))
                 throw new AssertionError("StateFragment shouldn't be null");
 
-            mProduct = (Product) mStateFragment.get(Keys.KEY_PRODUCT);
+            mSelectedProduct = (Product) mStateFragment.get(Keys.KEY_PRODUCT);
             mDetails = (List<Detail>) mStateFragment.get(Keys.KEY_DETAIL_LIST);
         }
 
@@ -170,7 +170,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mStateFragment.put(Keys.KEY_PRODUCT, mProduct);
+        mStateFragment.put(Keys.KEY_PRODUCT, mSelectedProduct);
         mStateFragment.put(Keys.KEY_DETAIL_LIST, mDetails);
     }
 
@@ -185,8 +185,8 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         switch (requestCode) {
             case REQUEST_PRODUCT_SELECTION:
                 if (resultCode == RESULT_OK) {
-                    mProduct = data.getParcelableExtra(Keys.KEY_PRODUCT);
-                    showAddDetailFragment(mProduct);
+                    mSelectedProduct = data.getParcelableExtra(Keys.KEY_PRODUCT);
+                    showAddDetailFragment(mSelectedProduct);
                 }
                 break;
         }
@@ -200,6 +200,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
                 .findFragmentByTag(TAG_ADD_DETAIL_FRAGMENT);
 
         FragmentTransaction transaction = manager.beginTransaction();
+        applyTransactionAnimator(transaction);
 
         if (fragment == null) {
             fragment = new AddDetailFragment();
@@ -208,12 +209,15 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             transaction.replace(android.R.id.content, fragment);
         }
 
-        fragment.setProduct(product);
-
         // Es el segundo fragmento y podrá volverse al primero?
         transaction.addToBackStack(null);
 
         transaction.commit();
+    }
+
+    private void applyTransactionAnimator(FragmentTransaction transaction) {
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
+                R.animator.enter_from_left, R.animator.exit_to_right);
     }
 
     private void showAcceptCancelActionBar() {
@@ -372,6 +376,11 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         Intent intent = new Intent(this, TicketCompraActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    public Product getSelectedProduct() {
+        return mSelectedProduct;
     }
 
     @Override

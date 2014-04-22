@@ -1,15 +1,13 @@
 package es.dexusta.ticketcompra;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
-import java.util.List;
 
 import es.dexusta.ticketcompra.control.ReceiptAdapter;
 import es.dexusta.ticketcompra.model.Receipt;
@@ -18,16 +16,7 @@ public class ListReceiptsFragment extends ListFragment {
     private static final boolean DEBUG = true;
     private static final String  TAG   = "ListReceiptsFragment";
 
-    private ListReceiptsCallback mListener;
-
-    private List<Receipt>        mList;
-
-    public static ListReceiptsFragment newInstance(List<Receipt> list) {
-        if (DEBUG) Log.d(TAG, "newInstance");
-        ListReceiptsFragment fragment = new ListReceiptsFragment();
-        fragment.mList = list;
-        return fragment;
-    }
+    private ListReceiptsCallback mCalback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,8 +28,7 @@ public class ListReceiptsFragment extends ListFragment {
         super.onAttach(activity);
         if (DEBUG) Log.d(TAG, "onAttach");
         if (activity instanceof ListReceiptsCallback) {
-            mListener = (ListReceiptsCallback) activity;
-            setList(mList);
+            mCalback = (ListReceiptsCallback) activity;
         } else {
             throw new ClassCastException(activity.toString()
                     + " must implement ListReceiptsFragment.ListReceiptsCallback");
@@ -48,31 +36,29 @@ public class ListReceiptsFragment extends ListFragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListAdapter(mCalback.getReceiptAdapter());
     }
 
-    public void setList(List<Receipt> list) {        
-
-        ReceiptAdapter adapter = (ReceiptAdapter) getListAdapter();
-        if (adapter != null) {
-            adapter.swapList(list);
-        } else {
-            setListAdapter(new ReceiptAdapter(getActivity(), list));
-        }
-    }    
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCalback = null;
+    }
     
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Receipt receipt = ((ReceiptAdapter) getListAdapter()).getItem(position);
-        mListener.onReceiptSelected(receipt);
+        mCalback.onReceiptSelected(receipt);
     }
 
     interface ListReceiptsCallback {
         public void onReceiptSelected(Receipt receipt);
 
         public void onCancelReceiptSelection();
+
+        public ReceiptAdapter getReceiptAdapter();
     }
 
 }

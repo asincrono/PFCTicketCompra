@@ -36,13 +36,6 @@ public class AddDetailFragment extends Fragment {
 
     private Product              mProduct;
 
-    public void setProduct(Product product) {
-        mProduct = product;
-        if (mTvLblProductName != null) {
-            mTvLblProductName.setText(product.getName());
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_detail_fragment, container, false);
@@ -66,6 +59,10 @@ public class AddDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mProduct = mCallbacks.getSelectedProduct();
+        mTvLblProductName.setText(mProduct.getName());
+
         ActionBar ab = getActivity().getActionBar();
         
         if (DEBUG) Log.d(TAG, " onActivityCreated");
@@ -215,6 +212,7 @@ public class AddDetailFragment extends Fragment {
     interface AddDetailCallback {
         public void onDetailAdded(Detail detail);
         public void onAddDetailCanceled();
+        public Product getSelectedProduct();
     }
 
     class UnitsAdapter extends BaseAdapter implements SpinnerAdapter {

@@ -1,5 +1,6 @@
 package es.dexusta.ticketcompra;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,11 +28,6 @@ public class CategorySelectionFragment extends ListFragment {
 //        return fragment;
 //    }
     
-    public void setPostion(int position) {
-        getListView().setSelectionFromTop(position, 0);
-//        getListView().onSaveInstanceState();
-    }
-    
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
@@ -40,6 +36,23 @@ public class CategorySelectionFragment extends ListFragment {
         setRetainInstance(true);
         
         if (DEBUG) Log.d(TAG, "onCreate");
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof CategorySelectionCallback) {
+            mCallback = (CategorySelectionCallback) activity;
+        } else {
+            throw new ClassCastException(activity.toString()
+                    + " must implement CategorySelectionCallback");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
     }
 
     @Override
@@ -58,7 +71,13 @@ public class CategorySelectionFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.category_selec_fragment, container, false);
     }
-    
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setSelection(mCallback.getSelectedCategoryPosition());
+    }
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Category category = (Category)getListAdapter().getItem(position);
