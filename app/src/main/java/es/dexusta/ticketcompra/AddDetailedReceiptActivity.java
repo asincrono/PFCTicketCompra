@@ -3,7 +3,6 @@ package es.dexusta.ticketcompra;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
-import com.google.cloud.backend.android.CloudCallbackHandler;
-import com.google.cloud.backend.android.CloudEntity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +34,14 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     private static final String  TAG   = "DetailedReceiptAcitivity";
     private static final boolean DEBUG = true;
 
-    private static final String TAG_LIST_DETAILS_FRAGMENT   = "list_details_fragment";
-
-    private static final String TAG_ADD_DETAIL_FRAGMENT     = "add_detail_fragment";
-    private static final String TAG_STATE_FRAGMENT          = "state_fragment";
+    private static final String TAG_STATE_FRAGMENT        = "state_fragment";
+    private static final String TAG_LIST_DETAILS_FRAGMENT = "list_details_fragment";
+    private static final String TAG_ADD_DETAIL_FRAGMENT   = "add_detail_fragment";
 
     // Won't show current activity until second activity returns.
     private static final int REQUEST_PRODUCT_SELECTION = 0;
 
-    private Shop         mShop;
+    private Shop         mSelectedShop;
     private Product      mSelectedProduct;
     private Receipt      mReceipt;
     private List<Detail> mDetails;
@@ -55,31 +50,21 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
     private StateFragment mStateFragment;
 
-    private int mCurrentFragment;
-
-    // private NoSwipeViewPager mViewPager;
-
     private DataSource mDS;
-
-    // private OnClickListener mOnClickAccept;
-    // private OnClickListener mOnClickCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mShop = getIntent().getExtras().getParcelable(Keys.KEY_SHOP);
+        mSelectedShop = getIntent().getExtras().getParcelable(Keys.KEY_SHOP);
 
         FragmentManager manager = getFragmentManager();
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
-            transaction.commit();
-
-            transaction = manager.beginTransaction();
             transaction.add(android.R.id.content, new ListDetailsFragment(), TAG_LIST_DETAILS_FRAGMENT);
-            transaction.addToBackStack(null);
+
             transaction.commit();
         } else {
             mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
@@ -110,20 +95,18 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
             }
 
+
+
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
                                         boolean result) {
                 if (result) {
-                    long receiptId = dataList.get(0).getId();
-                    List<CloudEntity> ceList = new ArrayList<CloudEntity>();
+                    mReceipt = dataList.get(0);
 
                     for (Detail detail : mDetails) {
-                        detail.setReceiptId(receiptId);
-                        ceList.add(detail.getEntity(getApplicationContext()));
+                        detail.setReceiptId(mReceipt.getId());
                     }
-
                     mDS.insertDetails(mDetails);
-
                 }
             }
         });
@@ -151,20 +134,11 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
                         " Details inserted: " + dataList.size() + ".", Toast.LENGTH_SHORT).show();
 
                 if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                    BackendDataAccess.uploadDetails(dataList, getApplicationContext(),
-                            getCloudBackend());
+                    BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
+                            getApplicationContext(), getCloudBackend());
                 }
-
-                Intent intent = new Intent(AddDetailedReceiptActivity.this,
-                        TicketCompraActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-                finish();
             }
         });
-
-        showAcceptCancelActionBar();
     }
 
     @Override
@@ -178,29 +152,23 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // TESTING HIDE/SHOW ACTION BAR.
-        ActionBar actionBar = getActionBar();
-        actionBar.show();
-
         switch (requestCode) {
             case REQUEST_PRODUCT_SELECTION:
                 if (resultCode == RESULT_OK) {
                     mSelectedProduct = data.getParcelableExtra(Keys.KEY_PRODUCT);
-                    showAddDetailFragment(mSelectedProduct);
+                    showAddDetailFragment();
                 }
                 break;
         }
     }
 
-    private void showAddDetailFragment(Product product) {
-
+    private void showAddDetailFragment() {
         FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        applyTransactionAnimator(transaction);
 
         AddDetailFragment fragment = (AddDetailFragment) manager
                 .findFragmentByTag(TAG_ADD_DETAIL_FRAGMENT);
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        applyTransactionAnimator(transaction);
 
         if (fragment == null) {
             fragment = new AddDetailFragment();
@@ -209,9 +177,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             transaction.replace(android.R.id.content, fragment);
         }
 
-        // Es el segundo fragmento y podrá volverse al primero?
         transaction.addToBackStack(null);
-
         transaction.commit();
     }
 
@@ -260,6 +226,13 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     }
 
     @Override
+    public void onAddDetailCanceled() {
+        Intent intent = new Intent(this, TicketCompraActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
     public ReceiptDetailAdapter getReceiptDetailListAdapter() {
         return mDetailAdapter;
     }
@@ -272,67 +245,15 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         // 3.- Then, after details inserted in the BD upload receipt & details
         // to the backend.
 
+        // (0) Checking if there is a null or empty list:
         if ((mDetails == null) || (mDetails.size() == 0)) {
-            String text = getString(R.string.msg_empty_detail_list);
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this, getString(R.string.msg_empty_detail_list),
+                    Toast.LENGTH_SHORT).show();
         } else {
-            DataAccessCallbacks<Receipt> receiptCallbacks = new DataAccessCallbacks<Receipt>() {
-
-                @Override
-                public void onInfoReceived(Object result, Option option) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onDataReceived(List<Receipt> results) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onDataProcessed(int processed, List<Receipt> dataList,
-                                            Operation operation, boolean result) {
-                    long receiptId = mReceipt.getId();
-                    for (Detail detail : mDetails) {
-                        detail.setReceiptId(receiptId);
-                    }
-                    mDS.insertDetails(mDetails);
-                }
-            };
-
-            DataAccessCallbacks<Detail> detailCallbacks = new DataAccessCallbacks<Detail>() {
-
-                @Override
-                public void onInfoReceived(Object result, Option option) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onDataReceived(List<Detail> results) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onDataProcessed(int processed, List<Detail> dataList,
-                                            Operation operation, boolean result) {
-                    // Iniciar la cadena de inserción del receipt y de los
-                    // detalles
-                    // en el backend.
-                    // Además (si se completa la tarea) se marcarán como
-                    // actualizados en la BD.
-                    BackendDataAccess.uploadReceiptDetails(mReceipt, mDetails,
-                            getApplicationContext(), getCloudBackend());
-                }
-            };
-
-            mDS.setReceiptCallback(receiptCallbacks);
-            mDS.setDetailCallback(detailCallbacks);
-
+            // (1) Creating and inserting a new receipt.
             mReceipt = new Receipt();
-            mReceipt.setShopId(mShop.getId());
+            mReceipt.setShopId(mSelectedShop.getId());
 
             // Get the total.
             int total = 0;
@@ -372,13 +293,6 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     }
 
     @Override
-    public void onAddDetailCanceled() {
-        Intent intent = new Intent(this, TicketCompraActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    @Override
     public Product getSelectedProduct() {
         return mSelectedProduct;
     }
@@ -386,35 +300,5 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     @Override
     public boolean isInsertionActive() {
         return true;
-    }
-
-    public class InsertDetailsHandler extends CloudCallbackHandler<List<CloudEntity>> {
-        private List<Detail> mDetails;
-        private Context      mContext;
-
-        public InsertDetailsHandler(List<Detail> details, Context context) {
-            mDetails = details;
-            mContext = context;
-        }
-
-        @Override
-        public void onComplete(List<CloudEntity> results) {
-            List<Detail> details = new ArrayList<Detail>();
-            for (CloudEntity entity : results) {
-                details.add(new Detail(entity));
-            }
-            mDS.insertDetails(details);
-            Toast.makeText(mContext, results.size() + " details inserted in the cloud",
-                    Toast.LENGTH_SHORT).show();
-            mContext = null;
-        }
-
-        @Override
-        public void onError(IOException exception) {
-            mDS.insertDetails(mDetails);
-            Toast.makeText(mContext, "Details NOT inserted in the cloud", Toast.LENGTH_SHORT)
-                    .show();
-            mContext = null;
-        }
     }
 }

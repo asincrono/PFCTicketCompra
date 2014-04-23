@@ -57,12 +57,12 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
             // Creation of the Fragment to store data between
             // configuration changes.
             Fragment fragment = new StateFragment();
-            transaction.add(fragment, TAG_STATE_FRAGMENT);
-            transaction.commit();
+            transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
+
 
             // We show the first fragment.
             fragment = new ListReceiptsFragment();
-            transaction = manager.beginTransaction();
+
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
                     R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.add(android.R.id.content, fragment, TAG_LIST_RECEIPTS_FRAGMENT);

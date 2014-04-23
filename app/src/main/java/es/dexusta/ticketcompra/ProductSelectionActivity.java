@@ -87,7 +87,7 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
             fragment = new SelectCategoryFragment();
             transaction = manager.beginTransaction();
             transaction.add(android.R.id.content, fragment, TAG_SELECT_CATEGORY_FRAGMENT);
-            transaction.addToBackStack(null);
+
             transaction.commit();
         } else {
             mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);

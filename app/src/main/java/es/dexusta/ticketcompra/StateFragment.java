@@ -27,12 +27,9 @@ public final class StateFragment extends Fragment {
             StateFragment fragment = new StateFragment();
 
             int length = keys.length;
-            HashMap<String, Object> map = new HashMap<String, Object>(length);
-
             for (int i = 0; i < length; i += 1) {
-                map.put(keys[i], values[i]);
+                fragment.mContents.put(keys[i], values[i]);
             }
-            fragment.mContents = map;
 
             return fragment;
         }
@@ -41,10 +38,7 @@ public final class StateFragment extends Fragment {
     public static StateFragment newInstance (String key, Object value) {
         StateFragment fragment = new StateFragment();
 
-        HashMap<String, Object> map = new HashMap<String, Object>(1);
-        map.put(key, value);
-
-        fragment.mContents = map;
+        fragment.mContents.put(key, value);
 
         return fragment;
     }

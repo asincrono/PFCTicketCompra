@@ -13,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 
@@ -25,16 +25,16 @@ public class AddDetailFragment extends Fragment {
     private static final String  TAG   = "AddDetailFragment";
     private static final boolean DEBUG = true;
 
-    private AddDetailCallback    mCallbacks;
+    private AddDetailCallback mCallbacks;
 
-    private TextView             mTvLblProductName;
-    private EditText             mEdtPrice;
-    private EditText             mEdtUnits;
+    private TextView mTvLblProductName;
+    private EditText mEdtPrice;
+    private EditText mEdtUnits;
     // second unit is the edit text for weight/volume (optional).
-    private EditText             mEdtSecondUnit;
-    private Spinner              mSpnSecondUnit;
+    private EditText mEdtSecondUnit;
+    private Spinner  mSpnSecondUnit;
 
-    private Product              mProduct;
+    private Product mProduct;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class AddDetailFragment extends Fragment {
 
         mTvLblProductName = (TextView) view.findViewById(R.id.tv_lbl_product_name);
         mEdtPrice = (EditText) view.findViewById(R.id.edt_price);
-        mEdtPrice.setFilters(new InputFilter[] { new InputFilter.LengthFilter(7),
-                new DecimalFilter(2) });
+        mEdtPrice.setFilters(new InputFilter[]{new InputFilter.LengthFilter(7),
+                new DecimalFilter(2)});
 
         mEdtUnits = (EditText) view.findViewById(R.id.edt_units);
         // mEdtUnits.setFilters(new InputFilter[] {new
@@ -57,21 +57,44 @@ public class AddDetailFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof AddDetailCallback) {
+            mCallbacks = (AddDetailCallback) activity;
+        } else {
+            throw new ClassCastException(activity.toString()
+                    + " must implement AddDetailFragment.AddDetailCallback");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         mProduct = mCallbacks.getSelectedProduct();
         mTvLblProductName.setText(mProduct.getName());
 
-        ActionBar ab = getActivity().getActionBar();
-        
         if (DEBUG) Log.d(TAG, " onActivityCreated");
-        
-        View v = ab.getCustomView();
-        FrameLayout  abFlAccept = (FrameLayout) v.findViewById(R.id.actionbar_accept);
-        FrameLayout  abFlCancel = (FrameLayout) v.findViewById(R.id.actionbar_cancel);
 
-        abFlAccept.setOnClickListener(new View.OnClickListener() {
+
+        Activity activity = getActivity();
+
+        if (BuildConfig.DEBUG && activity == null)
+            throw new AssertionError("Activity can't be null at this point");
+
+        ActionBar actionBar = activity.getActionBar();
+
+        if (BuildConfig.DEBUG && actionBar == null) {
+            throw new AssertionError("Action bar shouldn't be null");
+        }
+
+        View.OnClickListener onClickAccept = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -93,60 +116,22 @@ public class AddDetailFragment extends Fragment {
 
                 mCallbacks.onDetailAdded(detail);
             }
-        });
-        
-        abFlCancel.setOnClickListener(new View.OnClickListener() {
-            
+        };
+
+        View.OnClickListener onClickCancel = new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 mCallbacks.onAddDetailCanceled();
             }
-        });
-        //        showAcceptCancelActionBar(new OnClickListener() { // Accept.
-        //
-        //            @Override
-        //            public void onClick(View v) {
-        //                Detail detail = new Detail();
-        //                detail.setPrice(eurosToCents(mEdtPrice.getText().toString()));
-        //                String secondUnitStr = mEdtSecondUnit.getText().toString();
-        //                if (secondUnitStr.length() > 0) {
-        //                    if (mSpnSecondUnit.getSelectedItemId() == 0) {
-        //                        detail.setWeight(Integer.parseInt(secondUnitStr));
-        //                    } else {
-        //                        detail.setVolume(Integer.parseInt(secondUnitStr));
-        //                    }
-        //                }
-        //                detail.setProductId(mProduct.getId());
-        //                detail.setProductName(mProduct.getName());
-        //                
-        //                clear();
-        //                
-        //                mListener.onDetailAdded(detail);               
-        //            }
-        //        }, new OnClickListener() { // Cancel.
-        //
-        //            @Override
-        //            public void onClick(View v) {
-        //                clear();
-        //            }
-        //        }); 
+        };
+
+        ActionBarController.showAcceptCancelActionBar(actionBar, onClickAccept, onClickCancel);
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof AddDetailCallback) {
-            mCallbacks = (AddDetailCallback) activity;
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implement AddDetailFragment.AddDetailCallback");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
+    public void onStart() {
+        super.onStart();
     }
 
     private void clear() {
@@ -211,12 +196,14 @@ public class AddDetailFragment extends Fragment {
 
     interface AddDetailCallback {
         public void onDetailAdded(Detail detail);
+
         public void onAddDetailCanceled();
+
         public Product getSelectedProduct();
     }
 
     class UnitsAdapter extends BaseAdapter implements SpinnerAdapter {
-        private String[]       mArray;
+        private String[] mArray;
 
         private LayoutInflater mInflater;
 
@@ -285,7 +272,7 @@ public class AddDetailFragment extends Fragment {
 
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
-                int dstart, int dend) {
+                                   int dstart, int dend) {
 
             String regex = String.format("\\d*(\\.\\d{0,%d})?", mDecimals);
 
@@ -301,7 +288,5 @@ public class AddDetailFragment extends Fragment {
 
             return "";
         }
-
     }
-
 }

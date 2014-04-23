@@ -34,34 +34,34 @@ import es.dexusta.ticketcompra.model.Shop;
 
 public class SelectShopV2Activity extends CloudBackendActivity implements
         ChainSelectionCallback, ShopSelectionCallback, AddShopCallbacks {
-    private static final String    TAG                   = "SelectShopV2Activity";
-    private static final boolean   DEBUG                 = true;
+    private static final String  TAG   = "SelectShopV2Activity";
+    private static final boolean DEBUG = true;
 
-    private static final String TAG_STATE_FRAGMENT = "state_fragment";
+    private static final String TAG_STATE_FRAGMENT        = "state_fragment";
     private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain_fragment";
-    private static final String TAG_SELECT_SHOP_FRAGMENT = "select_shop_fragment";
-    private static final String TAG_ADD_SHOP_FRAGMENT = "add_shop_fragment";
+    private static final String TAG_SELECT_SHOP_FRAGMENT  = "select_shop_fragment";
+    private static final String TAG_ADD_SHOP_FRAGMENT     = "add_shop_fragment";
 
     private static final String[] ALLOWED_TAGS = {TAG_SELECT_CHAIN_FRAGMENT, TAG_SELECT_SHOP_FRAGMENT, TAG_ADD_SHOP_FRAGMENT};
 
     private static final String KEY_CHAINS = "chains";
-    private static final String KEY_SHOPS = "shops";
+    private static final String KEY_SHOPS  = "shops";
 
 
-    private static final int       SELECT_CHAIN_FRAGMENT = 0;
-    private static final int       SELECT_SHOP_FRAGMENT  = 1;
-    private static final int       ADD_SHOP_FRAGMENT     = 2;
+    private static final int SELECT_CHAIN_FRAGMENT = 0;
+    private static final int SELECT_SHOP_FRAGMENT  = 1;
+    private static final int ADD_SHOP_FRAGMENT     = 2;
 
-    private DataSource             mDS;
-    private List<Chain>       mChains;
-    private List<Shop>        mShops;
+    private DataSource  mDS;
+    private List<Chain> mChains;
+    private List<Shop>  mShops;
 
     private ChainAdapter mChainAdapter;
-    private ShopAdapter mShopAdapter;
+    private ShopAdapter  mShopAdapter;
 
-    private Chain                  mSelectedChain;
+    private Chain mSelectedChain;
 
-    private Class                  mDestinationActivity;
+    private Class mDestinationActivity;
 
     private StateFragment mStateFragment;
 
@@ -119,7 +119,7 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
 
             @Override
             public void onDataProcessed(int processed, List<Chain> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -144,12 +144,12 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
 
             @Override
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
                         BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
                                 getCloudBackend());
-                        
+
                         if (DEBUG)
                             Log.d(TAG, "Shop inserted: " + dataList.get(0));
                         Toast.makeText(getApplicationContext(), "Shop inserted.",
@@ -183,7 +183,6 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
         mDS.getShopsBy(chain);
         showFragment(TAG_SELECT_SHOP_FRAGMENT);
     }
-
 
 
     @Override
@@ -321,7 +320,8 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
             actionBar.setDisplayOptions(
                     ActionBar.DISPLAY_SHOW_CUSTOM,
                     ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE);
+                            | ActionBar.DISPLAY_SHOW_TITLE
+            );
         }
     }
 
