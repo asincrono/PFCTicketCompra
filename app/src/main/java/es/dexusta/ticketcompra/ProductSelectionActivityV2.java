@@ -35,8 +35,6 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     private static final String  TAG   = "ProductSelectionActivityV2";
     private static final boolean DEBUG = true;
 
-    private static final String KEY_CURRENT_FRAGMENT_TAG = "current_fragment_tag";
-
     private static final String TAG_SELECT_CATEGORY_FRAGMENT   = "select_category";
     private static final String TAG_SELECT_SUBCATEGORY_FRAGEMT = "select_subcategory";
     private static final String TAG_SELECT_PRODUCT_FRAGMENT    = "select_product";

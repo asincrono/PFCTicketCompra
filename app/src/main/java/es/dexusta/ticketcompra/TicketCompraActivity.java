@@ -28,7 +28,6 @@ import com.google.cloud.backend.android.CloudBackendActivity;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
 import es.dexusta.ticketcompra.dataaccess.Keys;
-import es.dexusta.ticketcompra.model.Shop;
 
 public class TicketCompraActivity extends CloudBackendActivity {
     private static final String   TAG                               = "TicketCompraActivity";
@@ -193,28 +192,27 @@ public class TicketCompraActivity extends CloudBackendActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Shop shop;
-        // Intent intent;
-        switch (requestCode) {
-        case REQUEST_SHOP_FOR_DETAILED_RECEIPT:
-            if (resultCode == RESULT_OK) {
-                shop = data.getParcelableExtra(Keys.KEY_SHOP);
-                data.setComponent(new ComponentName(this, AddDetailedReceiptActivity.class));
-                // intent = new Intent(this, AddDetailedReceiptActivity.class);
-                // intent.putExtra(Keys.KEY_SHOP, shop);
-                startActivity(data);
-            }
-            break;
 
-        case REQUEST_SHOP_FOR_TOTAL_RECEIPT:
-            if (resultCode == RESULT_OK) {
-                shop = data.getParcelableExtra(Keys.KEY_SHOP);
-                data.setComponent(new ComponentName(this, AddTotalActivity.class));
-                startActivity(data);
-            } else if (resultCode == RESULT_CANCELED) {
-                if (DEBUG) Log.d(TAG, "Add total recipe canceled.");
+        if (resultCode == RESULT_OK) {
+
+            if (BuildConfig.DEBUG && data.getParcelableExtra(Keys.KEY_SHOP) == null)
+                throw new AssertionError("If RESULT_OK, returned show shouldn't be null");
+
+            switch (requestCode) {
+                case REQUEST_SHOP_FOR_DETAILED_RECEIPT:
+                    data.setComponent(new ComponentName(this, AddDetailedReceiptActivity.class));
+                    startActivity(data);
+                    break;
+                case REQUEST_SHOP_FOR_TOTAL_RECEIPT:
+                    data.setComponent(new ComponentName(this, AddTotalActivity.class));
+                    startActivity(data);
+                    break;
             }
-            break;
+        } else if (resultCode == RESULT_CANCELED) {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Shop selection cancelled.");
+        } else {
+            throw new AssertionError("We shouldn't reach this point");
         }
     }
 

@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +12,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -198,7 +197,7 @@ public class AddProductActivity extends CloudBackendActivity {
                     
                     mDS.addToProductSubcategoryIdMap(dataList.get(0));
                 } else {
-                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insertó el producto.");
+                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insertï¿½ el producto.");
                 }
 
             }
@@ -309,79 +308,4 @@ public class AddProductActivity extends CloudBackendActivity {
             finish();
         }
     }
-
-    private class CategorySelectionListener implements OnItemSelectedListener {
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // DataSource ds = DataSource.getInstance(getApplicationContext());
-            // ds.addSubcategoryListener(new DataSourceListener<Subcategory>() {
-            //
-            // @Override
-            // public void onDataReceived(List<Subcategory> list) {
-            // ArrayAdapter<Subcategory> subcategoryAdapter = new
-            // ArrayAdapter<Subcategory>(
-            // AddProductActivity.this,
-            // android.R.layout.simple_spinner_item,
-            // list);
-            // subcategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // mSpnSubcategory.setAdapter(subcategoryAdapter);
-            // }
-            //
-            // @Override
-            // public void onDataProcessed(Subcategory data, Operation
-            // operation, boolean result) {
-            // // TODO Auto-generated method stub
-            //
-            // }
-            // });
-            //
-            // ds.getSubcategoriesBy((Category)
-            // parent.getAdapter().getItem(position));
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            // TODO Auto-generated method stub
-
-        }
-
-    }
-
-    // public class InsertProductHandler extends
-    // CloudCallbackHandler<CloudEntity> {
-    // private static final String SUBTAG = "InsertProductHandler";
-    // private Product mProduct;
-    // private Context mContext;
-    //
-    // public InsertProductHandler(Product product, Context context) {
-    // mProduct = product;
-    // mContext = context;
-    // }
-    //
-    // @Override
-    // public void onComplete(CloudEntity result) {
-    // List<Product> products = new ArrayList<Product>();
-    // products.add(new Product(result));
-    // mDS.insertProducts(products);
-    // if (DEBUG) Log.d(TAG + "." + SUBTAG, "onComplete");
-    // Toast.makeText(mContext, "Product inserted in the cloud (" +
-    // products.get(0).getName() + ")",
-    // Toast.LENGTH_LONG).show();
-    // mContext = null;
-    // }
-    //
-    // @Override
-    // public void onError(IOException exception) {
-    // List<Product> products = new ArrayList<Product>();
-    // products.add(mProduct);
-    // mDS.insertProducts(products);
-    // if (DEBUG) Log.d(TAG + "." + SUBTAG, "onComplete");
-    // Toast.makeText(mContext, "Product NOT inserted in the cloud (" +
-    // mProduct.getName() + ")",
-    // Toast.LENGTH_LONG).show();
-    // mContext = null;
-    // }
-    //
-    // }
 }
