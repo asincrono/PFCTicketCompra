@@ -70,7 +70,7 @@ public class SimpleAddProductFragment extends Fragment {
         if (BuildConfig.DEBUG && ab == null)
             throw new AssertionError("ActionBar shouldn't be null");
 
-        ActionBarController.showAcceptCancelActionBar(ab,
+        ActionBarController.setAcceptCancel(ab,
                 new View.OnClickListener() {
 
                     @Override

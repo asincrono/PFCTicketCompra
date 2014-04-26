@@ -350,4 +350,9 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     public void hideAcceptCancelActionBar() {
 
     }
+
+    @Override
+    public boolean isABAvaliable() {
+        return getActionBar() != null;
+    }
 }

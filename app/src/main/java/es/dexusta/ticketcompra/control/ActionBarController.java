@@ -3,6 +3,7 @@ package es.dexusta.ticketcompra.control;
 import android.app.ActionBar;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import es.dexusta.ticketcompra.R;
 
@@ -30,12 +31,21 @@ public class ActionBarController {
         }
     }
 
-    public static void showAcceptCancelActionBar(ActionBar actionBar, View.OnClickListener onClickAccept,
-                                          View.OnClickListener onClickCancel) {
+    public static void setAcceptCancel(ActionBar actionBar, OnClickListener onClickAccept,
+                                       OnClickListener onClickCancel) {
         ActionBarController.showCustom(actionBar, R.layout.actionbar_cancel_accept);
 
         View actionBarCustomView = actionBar.getCustomView();
         actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
         actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
+    }
+
+    public interface ActionBarHolder {
+        public void showAcceptCancelAB(OnClickListener onClickAccept,
+                                       OnClickListener onClickCancel);
+
+        public void showClassicAB();
+
+        public boolean isABAvaliable();
     }
 }

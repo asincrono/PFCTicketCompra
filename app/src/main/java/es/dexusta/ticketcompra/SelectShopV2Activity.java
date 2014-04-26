@@ -7,7 +7,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -19,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
@@ -49,11 +49,6 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     private static final String KEY_CHAINS = "chains";
     private static final String KEY_SHOPS  = "shops";
 
-
-    private static final int SELECT_CHAIN_FRAGMENT = 0;
-    private static final int SELECT_SHOP_FRAGMENT  = 1;
-    private static final int ADD_SHOP_FRAGMENT     = 2;
-
     private DataSource  mDS;
     private List<Chain> mChains;
     private List<Shop>  mShops;
@@ -66,6 +61,8 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     private Class mDestinationActivity;
 
     private StateFragment mStateFragment;
+
+    private boolean mShowingClassicAB = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,69 +287,22 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
                                           View.OnClickListener onClickCancel) {
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-
-            LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
-
-            final View actionBarCustomView = inflater
-                    .inflate(R.layout.actionbar_cancel_accept, null, false);
-
-            actionBarCustomView.findViewById(R.id.actionbar_accept)
-                    .setOnClickListener(onClickAccept);
-            actionBarCustomView.findViewById(R.id.actionbar_cancel)
-                    .setOnClickListener(onClickCancel);
-
-            showCustomAB(actionBar);
+            mShowingClassicAB = false;
+            ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
         }
     }
 
     @Override
     public void hideAcceptCancelActionBar() {
         final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            showClassicAB(actionBar);
+        if (actionBar != null && !mShowingClassicAB) {
+            mShowingClassicAB = true;
+            ActionBarController.setDisplayDefault(actionBar);
         }
     }
 
-    private void showClassicAB(ActionBar actionBar) {
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE,
-                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-        }
-    }
-
-    private void showCustomAB(ActionBar actionBar) {
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-        }
-    }
-
-    private void onShowingFragment(int fragment_code) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            switch (fragment_code) {
-                case SELECT_CHAIN_FRAGMENT:
-                    actionBar.setTitle(R.string.select_chain_fragment_title);
-                    showClassicAB(actionBar);
-                    break;
-                case SELECT_SHOP_FRAGMENT:
-                    actionBar.setTitle(R.string.select_shop_fragment_title);
-                    showClassicAB(actionBar);
-                    break;
-                case ADD_SHOP_FRAGMENT:
-                    actionBar.setTitle(R.string.add_shop_fragment_title);
-                    showCustomAB(actionBar);
-                    break;
-                default:
-                    showClassicAB(actionBar);
-                    break;
-            }
-        }
+    @Override
+    public boolean isABAvaliable() {
+        return (getActionBar() != null);
     }
 }

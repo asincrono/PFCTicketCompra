@@ -235,7 +235,7 @@ public class AddShopActivity extends CloudBackendActivity implements
                                           View.OnClickListener onClickCancel) {
         mShowMenu = false;
         invalidateOptionsMenu();
-        ActionBarController.showAcceptCancelActionBar(getActionBar(), onClickAccept, onClickCancel);
+        ActionBarController.setAcceptCancel(getActionBar(), onClickAccept, onClickCancel);
     }
 
     @Override

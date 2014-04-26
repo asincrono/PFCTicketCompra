@@ -2,7 +2,7 @@ package es.dexusta.ticketcompra.control;
 
 import es.dexusta.ticketcompra.model.Shop;
 
-public interface ShopSelectionCallback extends FragmentCallback{
+public interface ShopSelectionCallback extends FragmentABCallback {
     
     public void onShopSelection(Shop shop);
     public void onCancelShopSelection();

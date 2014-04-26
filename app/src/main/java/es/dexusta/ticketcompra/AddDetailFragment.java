@@ -126,7 +126,7 @@ public class AddDetailFragment extends Fragment {
             }
         };
 
-        ActionBarController.showAcceptCancelActionBar(actionBar, onClickAccept, onClickCancel);
+        ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
     }
 
     @Override
@@ -166,33 +166,6 @@ public class AddDetailFragment extends Fragment {
         }
         return result;
     }
-
-    // private void showAcceptCancelActionBar(OnClickListener onClickAccept,
-    // OnClickListener onClickCancel) {
-    // final ActionBar actionBar = getActivity().getActionBar();
-    //
-    // LayoutInflater inflater =
-    // LayoutInflater.from(actionBar.getThemedContext());
-    //
-    // final View actionBarCustomView =
-    // inflater.inflate(R.layout.actionbar_cancel_accept, null);
-    //
-    // actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-    // actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-    //
-    // actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-    // ActionBar.DISPLAY_SHOW_CUSTOM
-    // | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-    // // Previous line is equivalent to:
-    // // actionBar.setDisplayShowTitleEnabled(false);
-    // // actionBar.setDisplayShowHomeEnabled(false);
-    // // actionBar.setDisplayUseLogoEnabled(false);
-    // // actionBar.setDisplayShowCustomEnabled(true);
-    //
-    // actionBar.setCustomView(actionBarCustomView, new ActionBar.LayoutParams(
-    // ViewGroup.LayoutParams.MATCH_PARENT,
-    // ViewGroup.LayoutParams.MATCH_PARENT));
-    // }
 
     interface AddDetailCallback {
         public void onDetailAdded(Detail detail);

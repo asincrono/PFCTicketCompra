@@ -2,7 +2,7 @@ package es.dexusta.ticketcompra.control;
 
 import es.dexusta.ticketcompra.model.Product;
 
-public interface ProductSelectionCallback extends FragmentCallback{
+public interface ProductSelectionCallback extends FragmentABCallback {
     public void onProductSelected(Product product, int position);
 
     public ProductAdapter getProductAdapter();
