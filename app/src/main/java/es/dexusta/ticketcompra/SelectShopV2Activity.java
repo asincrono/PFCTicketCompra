@@ -42,7 +42,9 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     private static final String TAG_SELECT_SHOP_FRAGMENT  = "select_shop_fragment";
     private static final String TAG_ADD_SHOP_FRAGMENT     = "add_shop_fragment";
 
-    private static final String[] ALLOWED_TAGS = {TAG_SELECT_CHAIN_FRAGMENT, TAG_SELECT_SHOP_FRAGMENT, TAG_ADD_SHOP_FRAGMENT};
+    private static final String[] ALLOWED_TAGS = {TAG_SELECT_CHAIN_FRAGMENT,
+            TAG_SELECT_SHOP_FRAGMENT,
+            TAG_ADD_SHOP_FRAGMENT};
 
     private static final String KEY_CHAINS = "chains";
     private static final String KEY_SHOPS  = "shops";
@@ -72,16 +74,18 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
         if (savedInstanceState == null) {
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
-            transaction.add(android.R.id.content, ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
+
             // Add state fragment.
             mStateFragment = new StateFragment();
 
-            //TODO add initial fragment.
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
+            transaction.add(android.R.id.content,
+                    ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
 
             transaction.commit();
         } else {
-            mStateFragment = (StateFragment) getFragmentManager().findFragmentByTag(TAG_STATE_FRAGMENT);
+            mStateFragment = (StateFragment) getFragmentManager()
+                    .findFragmentByTag(TAG_STATE_FRAGMENT);
             mChains = (List<Chain>) mStateFragment.get(KEY_CHAINS);
             mShops = (List<Shop>) mStateFragment.get(KEY_SHOPS);
         }
@@ -282,16 +286,20 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     }
 
     @Override
-    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept, View.OnClickListener onClickCancel) {
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
+                                          View.OnClickListener onClickCancel) {
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
 
             LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
 
-            final View actionBarCustomView = inflater.inflate(R.layout.actionbar_cancel_accept, null, false);
+            final View actionBarCustomView = inflater
+                    .inflate(R.layout.actionbar_cancel_accept, null, false);
 
-            actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
-            actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
+            actionBarCustomView.findViewById(R.id.actionbar_accept)
+                    .setOnClickListener(onClickAccept);
+            actionBarCustomView.findViewById(R.id.actionbar_cancel)
+                    .setOnClickListener(onClickCancel);
 
             showCustomAB(actionBar);
         }

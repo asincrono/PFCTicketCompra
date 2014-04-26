@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<es.dexusta.ticketcompra.view.SlideRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<!--     <Button -->
-<!--         android:id="@+id/btt_add_product" -->
-<!--         style="?android:attr/borderlessButtonStyle" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentBottom="true" -->
-<!--         android:layout_alignParentLeft="true" -->
-<!--         android:paddingLeft="10dp" -->
-<!--         android:gravity="left|center_vertical" -->
-<!--         android:text="@string/btt_add_product" /> -->
+     <Button
+         android:id="@+id/btt_add_product"
+         style="?android:attr/borderlessButtonStyle"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentLeft="true"
+         android:gravity="left|center_vertical"
+         android:paddingLeft="10dp"
+         android:text="@string/btt_add_product" />
 
     <ListView
         android:id="@android:id/list"
@@ -22,4 +22,4 @@
         android:layout_alignParentLeft="true" >
     </ListView>
 
-</RelativeLayout>
+</es.dexusta.ticketcompra.view.SlideRelativeLayout>

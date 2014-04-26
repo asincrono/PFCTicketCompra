@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
@@ -73,7 +73,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         FragmentManager manager = getFragmentManager();
         if (savedInstanceState == null) {
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
+            mStateFragment = new StateFragment();
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
 
             transaction.add(android.R.id.content, new CategorySelectionFragment(),
                     TAG_SELECT_CATEGORY_FRAGMENT);
@@ -144,7 +145,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                                         Types.Operation operation, boolean result) {
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend());
+                        BackendDataAccess.uploadProduct(dataList.get(0),
+                                getApplicationContext(), getCloudBackend());
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Tried to upload new product.");
                     }
@@ -165,6 +167,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
 
             }
         });
+
+        mDS.listCategories();
     }
 
     @Override
@@ -337,7 +341,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     }
 
     @Override
-    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept, View.OnClickListener onClickCancel) {
+    public void showAcceptCancelActionBar(OnClickListener onClickAccept,
+                                          OnClickListener onClickCancel) {
 
     }
 

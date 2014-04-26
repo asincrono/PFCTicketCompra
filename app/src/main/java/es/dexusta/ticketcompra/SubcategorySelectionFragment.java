@@ -56,6 +56,11 @@ public class SubcategorySelectionFragment extends ListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.subcategory_selec_fragment, container, false);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ListView lv = getListView();
@@ -63,11 +68,6 @@ public class SubcategorySelectionFragment extends ListFragment {
 //            lv.setSelection(mCallback.getSelectedSubcategoryPostion());
 //        }
         setSelection(mCallback.getSelectedSubcategoryPostion());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.subcategory_selec_fragment, container, false);
     }
 
     @Override

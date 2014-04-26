@@ -77,6 +77,8 @@
         <activity
             android:name="es.dexusta.ticketcompra.ProductSelectionActivity"
             android:label="Product selection activity" />
+        <activity android:name=".ProductSelectionActivityV2"
+                  android:label="Product selection activity" />
         <activity
             android:name="ListReceiptsActivity"
             android:label="List Receipts Activity" >

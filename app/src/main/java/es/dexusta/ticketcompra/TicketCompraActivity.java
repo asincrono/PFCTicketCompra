@@ -239,7 +239,8 @@ public class TicketCompraActivity extends CloudBackendActivity {
                 startActivity(intent);
                 break;
             case ADD_PRODUCT:
-                intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
+                //intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
+                intent = new Intent(TicketCompraActivity.this, ProductSelectionActivityV2.class);
                 startActivity(intent);
                 break;
             case CUMULATIVE_SPENDING:
