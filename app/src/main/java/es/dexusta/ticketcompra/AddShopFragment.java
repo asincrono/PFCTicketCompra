@@ -184,6 +184,12 @@ public class AddShopFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mCallbacks.showAcceptCancelActionBar(new OnClickListener() {
@@ -250,6 +256,15 @@ public class AddShopFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause.");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onStop.");
+        mCallbacks.hideSoftKeyboard(mEdtAddress);
+
     }
 
 

@@ -1,18 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -30,6 +17,20 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.chart.PointStyle;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import es.dexusta.ticketcompra.EndingDatePickerFragment.SetEndingDateCallbacks;
 import es.dexusta.ticketcompra.StartDatePickerFragment.SetStartDateCallbacks;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -234,7 +235,7 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
         renderer.setYLabels(0);
         double auxValue = maxY;
         for (int i = 0; i < 10; ++i) {
-            renderer.addYTextLabel(auxValue, auxValue / 100 + " €  ");
+            renderer.addYTextLabel(auxValue, auxValue / 100 + "  â‚¬  ");
             auxValue -= maxY * 0.1;
         }
 

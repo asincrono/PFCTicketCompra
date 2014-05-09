@@ -192,10 +192,12 @@ public class TicketCompraActivity extends CloudBackendActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onActivityResult.");
 
         if (resultCode == RESULT_OK) {
 
-            if (BuildConfig.DEBUG && data.getParcelableExtra(Keys.KEY_SHOP) == null)
+            if (BuildConfig.DEBUG && data.getParcelableExtra(Keys.KEY_SELECTED_SHOP) == null)
                 throw new AssertionError("If RESULT_OK, returned show shouldn't be null");
 
             switch (requestCode) {
@@ -259,7 +261,6 @@ public class TicketCompraActivity extends CloudBackendActivity {
             Toast.makeText(TicketCompraActivity.this, "Selected: " + position, Toast.LENGTH_SHORT)
                     .show();
         }
-
     }
 
     private class DawerListAdapter extends BaseAdapter {

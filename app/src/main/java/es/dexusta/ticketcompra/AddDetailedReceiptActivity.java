@@ -56,7 +56,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSelectedShop = getIntent().getExtras().getParcelable(Keys.KEY_SHOP);
+        mSelectedShop = getIntent().getExtras().getParcelable(Keys.KEY_SELECTED_SHOP);
 
         FragmentManager manager = getFragmentManager();
 
@@ -155,7 +155,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         switch (requestCode) {
             case REQUEST_PRODUCT_SELECTION:
                 if (resultCode == RESULT_OK) {
-                    mSelectedProduct = data.getParcelableExtra(Keys.KEY_PRODUCT);
+                    mSelectedProduct = data.getParcelableExtra(Keys.KEY_SELECTED_PRODUCT);
                     showAddDetailFragment();
                 }
                 break;
@@ -221,7 +221,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     @Override
     public void onAddDetail() {
         // Select product.
-        Intent intent = new Intent(this, ProductSelectionActivity.class);
+        Intent intent = new Intent(this, ProductSelectionActivityV2.class);
         startActivityForResult(intent, 0);
     }
 

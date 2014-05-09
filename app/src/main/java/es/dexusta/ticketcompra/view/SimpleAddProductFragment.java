@@ -1,11 +1,9 @@
 package es.dexusta.ticketcompra.view;
 
-
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +13,11 @@ import android.widget.Toast;
 
 import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
-import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddProductCallback;
 import es.dexusta.ticketcompra.model.Category;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Subcategory;
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link SimpleAddProductFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class SimpleAddProductFragment extends Fragment {
 
     private Category    mSelectedCategory;
@@ -65,12 +56,7 @@ public class SimpleAddProductFragment extends Fragment {
         mSelectedCategory = mCallback.getSelectedCategory();
         mSelectedSubcategory = mCallback.getSeletedSubcategory();
 
-        ActionBar ab = getActivity().getActionBar();
-
-        if (BuildConfig.DEBUG && ab == null)
-            throw new AssertionError("ActionBar shouldn't be null");
-
-        ActionBarController.setAcceptCancel(ab,
+        mCallback.showAcceptCancelActionBar(
                 new View.OnClickListener() {
 
                     @Override
@@ -102,8 +88,7 @@ public class SimpleAddProductFragment extends Fragment {
                     public void onClick(View v) {
                         mCallback.onCancelAddProduct();
                     }
-                }
-        );
+                });
     }
 
     @Override

@@ -50,7 +50,7 @@
     </category>
     <category name="Cuidado del hogar" >
         <subcategory name="Bazar" />
-        <subcategory name="Drogería y limpieza" />
+        <subcategory name="Droguería y limpieza" />
     </category>
     <category name="Cuidado personal" >
         <subcategory name="Parafarmacia" />
@@ -62,13 +62,13 @@
         <subcategory name="Complementos nutricionales" />
         <subcategory name="Control de peso" />
         <subcategory name="Galletas" />
-        <subcategory name="Lacteos y derivados" />
+        <subcategory name="Lácteos y derivados" />
         <subcategory name="Pan y bollería" />
         <subcategory name="Para deportistas" />
         <subcategory name="Tortitas" />
     </category>
     <category name="Frescos" >
-        <subcategory name="Carniceria" />
+        <subcategory name="Carnicería" />
         <subcategory name="Charcutería" />
         <subcategory name="Frutas" />
         <subcategory name="Pescadería" />
@@ -76,7 +76,7 @@
         <subcategory name="Verduras" />
     </category>
     <category name="Platos preparados" >
-        <subcategory name="Bocadillos y sandwich listos" />
+        <subcategory name="Bocadillos y sándwich listos" />
         <subcategory name="En conserva" />
         <subcategory name="Preparados en sobre" />
         <subcategory name="Preparados refrigerados" />

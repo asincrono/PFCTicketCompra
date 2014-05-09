@@ -3,9 +3,12 @@ package es.dexusta.ticketcompra;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddProductCallback;
 import es.dexusta.ticketcompra.control.CategoryAdapter;
 import es.dexusta.ticketcompra.control.CategorySelectionCallback;
@@ -32,11 +36,10 @@ import es.dexusta.ticketcompra.model.Subcategory;
 public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         CategorySelectionCallback, SubcategorySelectionCallback, ProductSelectionCallback,
         AddProductCallback {
-    private static final String  TAG   = "ProductSelectionActivityV2";
-    private static final boolean DEBUG = true;
+    private static final String TAG = "ProductSelectionActivityV2";
 
     private static final String TAG_SELECT_CATEGORY_FRAGMENT   = "select_category";
-    private static final String TAG_SELECT_SUBCATEGORY_FRAGEMT = "select_subcategory";
+    private static final String TAG_SELECT_SUBCATEGORY_FRAGMET = "select_subcategory";
     private static final String TAG_SELECT_PRODUCT_FRAGMENT    = "select_product";
     private static final String TAG_ADD_PRODUCT_FRAGMENT       = "add_product";
     private static final String TAG_STATE_FRAGMENT             = "state_fragment";
@@ -44,13 +47,13 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     private StateFragment mStateFragment;
 
     private Category mSelectedCategory;
-    private int mSelectedCategoryPosition;
+    private int      mSelectedCategoryPosition;
 
     private Subcategory mSelectedSubcategory;
-    private int mSelectedSubcategoryPosition;
+    private int         mSelectedSubcategoryPosition;
 
     private Product mSelectedProduct;
-    private int mSelectedProductPosition;
+    private int     mSelectedProductPosition;
 
     private List<Category>    mCategories;
     private List<Subcategory> mSubcategories;
@@ -87,11 +90,20 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
             mSubcategories = (List<Subcategory>) mStateFragment.get(Keys.KEY_SUBCATEGORY_LIST);
             mProducts = (List<Product>) mStateFragment.get(Keys.KEY_PRODUCT_LIST);
 
+            mSelectedCategory = (Category) mStateFragment
+                    .get(Keys.KEY_SELECTED_CATEGORY);
+            mSelectedCategoryPosition = (Integer) mStateFragment
+                    .get(Keys.KEY_SELECTED_CATEGORY_POSITION);
+            mSelectedSubcategory = (Subcategory) mStateFragment
+                    .get(Keys.KEY_SELECTED_SUBCATEGORY);
+            mSelectedSubcategoryPosition = (Integer) mStateFragment
+                    .get(Keys.KEY_SELECTED_SUBCATEGORY_POSITION);
+
+
             mCategoryAdapter.swapList(mCategories);
             mSubcategoryAdapter.swapList(mSubcategories);
             mProductAdapter.swapList(mProducts);
         }
-
 
 
         mDS = DataSource.getInstance(getApplicationContext());
@@ -131,7 +143,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                 mSubcategories = results;
                 mStateFragment.put(Keys.KEY_SUBCATEGORY_LIST, mSubcategories);
                 mSubcategoryAdapter.swapList(mSubcategories);
-                showSubcategorySelection();
+                // showSubcategorySelection();
             }
 
             @Override
@@ -150,7 +162,14 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Tried to upload new product.");
                     }
-                    showProductSelection();
+
+                    // TODO: Comprobar los siguiente:
+                    // Aquí no se debería indicar que se lanza nada. Una vez insertado el producto
+                    // se retira AddProductFragment de la pila onBackPressed();
+                    refreshProductList();
+                    onBackPressed();
+
+                    //showProductSelection();
                 }
             }
 
@@ -159,7 +178,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                 mProducts = results;
                 mStateFragment.put(Keys.KEY_PRODUCT_LIST, mProducts);
                 mProductAdapter.swapList(mProducts);
-                showProductSelection();
+                //showProductSelection();
             }
 
             @Override
@@ -184,11 +203,11 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         FragmentTransaction transaction = manager.beginTransaction();
         applyTransactionAnimator(transaction);
 
-        Fragment fragment = manager.findFragmentByTag(TAG_SELECT_SUBCATEGORY_FRAGEMT);
+        Fragment fragment = manager.findFragmentByTag(TAG_SELECT_SUBCATEGORY_FRAGMET);
 
         if (fragment == null) {
             fragment = new SubcategorySelectionFragment();
-            transaction.replace(android.R.id.content, fragment, TAG_SELECT_SUBCATEGORY_FRAGEMT);
+            transaction.replace(android.R.id.content, fragment, TAG_SELECT_SUBCATEGORY_FRAGMET);
         } else {
             transaction.replace(android.R.id.content, fragment);
         }
@@ -252,11 +271,19 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         mDS.insertProducts(list);
     }
 
+    private void refreshProductList() {
+        if (mSelectedSubcategory != null) {
+            mDS.getProductsBy(mSelectedSubcategory);
+        }
+    }
+
     @Override
     public void onCancelAddProduct() {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "onCancelAddProduct.");
-        onBackPressed();
+        // if user cancel add product we assume he don't want to add any product, as in that case
+        // she will just hit back.
+        finish();
     }
 
     @Override
@@ -273,7 +300,12 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     public void onCategorySelected(Category category, int position) {
         mSelectedCategory = category;
         mSelectedCategoryPosition = position;
+
+        mStateFragment.put(Keys.KEY_SELECTED_CATEGORY, mSelectedCategory);
+        mStateFragment.put(Keys.KEY_SELECTED_CATEGORY_POSITION, mSelectedCategoryPosition);
+
         mDS.getSubcategoriesBy(mSelectedCategory);
+        showSubcategorySelection();
     }
 
     @Override
@@ -295,7 +327,12 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     public void onSubcategorySelected(Subcategory subcategory, int position) {
         mSelectedSubcategory = subcategory;
         mSelectedSubcategoryPosition = position;
+
+        mStateFragment.put(Keys.KEY_SELECTED_SUBCATEGORY, mSelectedSubcategory);
+        mStateFragment.put(Keys.KEY_SELECTED_SUBCATEGORY_POSITION, mSelectedCategoryPosition);
+
         mDS.getProductsBy(mSelectedSubcategory);
+        showProductSelection();
     }
 
     @Override
@@ -317,6 +354,9 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     public void onProductSelected(Product product, int position) {
         mSelectedProduct = product;
         mSelectedProductPosition = position;
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Keys.KEY_SELECTED_PRODUCT, mSelectedProduct);
+        setResult(RESULT_OK, resultIntent);
         // TODO RETURN SELECTED PRODUCT TO THE ORIGIN ACTIVITY.
     }
 
@@ -343,16 +383,28 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
     @Override
     public void showAcceptCancelActionBar(OnClickListener onClickAccept,
                                           OnClickListener onClickCancel) {
-
+        ActionBarController.setAcceptCancel(getActionBar(), onClickAccept, onClickCancel);
     }
 
     @Override
     public void hideAcceptCancelActionBar() {
-
+        ActionBarController.setDisplayDefault(getActionBar());
     }
 
     @Override
     public boolean isABAvaliable() {
         return getActionBar() != null;
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

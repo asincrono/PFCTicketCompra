@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest package="es.dexusta.ticketcompra"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
@@ -40,7 +40,7 @@
         <activity
             android:name="es.dexusta.ticketcompra.TicketCompraActivity"
             android:label="Ticket Compra" >
-              <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,23 +51,21 @@
             android:label="CouldBackend Test" >
         </activity>
         <activity
-            android:name="TesterGraph"
+            android:name="es.dexusta.ticketcompra.TesterGraph"
             android:label="Tester Graph" >
-          
         </activity>
         <activity android:name="org.achartengine.GraphicalActivity" >
         </activity>
         <activity
-            android:name=".AddShopActivity"
+            android:name="es.dexusta.ticketcompra.AddShopActivity"
             android:label="Add shop"
-            android:parentActivityName=".TicketCompraActivity" />
+            android:parentActivityName="es.dexusta.ticketcompra.TicketCompraActivity" />
         <activity
             android:name="es.dexusta.ticketcompra.AddDetailedReceiptActivity"
             android:label="Add detailed receipt" />
         <activity
             android:name="es.dexusta.ticketcompra.AddTotalActivity"
-            android:label="Add total receipt"
-            android:windowSoftInputMode="stateHidden" />
+            android:label="Add total receipt" />
         <activity
             android:name="es.dexusta.ticketcompra.AddProductActivity"
             android:label="Add product" />
@@ -77,10 +75,11 @@
         <activity
             android:name="es.dexusta.ticketcompra.ProductSelectionActivity"
             android:label="Product selection activity" />
-        <activity android:name=".ProductSelectionActivityV2"
-                  android:label="Product selection activity" />
         <activity
-            android:name="ListReceiptsActivity"
+            android:name="es.dexusta.ticketcompra.ProductSelectionActivityV2"
+            android:label="Product selection activity" />
+        <activity
+            android:name="es.dexusta.ticketcompra.ListReceiptsActivity"
             android:label="List Receipts Activity" >
         </activity>
         <activity
@@ -116,6 +115,11 @@
                 <category android:name="com.google.cloud.backend.android" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="es.dexusta.ticketcompra.tests.TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
 
 /**
@@ -13,6 +14,10 @@ import es.dexusta.ticketcompra.R;
 public class ActionBarController {
 
     public static void setDisplayDefault(ActionBar actionBar) {
+
+        if (BuildConfig.DEBUG && actionBar == null)
+            throw new AssertionError("ActionBar shouldn't be null");
+
         int display = ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE;
         int mask = ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM;
 
@@ -20,6 +25,10 @@ public class ActionBarController {
     }
 
     public static void showCustom(ActionBar actionBar, int abLayout) {
+
+        if (BuildConfig.DEBUG && actionBar == null)
+            throw new AssertionError("ActionBar shouldn't be null");
+
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(abLayout);
     }
@@ -33,19 +42,13 @@ public class ActionBarController {
 
     public static void setAcceptCancel(ActionBar actionBar, OnClickListener onClickAccept,
                                        OnClickListener onClickCancel) {
+        if (BuildConfig.DEBUG && actionBar == null)
+            throw new AssertionError("ActionBar shouldn't be null");
+
         ActionBarController.showCustom(actionBar, R.layout.actionbar_cancel_accept);
 
         View actionBarCustomView = actionBar.getCustomView();
         actionBarCustomView.findViewById(R.id.actionbar_accept).setOnClickListener(onClickAccept);
         actionBarCustomView.findViewById(R.id.actionbar_cancel).setOnClickListener(onClickCancel);
-    }
-
-    public interface ActionBarHolder {
-        public void showAcceptCancelAB(OnClickListener onClickAccept,
-                                       OnClickListener onClickCancel);
-
-        public void showClassicAB();
-
-        public boolean isABAvaliable();
     }
 }

@@ -4,7 +4,7 @@ import es.dexusta.ticketcompra.model.Category;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Subcategory;
 
-public interface AddProductCallback {
+public interface AddProductCallback extends FragmentABCallback {
     public void onAddProduct(Product product);
 
     public void onCancelAddProduct();

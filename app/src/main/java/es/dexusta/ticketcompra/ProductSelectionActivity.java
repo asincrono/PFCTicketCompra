@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
@@ -45,7 +46,6 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
     private int mSelectedCategoryPosition;
     private int mSelectedSubcategoryPosition;
     private int mSelectedProductPosition;
-    private int mCurrentFragment;
 
     private StateFragment mStateFragment;
 
@@ -266,7 +266,7 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
 
         // Go to next activity.
         Intent intent = new Intent();
-        intent.putExtra(Keys.KEY_PRODUCT, product);
+        intent.putExtra(Keys.KEY_SELECTED_PRODUCT, product);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -283,7 +283,7 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
 
     @Override
     public void onClickAddProduct() {
-
+        showAddProduct();
     }
 
     @Override
@@ -307,6 +307,11 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
     }
 
     @Override
+    public boolean isABAvaliable() {
+        return getActionBar() != null;
+    }
+
+    @Override
     public void onAddProduct(Product product) {
         // TODO Auto-generated method stub
 
@@ -326,5 +331,17 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
     @Override
     public Subcategory getSeletedSubcategory() {
         return mSelectedSubcategory;
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

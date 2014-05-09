@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
@@ -197,7 +198,7 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
         // Toast.makeText(this, " Shop id " + shop.getId() + " selected",
         // Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, mDestinationActivity);
-        intent.putExtra(Keys.KEY_SHOP, shop);
+        intent.putExtra(Keys.KEY_SELECTED_SHOP, shop);
         startActivity(intent);
     }
 
@@ -220,23 +221,9 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
 
     @Override
     public void onCancelAddShop() {
-        onBackPressed();
-    }
-
-    private void showShopSelectionFragment() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        Fragment fragment = manager.findFragmentByTag(TAG_SELECT_SHOP_FRAGMENT);
-        if (fragment == null) {
-            fragment = ShopSelectionFragment.newInstance();
-            transaction.replace(android.R.id.content, fragment, TAG_SELECT_SHOP_FRAGMENT);
-        } else {
-            transaction.replace(android.R.id.content, fragment);
-        }
-
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // We assume that if the user cancel add shop she wants to abandon this task. If not
+        // she would just press back to select other chain.
+        finish();
     }
 
     private void showFragment(String tag) {
@@ -304,5 +291,17 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     @Override
     public boolean isABAvaliable() {
         return (getActionBar() != null);
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

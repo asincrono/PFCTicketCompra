@@ -1,17 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.BarChart.Type;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -29,6 +17,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.chart.BarChart.Type;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import es.dexusta.ticketcompra.EndingDatePickerFragment.SetEndingDateCallbacks;
 import es.dexusta.ticketcompra.StartDatePickerFragment.SetStartDateCallbacks;
@@ -265,7 +265,7 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
         renderer.setYLabels(0);
         double auxValue = yMax;
         for (int i = 0; i < 10; ++i) {
-            renderer.addYTextLabel(auxValue, auxValue/100 + " €  ");
+            renderer.addYTextLabel(auxValue, auxValue/100 + " â‚¬  ");
             auxValue -= yMax * 0.1;
         }
         

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Shop;
 
-public class SelectShopActivity extends FragmentActivity implements ChainSelectionCallback, ShopSelectionCallback{
+public class SelectShopActivity extends FragmentActivity
+        implements ChainSelectionCallback, ShopSelectionCallback{
     private static final String TAG = "SelectShopAcitivty";
     private static final boolean DEBUG = true; 
     
@@ -172,5 +174,22 @@ public class SelectShopActivity extends FragmentActivity implements ChainSelecti
     @Override
     public void hideAcceptCancelActionBar() {
 
+    }
+
+    @Override
+    public boolean isABAvaliable() {
+        return getActionBar() != null;
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

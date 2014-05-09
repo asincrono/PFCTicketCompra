@@ -15,7 +15,7 @@ import es.dexusta.ticketcompra.control.CategorySelectionCallback;
 import es.dexusta.ticketcompra.model.Category;
 
 public class CategorySelectionFragment extends ListFragment {
-    private static final String TAG = "CategorySelectinFragment";
+    private static final String TAG = "CategorySelectionFragment";
     private static final boolean DEBUG = true;
    
     private CategorySelectionCallback mCallback;
