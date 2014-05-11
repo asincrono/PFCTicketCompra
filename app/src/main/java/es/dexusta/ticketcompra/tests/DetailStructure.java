@@ -1,35 +1,67 @@
 package es.dexusta.ticketcompra.tests;
 
+import es.dexusta.ticketcompra.model.Detail;
+
 /**
  * Created by asincrono on 02/05/14.
  */
 public class DetailStructure {
-    private long price;
-    private long units;
-    private ProductStructure product;
+    private long   receiptId;
+    private long   productId;
+    private int    price;
+    private int    units;
+    private String productName;
 
-    public long getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public long getUnits() {
+    public int getUnits() {
         return units;
     }
 
-    public void setUnits(long units) {
+    public void setUnits(int units) {
         this.units = units;
     }
 
-    public ProductStructure getProduct() {
-        return product;
+    public long getReceiptId() {
+        return receiptId;
     }
 
-    public void setProduct(ProductStructure product) {
-        this.product = product;
+    public void setReceiptId(long receiptId) {
+        this.receiptId = receiptId;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productNane) {
+        this.productName = productName;
+    }
+
+    public Detail getDetail() {
+        Detail detail = new Detail();
+
+        detail.setReceiptId(receiptId);
+        detail.setProductId(productId);
+        detail.setProductName(productName);
+        detail.setUnits(units);
+        detail.setPrice(price);
+
+        return detail;
     }
 
     @Override
@@ -37,7 +69,7 @@ public class DetailStructure {
         return "DetailStructure{" +
                 "price=" + price +
                 ", units=" + units +
-                ", product=" + product +
+                ", productName='" + productName + '\'' +
                 '}';
     }
 }

@@ -1,14 +1,16 @@
 package es.dexusta.ticketcompra.tests;
 
-import java.util.List;
+import java.util.Arrays;
+
+import es.dexusta.ticketcompra.model.Receipt;
 
 /**
  * Created by asincrono on 02/05/14.
  */
 public class ReceiptStructure {
-    private long shopId;
-    private String timestamp;
-    private List<DetailStructure> details;
+    private long              shopId;
+    private String            timestamp;
+    private DetailStructure[] details;
 
     public long getShopId() {
         return shopId;
@@ -26,12 +28,21 @@ public class ReceiptStructure {
         this.timestamp = timestamp;
     }
 
-    public List<DetailStructure> getDetails() {
+    public DetailStructure[] getDetails() {
         return details;
     }
 
-    public void setDetails(List<DetailStructure> details) {
+    public void setDetails(DetailStructure[] details) {
         this.details = details;
+    }
+
+    public Receipt getReceipt() {
+        Receipt receipt = new Receipt();
+
+        receipt.setTimestamp(timestamp);
+        receipt.setShopId(shopId);
+
+        return receipt;
     }
 
     @Override
@@ -39,7 +50,7 @@ public class ReceiptStructure {
         return "ReceiptStructure{" +
                 "shopId=" + shopId +
                 ", timestamp='" + timestamp + '\'' +
-                ", details=" + details +
+                ", details=" + Arrays.toString(details) +
                 '}';
     }
 }

@@ -1,0 +1,66 @@
+[
+   {
+      "name": "Tabasco Original",
+      "description": "Salsa picante a base de chiles",
+      "subcategoryName": "Conservas, aceites y condimentos"
+   },
+   {
+      "name": "Trufas Belgas DIA",
+      "subcategoryName": "Desayuno, dulces y pan"
+   },
+   {
+      "name": "Semilla tostada de sésamo Santa Rita",
+      "subcategoryName": "Desayuno, dulces y pan"
+   },
+   {
+      "name": "Chocolate negro 70% Valor",
+      "subcategoryName": "Desayuno, dulces y pan"
+   },
+   {
+      "name": "Ketchup Leader Price",
+      "subcategoryName": "Conservas, aceites y condimentos"
+   },
+   {
+      "name": "Reque Loran",
+      "description": "Requesón",
+      "subcategoryName": "Lácteos y huevos"
+   },
+   {
+      "name": "Cerveza Estrella Galicia",
+      "subcategoryName": "Cervezas"
+   },
+   {
+      "name": "Vino Pionero Mundi",
+      "description": "Albariño",
+      "subcategoryName": "Vinos blancos"
+   },
+   {
+      "name": "Pasta Oriental Maggi sabor pollo",
+      "subcategoryName": "Preparados en sobre"
+   },
+   {
+      "name": "Pasta Oriental Maggi sabor gamba",
+      "subcategoryName": "Preparados en sobre"
+   },
+   {
+      "name": "Tahin Nature Lima",
+      "description": "Salsa tahini",
+      "subcategoryName": "Conservas, aceites y condimentos"
+   },
+   {
+     "name": "Sopinstant Gallina blanca, crema de pollo",
+      "subcategoryName": "Preparados en sobre"
+   },
+   {
+      "name": "Levadura en polvo Royal",
+      "subcategoryName": "Desayuno, dulces y pan"
+   },
+   {
+      "name": "Arroz redondo SOS",
+      "subcategoryName": "Arroz, pastas y legumbres"
+   },
+   {
+      "name": "Bombones Nestlé Crème Crocante",
+      "subcategoryName": "Desayuno, dulces y pan"
+   }
+]

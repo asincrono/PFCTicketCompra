@@ -12,6 +12,14 @@ import es.dexusta.ticketcompra.model.Chain;
 public class ChainInfo {
     private HashMap<String, Chain> mStructure = new HashMap<String, Chain>();
 
+    public ChainInfo(List<Chain> chains) {
+        add(chains);
+    }
+
+    public ChainInfo(Chain[] chains) {
+        add(chains);
+    }
+
     public void add(Chain[] chains) {
         for (Chain chain : chains) {
             mStructure.put(chain.getName(), chain);
@@ -19,7 +27,9 @@ public class ChainInfo {
     }
 
     public void add(List<Chain> chains) {
-        add(chains.toArray(new Chain[chains.size()]));
+        for (Chain chain : chains) {
+            mStructure.put(chain.getName(), chain);
+        }
     }
 
     public long getId(String name) {

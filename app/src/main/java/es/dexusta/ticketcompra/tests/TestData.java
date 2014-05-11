@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Types;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Product;
+import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Region;
 import es.dexusta.ticketcompra.model.Shop;
 import es.dexusta.ticketcompra.model.Subcategory;
@@ -31,11 +31,11 @@ import es.dexusta.ticketcompra.model.Town;
  */
 
 public class TestData {
-    private static final String TAG = "TestData";
+    private static final java.lang.String TAG = "TestData";
 
 
-    private static List<ProductStructure> mProducts;
-    private static List<Shop>             mShops;
+    private static List<Product> mProducts;
+    private static List<Shop>    mShops;
     private static int mNumRegions    = 0;
     private static int mNumSubregions = 0;
     private static int mNumTowns      = 0;
@@ -108,7 +108,7 @@ public class TestData {
                 if (mNumSubregions == 0) {
                     if (BuildConfig.DEBUG)
                         Log.d(TAG, "Last bunch of towns added to the structure.");
-                    afterStructureBuilt();
+
                 } else {
                     if (BuildConfig.DEBUG)
                         Log.d(TAG, results.size() + " towns added, " + mNumSubregions +
@@ -136,6 +136,10 @@ public class TestData {
             public void onDataReceived(List<Chain> results) {
                 if (results.size() > 0)
                     mChainInfo.add(results);
+
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "buildChainInfo done.");
+
                 buildSubcategoryInfo(dataSource, callback);
             }
 
@@ -159,6 +163,8 @@ public class TestData {
             public void onDataReceived(List<Subcategory> results) {
                 if (results.size() > 0)
                     mSubcategoryInfo.add(results);
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "buildSubcategoryInfo done.");
                 buildTownInfo(dataSource, callback);
             }
 
@@ -182,6 +188,10 @@ public class TestData {
             public void onDataReceived(List<Town> results) {
                 if (results.size() > 0)
                     mTownInfo.add(results);
+
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "buildTownInfo done and about to call callback method.");
+
                 callback.afterDataRetrieved();
             }
 
@@ -212,33 +222,101 @@ public class TestData {
         return mSubcategoryInfo.getSubcategories();
     }
 
-    private static void afterStructureBuilt() {
+    public static List<Product> getProductList(ProductStructure[] products) {
+        List<Product> productList = new ArrayList<Product>(products.length);
 
+        Product product;
+        long subcategoryId;
+        for (ProductStructure productStructure : products) {
+            product = new Product();
+
+            product.setName(productStructure.getName());
+            product.setDescription(productStructure.getDescription());
+
+            subcategoryId = mSubcategoryInfo.getId(productStructure.getSubcategoryName());
+            if (subcategoryId < 0) {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "subcategory: " + productStructure.getSubcategoryName() + " not found.");
+            }
+            product.setSubcategoryId(subcategoryId);
+            productList.add(product);
+        }
+
+        return productList;
+    }
+
+    public static List<Shop> getShopList(ShopStructure[] shops) {
+        List<Shop> shopList = new ArrayList<Shop>(shops.length);
+
+        Shop shop;
+        long townId, chainId;
+        for (ShopStructure shopStructure : shops) {
+            shop = new Shop();
+
+            shop.setAddress(shopStructure.getAddress());
+            shop.setTownName(shopStructure.getTownName());
+
+            townId = mTownInfo.getId(shopStructure.getTownName());
+            shop.setTownId(townId);
+
+            chainId = mChainInfo.getId(shopStructure.getChainName());
+            shop.setChainId(chainId);
+
+            shopList.add(shop);
+        }
+
+        return shopList;
+    }
+
+
+
+    public static List<Receipt> getReceiptList(ReceiptStructure[] receipts) {
+        List<Receipt> receiptList = new ArrayList<Receipt>(receipts.length);
+
+        return receiptList;
+    }
+
+
+    public static ProductStructure[] getProducts(Context context) {
+        InputStream inputStream = context.getResources().openRawResource(R.raw.products);
+        InputStreamReader jsonReader = new InputStreamReader(inputStream);
+
+        Gson gson = new Gson();
+
+        return gson.fromJson(jsonReader, ProductStructure[].class);
+    }
+
+    public static ShopStructure[] getShops(Context context) {
+        InputStream inputStream = context.getResources().openRawResource(R.raw.shops);
+        InputStreamReader jsonReader = new InputStreamReader(inputStream);
+
+        Gson gson = new Gson();
+
+        return gson.fromJson(jsonReader, ShopStructure[].class);
+    }
+
+    public static ReceiptStructure[] getReceipts(Context context) {
+        InputStream inputStream = context.getResources().openRawResource(R.raw.receipts);
+        InputStreamReader jsonReader = new InputStreamReader(inputStream);
+
+        Gson gson = new Gson();
+
+        return gson.fromJson(jsonReader, ReceiptStructure[].class);
     }
 
 
     public static void InsertProducs(Context context, final DataSource dataSource) {
-        final HashMap<String, Long> subcategoryIdMap = new HashMap<String, Long>();
+        final HashMap<java.lang.String, Long> subcategoryIdMap = new HashMap<java.lang.String, Long>();
 
         // Build product structure from json.
         InputStream inputStream = context.getResources().openRawResource(R.raw.products);
         InputStreamReader jsonReader = new InputStreamReader(inputStream);
 
         Gson gson = new Gson();
-        mProducts = Arrays.asList(gson.fromJson(jsonReader, ProductStructure[].class));
+        ProductStructure[] productStructures = gson.fromJson(jsonReader, ProductStructure[].class);
 
-        List<Product> products = new ArrayList<Product>(mProducts.size());
-        Product product;
-        for (ProductStructure productStructure : mProducts) {
-            product = new Product();
-
-            product.setName(productStructure.getName());
-            product.setDescription(productStructure.getDescription());
-            product.setSubcategoryId(subcategoryIdMap.get(productStructure.getSubcategoryName()));
-            products.add(product);
-        }
-
-        dataSource.insertProducts(products);
+        List<Product> productList = getProductList(productStructures);
+        dataSource.insertProducts(productList);
     }
 
     public static void insertShops(Context context, DataSource dataSource) {
@@ -249,22 +327,9 @@ public class TestData {
 
         ShopStructure[] shopStructures = gson.fromJson(jsonReader, ShopStructure[].class);
 
-        Shop shop;
-        List<Shop> shops = new ArrayList<Shop>(shopStructures.length);
+        List<Shop> shopList = getShopList(shopStructures);
 
-        for (ShopStructure shopStructure : shopStructures) {
-            shop = new Shop();
-            shop.setTownId(mRegionInfo.getTownId(shopStructure.getTownName()));
-            shop.setTownName(shopStructure.getTownName());
-            // Todo: get chain id from chain name.
-            shop.setChainId(0);
-            shop.setAddress(shopStructure.getAddress());
-
-            shops.add(shop);
-        }
-
-        dataSource.insertShops(shops);
-
+        dataSource.insertShops(shopList);
     }
 
     private static ReceiptStructure[] buildReceiptStructure(Context context) {

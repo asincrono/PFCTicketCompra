@@ -1,5 +1,37 @@
 package es.dexusta.ticketcompra.dataaccess;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.google.cloud.backend.android.CloudBackendMessaging;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
+import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
+import es.dexusta.ticketcompra.dataaccess.Types.Operation;
+import es.dexusta.ticketcompra.model.Category;
+import es.dexusta.ticketcompra.model.Chain;
+import es.dexusta.ticketcompra.model.DBHelper;
+import es.dexusta.ticketcompra.model.Detail;
+import es.dexusta.ticketcompra.model.Product;
+import es.dexusta.ticketcompra.model.Receipt;
+import es.dexusta.ticketcompra.model.Region;
+import es.dexusta.ticketcompra.model.ReplicatedDBObject;
+import es.dexusta.ticketcompra.model.Shop;
+import es.dexusta.ticketcompra.model.Subcategory;
+import es.dexusta.ticketcompra.model.Subregion;
+import es.dexusta.ticketcompra.model.Total;
+import es.dexusta.ticketcompra.model.Town;
+import es.dexusta.ticketcompra.util.Installation;
+import es.dexusta.ticketcompra.util.Interval;
+
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CATEGORY;
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CHAIN;
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_DETAIL;
@@ -47,39 +79,6 @@ import static es.dexusta.ticketcompra.model.DBHelper.T_TOTAL_UPDATED;
 import static es.dexusta.ticketcompra.model.DBHelper.T_TOWN_ID;
 import static es.dexusta.ticketcompra.model.DBHelper.T_TOWN_SUBREGION_ID;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-
-import android.R.raw;
-import android.content.Context;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.google.cloud.backend.android.CloudBackendMessaging;
-
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
-import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
-import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
-import es.dexusta.ticketcompra.dataaccess.Types.Operation;
-import es.dexusta.ticketcompra.model.Category;
-import es.dexusta.ticketcompra.model.Chain;
-import es.dexusta.ticketcompra.model.DBHelper;
-import es.dexusta.ticketcompra.model.Detail;
-import es.dexusta.ticketcompra.model.Product;
-import es.dexusta.ticketcompra.model.Receipt;
-import es.dexusta.ticketcompra.model.Region;
-import es.dexusta.ticketcompra.model.ReplicatedDBObject;
-import es.dexusta.ticketcompra.model.Shop;
-import es.dexusta.ticketcompra.model.Subcategory;
-import es.dexusta.ticketcompra.model.Subregion;
-import es.dexusta.ticketcompra.model.Total;
-import es.dexusta.ticketcompra.model.Town;
-import es.dexusta.ticketcompra.util.Installation;
-import es.dexusta.ticketcompra.util.Interval;
-
 /**
  * Singleton que agrupa todo el sistema de acceso a los datos.
  * 
@@ -88,16 +87,14 @@ import es.dexusta.ticketcompra.util.Interval;
  */
 // TODO: Realizar como fragmento en lugar de singleton?
 public class DataSource {
-    private static final String                     TAG                       = "DataSource";
-    private static final boolean                    DEBUG                     = true;
-
     // SQL QUERY CONSTANTS:
     public static final String                      BASIC_QUERY               = "SELECT * FROM ";
     // do not remove first space (not an error).
     public static final String                      BASIC_WHERE               = " WHERE ";
     // do not remove first space (not an error).
     public static final String                      IS_NULL                   = " IS NULL";
-
+    private static final String                     TAG                       = "DataSource";
+    private static final boolean                    DEBUG                     = true;
     private static DataSource                       mDataSource;
 
     private DBHelper                                mHelper;
@@ -155,6 +152,129 @@ public class DataSource {
         init();
     }
 
+    public static DataSource getInstance(Context context) {
+
+        if (mDataSource == null) {
+            mDataSource = new DataSource(context);
+        }
+        return mDataSource;
+    }
+
+    public static Detail getDetailFromDetailLineCursor(Cursor c) {
+        Detail detail = null;
+
+        if (c != null && c.getCount() > 0) {
+
+            // Check if we have the right number of columns: 6 (detail) + 5
+            // (product) = 11.
+            if (c.getColumnCount() == 11) {
+                try {
+                    int idIdx = c.getColumnIndexOrThrow(T_DETAIL_ID);
+                    int prodIdIdx = c.getColumnIndexOrThrow(T_DETAIL_PROD_ID);
+                    int recptIdIdx = c.getColumnIndexOrThrow(T_DETAIL_RECPT_ID);
+                    int priceIdx = c.getColumnIndexOrThrow(T_DETAIL_PRICE);
+                    int unitsIdx = c.getColumnIndexOrThrow(T_DETAIL_UNITS);
+                    int weightIdx = c.getColumnIndexOrThrow(T_DETAIL_WEIGHT);
+
+                    detail = new Detail();
+
+                    detail.setId(c.getLong(idIdx));
+                    detail.setReceiptId(c.getLong(recptIdIdx));
+                    detail.setProductId(c.getLong(prodIdIdx));
+                    detail.setPrice(c.getInt(priceIdx));
+                    detail.setUnits(c.getInt(unitsIdx));
+                    detail.setWeight(c.getInt(weightIdx));
+                } catch (IllegalArgumentException e) {
+                    // Or simply return null?
+                    throw (new IllegalArgumentException("cursor lacks the required columns"));
+                }
+            }
+        }
+
+        return detail;
+    }
+
+    public static Product getProductFromDetailLineCursor(Cursor c) {
+        Product product = null;
+
+        if (c != null && c.getCount() > 0) {
+
+            // Check if we have the right number of columns: 6 (detail) + 5
+            // (product) = 11.
+            if (c.getColumnCount() == 11) {
+                try {
+                    int idIdx = c.getColumnIndexOrThrow(T_PROD_ID_ALT);
+                    int subcatIdx = c.getColumnIndexOrThrow(T_PROD_SUBCAT_ID_ALT);
+                    int nameIdx = c.getColumnIndexOrThrow(T_PROD_NAME_ALT);
+                    int descrIdx = c.getColumnIndexOrThrow(T_PROD_DESCR);
+                    int artNumIdx = c.getColumnIndexOrThrow(T_PROD_ARTNUMBER);
+
+                    product = new Product();
+
+                    product.setId(c.getLong(idIdx));
+                    product.setSubcategoryId(c.getLong(subcatIdx));
+                    product.setName(c.getString(nameIdx));
+                    product.setDescription(c.getString(descrIdx));
+                    product.setArticleNumber(c.getString(artNumIdx));
+                } catch (IllegalArgumentException e) {
+                    // Or simply return null?
+                    throw (new IllegalArgumentException("cursor lacks the required columns"));
+                }
+            }
+        }
+
+        return product;
+    }
+
+    /**
+     * Receives a receipt and a bundle and attach the receipt data to the
+     * bundle. To be detached with {@link #detachReceipt(Bundle)}
+     *
+     * @param receipt
+     *            the receipt to attach to the bundle.
+     * @param bundle
+     *            the bundle to attach the receipt to.
+     * @return a bundle with the receipt data attached.
+     */
+    public static Bundle attachToBundle(Receipt receipt, Bundle bundle) {
+        Bundle b;
+        if (bundle != null) {
+            b = bundle;
+        } else {
+            b = new Bundle();
+        }
+
+        b.putLong(Keys.KEY_RECEIPT_ID, receipt.getId());
+        b.putLong(Keys.KEY_RECEIPT_SHOP_ID, receipt.getShopId());
+        b.putString(Keys.KEY_RECEIPT_TIMESTAMP, receipt.getTimestampRfc3339());
+
+        return b;
+    }
+
+    /**
+     * Extracts the info from the provided bundle (previously attached to the
+     * bundle with {@link #attachToBundle(Receipt, Bundle)}) and returns a
+     * receipt or null if isn't any.
+     *
+     * @param bundle
+     *            the {@code bundle} from which we will try to extract the
+     *            receipt.
+     * @return the receipt.
+     */
+    public static Receipt detachReceipt(Bundle bundle) {
+        Receipt receipt = null;
+
+        long id = bundle.getLong(Keys.KEY_RECEIPT_ID);
+        if (id > 0) {
+            receipt = new Receipt();
+            receipt.setId(id);
+            receipt.setShopId(bundle.getLong(Keys.KEY_RECEIPT_SHOP_ID));
+            receipt.setTimestamp(bundle.getLong(Keys.KEY_RECEIPT_TIMESTAMP));
+        }
+
+        return receipt;
+    }
+
     private void init() {
         // Crear todos los objetos necesarios para el acceso a los datos:
         // SQLiteOpenHelper, etc.
@@ -183,14 +303,6 @@ public class DataSource {
         buildShopUnivIdLocIdMap();
         buildChainIdNameMap();
         buildShopIdChainIdMap();
-    }
-
-    public static DataSource getInstance(Context context) {
-
-        if (mDataSource == null) {
-            mDataSource = new DataSource(context);
-        }
-        return mDataSource;
     }
 
     public void initDatabase(InitializerCallback callback) {
@@ -482,7 +594,7 @@ public class DataSource {
         long categoryId = mSubcategoryCategoryIdMap.get(product.getSubcategoryId());
         return mCategoryIdNameMap.get(categoryId);
     }
-
+    
     public long getProductSubcategoryId(Product product) {
         return mProductSubcategoryId.get(product.getId());
     }
@@ -499,7 +611,7 @@ public class DataSource {
     public void addToProductSubcategoryIdMap(Product product) {
         mProductSubcategoryId.put(product.getId(), product.getSubcategoryId());
     }
-    
+
     public String getProductCategoryName(long product_id) {
         long subcat_id = mProductSubcategoryId.get(product_id);
         long cat_id = mSubcategoryCategoryIdMap.get(subcat_id);
@@ -527,68 +639,68 @@ public class DataSource {
         return mReceiptUnivIdLocIdMap.get(univId);
     }
 
-    public void setCategoryCallback(DataAccessCallbacks<Category> listener) {
-        mCategoryData.setCallback(listener);
-    }
-
     public DataAccessCallbacks<Category> getCategoryCallback() {
         return mCategoryData.getCallback();
     }
 
-    public void setSubcategoryCallback(DataAccessCallbacks<Subcategory> listener) {
-        mSubcategoryData.setCallback(listener);
+    public void setCategoryCallback(DataAccessCallbacks<Category> listener) {
+        mCategoryData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Subcategory> getSubcategoryCallback() {
         return mSubcategoryData.getCallback();
     }
 
-    public void setProductCallback(DataAccessCallbacks<Product> listener) {
-        mProductData.setCallback(listener);
+    public void setSubcategoryCallback(DataAccessCallbacks<Subcategory> listener) {
+        mSubcategoryData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Product> getProductCallback() {
         return mProductData.getCallback();
     }
 
-    public void setChainCallback(DataAccessCallbacks<Chain> listener) {
-        mChainData.setCallback(listener);
+    public void setProductCallback(DataAccessCallbacks<Product> listener) {
+        mProductData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Chain> getChainCallback() {
         return mChainData.getCallback();
     }
 
-    public void setShopCallback(DataAccessCallbacks<Shop> listener) {
-        mShopData.setCallback(listener);
+    public void setChainCallback(DataAccessCallbacks<Chain> listener) {
+        mChainData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Shop> getShopCallback() {
         return mShopData.getCallback();
     }
 
-    public void setReceiptCallback(DataAccessCallbacks<Receipt> listener) {
-        mReceiptData.setCallback(listener);
+    public void setShopCallback(DataAccessCallbacks<Shop> listener) {
+        mShopData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Receipt> getReceiptCallback() {
         return mReceiptData.getCallback();
     }
 
-    public void setDetailCallback(DataAccessCallbacks<Detail> listener) {
-        mDetailData.setCallback(listener);
+    public void setReceiptCallback(DataAccessCallbacks<Receipt> listener) {
+        mReceiptData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Detail> getDetailCallback() {
         return mDetailData.getCallback();
     }
 
-    public void setTotalCallback(DataAccessCallbacks<Total> listener) {
-        mTotalData.setCallback(listener);
+    public void setDetailCallback(DataAccessCallbacks<Detail> listener) {
+        mDetailData.setCallback(listener);
     }
 
     public DataAccessCallbacks<Total> getTotalCallback() {
         return mTotalData.getCallback();
+    }
+
+    public void setTotalCallback(DataAccessCallbacks<Total> listener) {
+        mTotalData.setCallback(listener);
     }
 
     public void setCursorCallback(DataCursorListener listener) {
@@ -682,9 +794,13 @@ public class DataSource {
     // Para Town.
     public void listTwons() {
         if (mTownData.hasCallback()) {
-
+            mTownData.list();
         }
     }
+
+    // Para User.
+
+    // Para Chain.
 
     public void getTwon(long id) {
         if (mTownData.hasCallback()) {
@@ -722,12 +838,8 @@ public class DataSource {
         }
     }
 
-    // Para User.
-
-    // Para Chain.
-
     public void listChains() {
-        // TODO ??? NO SE PODRÍA USAR SIMPLEMENTE mChainData.list();
+        // TODO ??? NO SE PODRï¿½A USAR SIMPLEMENTE mChainData.list();
         if (DEBUG) Log.d(TAG, "listChains");
         if (mChainData.getCallback() != null) {
             mChainData.list();
@@ -812,6 +924,8 @@ public class DataSource {
         }
     }
 
+    // Para Producto.
+
     // Para Subcategory.
     public void listSubcategories() {
         if (mSubcategoryData.getCallback() != null) {
@@ -843,8 +957,6 @@ public class DataSource {
             mSubcategoryData.getCount();
         }
     }
-
-    // Para Producto.
 
     public void listProducts() {
         if (mProductData.getCallback() != null) {
@@ -1035,11 +1147,11 @@ public class DataSource {
         if (mDetailData.getCallback() != null) {
             // Build receips id list.
             StringBuilder rawQueryBldr = new StringBuilder();
-            
+
             /*
-             * SELECT * FROM detail WHERE receipt_id IN (receipt_ids[0..num_receipts]); 
+             * SELECT * FROM detail WHERE receipt_id IN (receipt_ids[0..num_receipts]);
              */
-            // SELECT * FROM detail WHERE 
+            // SELECT * FROM detail WHERE
             rawQueryBldr.append(BASIC_QUERY).append(TBL_DETAIL).append(BASIC_WHERE);
             rawQueryBldr.append(T_DETAIL_RECPT_ID).append(" IN (");
             int num_receipts = receipts.size();
@@ -1049,7 +1161,7 @@ public class DataSource {
             rawQueryBldr.append(receipts.get(num_receipts - 1).getId());
             rawQueryBldr.append(")");
             if (DEBUG) Log.d(TAG, "Query issued: \"" + rawQueryBldr + "\"");
-            mDetailData.query(rawQueryBldr.toString(), null);            
+            mDetailData.query(rawQueryBldr.toString(), null);
         }
     }
 
@@ -1131,6 +1243,8 @@ public class DataSource {
         }
     }
 
+    // Custom queries:
+
     public void getTotalsBy(Chain chain) {
         if (mTotalData.getCallback() != null) {
 
@@ -1173,13 +1287,13 @@ public class DataSource {
         }
     }
 
+    // Operaciones que modifican los datos.
+
     public void getTotalCount() {
         if (mTotalData.getCallback() != null) {
             mTotalData.getCount();
         }
     }
-
-    // Custom queries:
 
     /*
      * Rececipt/detail query: I will need receipt, product and detail info.
@@ -1191,9 +1305,9 @@ public class DataSource {
          * SELECT detail.*, product.id AS alt_product_id, product.subcategory_id
          * AS alt_product_subcategory_id, product.name AS alt_product_name,
          * product.description, product.article_number
-         * 
+         *
          * FROM detail, product
-         * 
+         *
          * WHERE detail.product_id = product._id AND detail.receipt_id =
          * <receipt.getId()>
          */
@@ -1213,74 +1327,6 @@ public class DataSource {
         String rawQuery = select + where;
         genericQuery(rawQuery, null);
     }
-
-    public static Detail getDetailFromDetailLineCursor(Cursor c) {
-        Detail detail = null;
-
-        if (c != null && c.getCount() > 0) {
-
-            // Check if we have the right number of columns: 6 (detail) + 5
-            // (product) = 11.
-            if (c.getColumnCount() == 11) {
-                try {
-                    int idIdx = c.getColumnIndexOrThrow(T_DETAIL_ID);
-                    int prodIdIdx = c.getColumnIndexOrThrow(T_DETAIL_PROD_ID);
-                    int recptIdIdx = c.getColumnIndexOrThrow(T_DETAIL_RECPT_ID);
-                    int priceIdx = c.getColumnIndexOrThrow(T_DETAIL_PRICE);
-                    int unitsIdx = c.getColumnIndexOrThrow(T_DETAIL_UNITS);
-                    int weightIdx = c.getColumnIndexOrThrow(T_DETAIL_WEIGHT);
-
-                    detail = new Detail();
-
-                    detail.setId(c.getLong(idIdx));
-                    detail.setReceiptId(c.getLong(recptIdIdx));
-                    detail.setProductId(c.getLong(prodIdIdx));
-                    detail.setPrice(c.getInt(priceIdx));
-                    detail.setUnits(c.getInt(unitsIdx));
-                    detail.setWeight(c.getInt(weightIdx));
-                } catch (IllegalArgumentException e) {
-                    // Or simply return null?
-                    throw (new IllegalArgumentException("cursor lacks the required columns"));
-                }
-            }
-        }
-
-        return detail;
-    }
-
-    public static Product getProductFromDetailLineCursor(Cursor c) {
-        Product product = null;
-
-        if (c != null && c.getCount() > 0) {
-
-            // Check if we have the right number of columns: 6 (detail) + 5
-            // (product) = 11.
-            if (c.getColumnCount() == 11) {
-                try {
-                    int idIdx = c.getColumnIndexOrThrow(T_PROD_ID_ALT);
-                    int subcatIdx = c.getColumnIndexOrThrow(T_PROD_SUBCAT_ID_ALT);
-                    int nameIdx = c.getColumnIndexOrThrow(T_PROD_NAME_ALT);
-                    int descrIdx = c.getColumnIndexOrThrow(T_PROD_DESCR);
-                    int artNumIdx = c.getColumnIndexOrThrow(T_PROD_ARTNUMBER);
-
-                    product = new Product();
-
-                    product.setId(c.getLong(idIdx));
-                    product.setSubcategoryId(c.getLong(subcatIdx));
-                    product.setName(c.getString(nameIdx));
-                    product.setDescription(c.getString(descrIdx));
-                    product.setArticleNumber(c.getString(artNumIdx));
-                } catch (IllegalArgumentException e) {
-                    // Or simply return null?
-                    throw (new IllegalArgumentException("cursor lacks the required columns"));
-                }
-            }
-        }
-
-        return product;
-    }
-
-    // Operaciones que modifican los datos.
 
     public void insertRegions(List<Region> dataList) {
         mRegionData.insert(dataList);
@@ -1322,6 +1368,9 @@ public class DataSource {
         mSubregionData.deleteAll();
     }
 
+    // TODO: ACTUALIZAR EL RESTO DE DBOBJECTS A DataAccessNew E INSERCIONES DE
+    // LISTAS.
+
     public void deleteTowns(List<Town> dataList) {
         mTownData.delete(dataList);
     }
@@ -1329,9 +1378,6 @@ public class DataSource {
     public void deleteTowns() {
         mTownData.deleteAll();
     }
-
-    // TODO: ACTUALIZAR EL RESTO DE DBOBJECTS A DataAccessNew E INSERCIONES DE
-    // LISTAS.
 
     public void insertChains(List<Chain> dataList) {
         mChainData.insert(dataList);
@@ -1454,62 +1500,14 @@ public class DataSource {
         mDetailData.deleteAll();
     }
 
+    // Static service methods?
+
     public void deleteTotals(List<Total> dataList) {
         mTotalData.delete(dataList);
     }
 
     public void deleteTotals() {
         mTotalData.deleteAll();
-    }
-
-    // Static service methods?
-    /**
-     * Receives a receipt and a bundle and attach the receipt data to the
-     * bundle. To be detached with {@link #detachReceipt(Bundle)}
-     * 
-     * @param receipt
-     *            the receipt to attach to the bundle.
-     * @param bundle
-     *            the bundle to attach the receipt to.
-     * @return a bundle with the receipt data attached.
-     */
-    public static Bundle attachToBundle(Receipt receipt, Bundle bundle) {
-        Bundle b;
-        if (bundle != null) {
-            b = bundle;
-        } else {
-            b = new Bundle();
-        }
-
-        b.putLong(Keys.KEY_RECEIPT_ID, receipt.getId());
-        b.putLong(Keys.KEY_RECEIPT_SHOP_ID, receipt.getShopId());
-        b.putString(Keys.KEY_RECEIPT_TIMESTAMP, receipt.getTimestampRfc3339());
-
-        return b;
-    }
-
-    /**
-     * Extracts the info from the provided bundle (previously attached to the
-     * bundle with {@link #attachToBundle(Receipt, Bundle)}) and returns a
-     * receipt or null if isn't any.
-     * 
-     * @param bundle
-     *            the {@code bundle} from which we will try to extract the
-     *            receipt.
-     * @return the receipt.
-     */
-    public static Receipt detachReceipt(Bundle bundle) {
-        Receipt receipt = null;
-
-        long id = bundle.getLong(Keys.KEY_RECEIPT_ID);
-        if (id > 0) {
-            receipt = new Receipt();
-            receipt.setId(id);
-            receipt.setShopId(bundle.getLong(Keys.KEY_RECEIPT_SHOP_ID));
-            receipt.setTimestamp(bundle.getLong(Keys.KEY_RECEIPT_TIMESTAMP));
-        }
-
-        return receipt;
     }
 
     private void populateTestData(int nProducts, int nReceipts, int nTotals, int nDetails,
@@ -1520,7 +1518,7 @@ public class DataSource {
         ChainDACallbacks chainDACallbacks = new ChainDACallbacks();
         setChainCallback(chainDACallbacks);
 
-        // TODO: Completar/verificar esta función.
+        // TODO: Completar/verificar esta funciï¿½n.
 
         PopulateSubcategoryDACallbacks subcategoryDACallbacks = new PopulateSubcategoryDACallbacks(
                 nProducts);
@@ -1558,12 +1556,12 @@ public class DataSource {
     class ChainDACallbacks implements DataAccessCallbacks<Chain> {
         private List<Town> mTowns;
 
-        public void setTowns(List<Town> towns) {
-            mTowns = towns;
-        }
-
         public List<Town> getTowns() {
             return mTowns;
+        }
+
+        public void setTowns(List<Town> towns) {
+            mTowns = towns;
         }
 
         @Override
@@ -1665,7 +1663,7 @@ public class DataSource {
                 for (int i = 0; i < mNumProducts; ++i) {
                     product = new Product();
 
-                    product.setName("Product nº " + i + " (" + subcategory.getName() + ")");
+                    product.setName("Product nï¿½ " + i + " (" + subcategory.getName() + ")");
                     product.setSubcategoryId(subcategory.getId());
 
                     products.add(product);
@@ -1714,20 +1712,20 @@ public class DataSource {
         private List<Product> mProductList;
         private int           mNumDetails = 5;
 
-        public void setNumDetails(int numDetails) {
-            mNumDetails = numDetails;
-        }
-
         public int getNumDetails() {
             return mNumDetails;
         }
 
-        public void setProductList(List<Product> productList) {
-            mProductList = productList;
+        public void setNumDetails(int numDetails) {
+            mNumDetails = numDetails;
         }
 
         public List<Product> getProductList() {
             return mProductList;
+        }
+
+        public void setProductList(List<Product> productList) {
+            mProductList = productList;
         }
 
         @Override

@@ -28,6 +28,7 @@ import com.google.cloud.backend.android.CloudBackendActivity;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
 import es.dexusta.ticketcompra.dataaccess.Keys;
+import es.dexusta.ticketcompra.tests.TestActivity;
 
 public class TicketCompraActivity extends CloudBackendActivity {
     private static final String   TAG                               = "TicketCompraActivity";
@@ -179,7 +180,16 @@ public class TicketCompraActivity extends CloudBackendActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) return true;
-        return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.tests :
+                Intent intent = new Intent(this, TestActivity.class);
+                startActivity(intent);
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Menu option \"Tests\" selected.");
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

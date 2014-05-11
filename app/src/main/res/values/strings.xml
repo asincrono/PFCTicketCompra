@@ -372,6 +372,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="msg_add_product_name">Add a name for the product</string>
     <string name="msg_add_product_description">You must add a product description</string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_test">Tests</string>
+    <string name="action_tests">Tests</string>
 
 </resources>
