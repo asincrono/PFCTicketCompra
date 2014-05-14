@@ -1,7 +1,4 @@
-package es.dexusta.ticketcompra;
-
-import java.util.HashMap;
-import java.util.List;
+package es.dexusta.ticketcompra.tests;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
+
+import java.util.HashMap;
+import java.util.List;
+
+import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.model.Region;
@@ -29,39 +31,29 @@ public class TesterActivity extends Activity {
 
     private static final int                 NANOS_PER_SECOND  = 1000000000;
     private static final int                 MILLIS_PER_SECOND = 1000;
+    private static final int                 mNumMunicipios    = 8117;
     private XmlParser                        mXmlParser;
     private XmlResourceParser                mParser;
     private Long                             mEndTime;
     private Long                             mStartTime;
     private DataSource                       mDS;
-
     private ProgressBar                      mProgressBar;
-
     private boolean                          mDBAlreadyExists  = false;
-
     private DataAccessCallbacks<Region>      mRegionListener;
     private DataAccessCallbacks<Subregion>   mSubregionListener;
     private DataAccessCallbacks<Town>        mTownListener;
-
     private HashMap<Long, Region>            mMapRegions;
     private HashMap<Long, Subregion>         mMapSubregions;
-
     private HashMap<Region, List<Subregion>> mMapRegionsSubregions;
     private HashMap<Subregion, List<Town>>   mMapSubregionsTowns;
-
     private int                              mNumRegReaded;
     private int                              mNumSubregReaded;
     private int                              mNumTownsReaded;
-
     private int                              mNumRegInserted;
     private int                              mNumSubregInserted;
     private int                              mNumTownsInserted;
-
     private Country                          mCountry;
     private CountryList                      mCountryList;
-
-    private static final int                 mNumMunicipios    = 8117;
-
     private CatSubcatStructure               mStructure;
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LongSparseArray;
 
 import com.google.cloud.backend.android.CloudBackendMessaging;
 
@@ -88,29 +89,31 @@ import static es.dexusta.ticketcompra.model.DBHelper.T_TOWN_SUBREGION_ID;
 // TODO: Realizar como fragmento en lugar de singleton?
 public class DataSource {
     // SQL QUERY CONSTANTS:
-    public static final String                      BASIC_QUERY               = "SELECT * FROM ";
+    public static final  String  BASIC_QUERY = "SELECT * FROM ";
     // do not remove first space (not an error).
-    public static final String                      BASIC_WHERE               = " WHERE ";
+    public static final  String  BASIC_WHERE = " WHERE ";
     // do not remove first space (not an error).
-    public static final String                      IS_NULL                   = " IS NULL";
-    private static final String                     TAG                       = "DataSource";
-    private static final boolean                    DEBUG                     = true;
-    private static DataSource                       mDataSource;
+    public static final  String  IS_NULL     = " IS NULL";
+    private static final String  TAG         = "DataSource";
+    private static final boolean DEBUG       = true;
+    private static DataSource mDataSource;
 
-    private DBHelper                                mHelper;
-    private Context                                 mContext;
+    private DBHelper mHelper;
+    private Context  mContext;
 
-    private HashMap<Long, String>                   mCategoryIdNameMap        = new HashMap<Long, String>();
-    private HashMap<Long, String>                   mSubcategoryIdNameMap     = new HashMap<Long, String>();
-    private HashMap<Long, Long>                     mSubcategoryCategoryIdMap = new HashMap<Long, Long>();
+    private HashMap<Long, String>   mCategoryIdNameMap        = new HashMap<Long, String>();
+    private LongSparseArray<String> mCategoryIdSparseArray    = new LongSparseArray<String>();// ???
 
-    private HashMap<String, Long>                   mShopUnivIdLocIdMap       = new HashMap<String, Long>();
-    private HashMap<String, Long>                   mProductUnivIdLocIdMap    = new HashMap<String, Long>();
-    private HashMap<Long, Long>                     mProductSubcategoryId     = new HashMap<Long, Long>();
-    private HashMap<String, Long>                   mReceiptUnivIdLocIdMap    = new HashMap<String, Long>();
+    private HashMap<Long, String>   mSubcategoryIdNameMap     = new HashMap<Long, String>();
+    private HashMap<Long, Long>     mSubcategoryCategoryIdMap = new HashMap<Long, Long>();
 
-    private HashMap<Long, String>                   mChainIdNameMap           = new HashMap<Long, String>();
-    private HashMap<Long, Long>                     mShopIdChainIdMap         = new HashMap<Long, Long>();
+    private HashMap<String, Long> mShopUnivIdLocIdMap    = new HashMap<String, Long>();
+    private HashMap<String, Long> mProductUnivIdLocIdMap = new HashMap<String, Long>();
+    private HashMap<Long, Long>   mProductSubcategoryId  = new HashMap<Long, Long>();
+    private HashMap<String, Long> mReceiptUnivIdLocIdMap = new HashMap<String, Long>();
+
+    private HashMap<Long, String> mChainIdNameMap   = new HashMap<Long, String>();
+    private HashMap<Long, Long>   mShopIdChainIdMap = new HashMap<Long, Long>();
 
     // private DataAccessCallbacks<Category> mCategoryListener;
     // private DataAccessCallbacks<Subcategory> mSubcategoryListener;
@@ -129,23 +132,23 @@ public class DataSource {
 
     private DataAccessCallbacks<ReplicatedDBObject> mSimpleInsertListener;
 
-    private DataCursorListener                      mCursorListener;
+    private DataCursorListener mCursorListener;
 
-    private ChainDataAccess                         mChainData;
-    private ShopDataAccess                          mShopData;
+    private ChainDataAccess mChainData;
+    private ShopDataAccess  mShopData;
 
-    private CategoryDataAccess                      mCategoryData;
-    private SubcategoryDataAccess                   mSubcategoryData;
+    private CategoryDataAccess    mCategoryData;
+    private SubcategoryDataAccess mSubcategoryData;
 
-    private ProductDataAccess                       mProductData;
+    private ProductDataAccess mProductData;
 
-    private ReceiptDataAccess                       mReceiptData;
-    private DetailDataAccess                        mDetailData;
-    private TotalDataAccess                         mTotalData;
+    private ReceiptDataAccess mReceiptData;
+    private DetailDataAccess  mDetailData;
+    private TotalDataAccess   mTotalData;
 
-    private RegionDataAccess                        mRegionData;
-    private SubregionDataAccess                     mSubregionData;
-    private TownDataAccess                          mTownData;
+    private RegionDataAccess    mRegionData;
+    private SubregionDataAccess mSubregionData;
+    private TownDataAccess      mTownData;
 
     private DataSource(Context context) {
         mContext = context;

@@ -7,7 +7,7 @@ import es.dexusta.ticketcompra.model.Subcategory;
  */
 public class SubcategoryStructure {
     private long             id;
-    private ProductStructure name;
+    private String name;
 
     public SubcategoryStructure(Subcategory subcategory) {
         id = subcategory.getId();
@@ -22,16 +22,16 @@ public class SubcategoryStructure {
         this.id = id;
     }
 
-    public ProductStructure getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(ProductStructure name) {
+    public void setName(String name) {
         this.name = name;
     }
 
     @Override
-    public ProductStructure toString() {
+    public String toString() {
         return "SubcategoryStructure{" +
                 "id=" + id +
                 ", name='" + name + '\'' +

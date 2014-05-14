@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/tests" android:title="@string/action_tests"></item>
-    
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tests"
+        android:title="@string/action_tests"></item>
+    <item
+        android:id="@+id/list_shops"
+        android:title="List shops"></item>
+    <item
+        android:id="@+id/delete"
+        android:title="Delete"></item>
 </menu>

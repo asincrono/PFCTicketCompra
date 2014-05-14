@@ -1,4 +1,4 @@
-package es.dexusta.ticketcompra;
+package es.dexusta.ticketcompra.tests;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import es.dexusta.ticketcompra.BuildConfig;
+import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 
@@ -88,7 +90,7 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
         mCallbacks.onAddDetail();
     }
 
-    interface ListDetailsCallback {
+    public interface ListDetailsCallback {
         public boolean isInsertionActive();
 
         public void onAddDetail();

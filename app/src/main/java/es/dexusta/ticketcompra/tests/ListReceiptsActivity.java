@@ -1,4 +1,4 @@
-package es.dexusta.ticketcompra;
+package es.dexusta.ticketcompra.tests;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -9,8 +9,8 @@ import android.os.Bundle;
 import java.util.HashMap;
 import java.util.List;
 
-import es.dexusta.ticketcompra.ListDetailsFragment.ListDetailsCallback;
-import es.dexusta.ticketcompra.ListReceiptsFragment.ListReceiptsCallback;
+import es.dexusta.ticketcompra.R;
+import es.dexusta.ticketcompra.StateFragment;
 import es.dexusta.ticketcompra.control.ReceiptAdapter;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -20,10 +20,11 @@ import es.dexusta.ticketcompra.dataaccess.Keys;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Receipt;
+import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 
 
 public class ListReceiptsActivity extends Activity implements ListDetailsCallback,
-        ListReceiptsCallback {
+        ListReceiptsFragment.ListReceiptsCallback {
     private static final boolean DEBUG = true;
     private static final String  TAG   = "ListReceiptsActivity";
 
@@ -31,8 +32,8 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
     private static final String TAG_LIST_RECEIPTS_FRAGMENT = "list_receipts_fragment";
     private static final String TAG_LIST_DETAILS_FRAGMENT  = "list_details_fragment";
 
-    private Receipt mSelectedReceipt;
-    private List<Receipt> mReceipts;
+    private Receipt                        mSelectedReceipt;
+    private List<Receipt>                  mReceipts;
     private HashMap<Receipt, List<Detail>> mReceiptDetailMap;
 
 

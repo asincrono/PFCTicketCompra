@@ -25,54 +25,63 @@ import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
+import java.util.List;
+
+import es.dexusta.ticketcompra.dataaccess.AsyncStatement;
+import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
 import es.dexusta.ticketcompra.dataaccess.Keys;
+import es.dexusta.ticketcompra.dataaccess.Types;
+import es.dexusta.ticketcompra.model.Product;
+import es.dexusta.ticketcompra.model.Receipt;
+import es.dexusta.ticketcompra.model.Shop;
+import es.dexusta.ticketcompra.tests.ListShopsActivity;
 import es.dexusta.ticketcompra.tests.TestActivity;
 
 public class TicketCompraActivity extends CloudBackendActivity {
-    private static final String   TAG                               = "TicketCompraActivity";
-    private static final boolean  DEBUG                             = true;
+    private static final String  TAG   = "TicketCompraActivity";
+    private static final boolean DEBUG = true;
 
     // Drawer menu constants.
     // Title: NEW DATA = 0
-    private static final int      DETAILED_RECEIPT                  = 1;
-    private static final int      TOTAL_TICKET                      = 2;
-    private static final int      ADD_SHOP                          = 3;
-    private static final int      ADD_PRODUCT                       = 4;
+    private static final int DETAILED_RECEIPT       = 1;
+    private static final int TOTAL_TICKET           = 2;
+    private static final int ADD_SHOP               = 3;
+    private static final int ADD_PRODUCT            = 4;
     // Title: CHECK SPENDING = 5
-    private static final int      CUMULATIVE_SPENDING               = 6;
-    private static final int      SPENDING_IN_TIME                  = 7;
-    private static final int      SPENDING_BY_CATEGORY              = 8;
+    private static final int CUMULATIVE_SPENDING    = 6;
+    private static final int SPENDING_IN_TIME       = 7;
+    private static final int SPENDING_BY_CATEGORY   = 8;
     // Title: REPORTS & SUGGESTIONS = 9
-    private static final int      PURCHASING_SUGGESTIONS            = 10;
-    private static final int      BETTER_PRICES                     = 11;
+    private static final int PURCHASING_SUGGESTIONS = 10;
+    private static final int BETTER_PRICES          = 11;
 
     // Request codes for startAcitivityForResult.
     // Need to take in account that:
     // private static final int REQUEST_ACCOUNT_PICKER = 2;
     // defined in parent, SO I CAN NOT USE 2.
-    private static final int      REQUEST_SHOP_FOR_DETAILED_RECEIPT = 3;
-    private static final int      REQUEST_SHOP_FOR_TOTAL_RECEIPT    = 4;
-    private static final int      REQUEST_ADD_SHOP                  = 5;
-    private static final int      REQUEST_ADD_PRODUCT               = 6;
+    private static final int REQUEST_SHOP_FOR_DETAILED_RECEIPT = 3;
+    private static final int REQUEST_SHOP_FOR_TOTAL_RECEIPT    = 4;
+    private static final int REQUEST_ADD_SHOP                  = 5;
+    private static final int REQUEST_ADD_PRODUCT               = 6;
 
     // private static final int REQUEST_ = ;
 
-    private DataSource            mDS;
+    private DataSource mDS;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private FrameLayout           mFLContentFrame;
     private DrawerLayout          mDrawerLayout;
 
-    private ListView              mDrawerList;
+    private ListView mDrawerList;
 
-    private CharSequence          mTitle;
+    private CharSequence mTitle;
 
-    private String[]              mDrawerMenuTitles;
-    private String[]              mDrawerFirstMenu;
-    private String[]              mDrawerSecondMenu;
-    private String[]              mDrawerThirdMenu;
+    private String[] mDrawerMenuTitles;
+    private String[] mDrawerFirstMenu;
+    private String[] mDrawerSecondMenu;
+    private String[] mDrawerThirdMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,14 +171,6 @@ public class TicketCompraActivity extends CloudBackendActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-
-        // Hide ActionBar items that shoudn't show when drawer open
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
@@ -178,18 +179,101 @@ public class TicketCompraActivity extends CloudBackendActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+
+        // Hide ActionBar items that shoudn't show when drawer open
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) return true;
 
+        Intent intent;
         switch (item.getItemId()) {
-            case R.id.tests :
-                Intent intent = new Intent(this, TestActivity.class);
+            case R.id.tests:
+                intent = new Intent(this, TestActivity.class);
                 startActivity(intent);
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Menu option \"Tests\" selected.");
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
+            case R.id.list_shops:
+                intent = new Intent(this, ListShopsActivity.class);
+                startActivity(intent);
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Menu option \"List shops\" selected");
+                break;
+            case R.id.delete:
+                mDS.setShopCallback(new DataAccessCallbacks<Shop>() {
+                    @Override
+                    public void onDataProcessed(int processed, List<Shop> dataList, Types.Operation operation, boolean result) {
+                        if (operation == Types.Operation.DELETE) {
+                            mDS.deleteProducts();
+                        }
+
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, processed + " shops deleted.");
+                    }
+
+                    @Override
+                    public void onDataReceived(List<Shop> results) {
+
+                    }
+
+                    @Override
+                    public void onInfoReceived(Object result, AsyncStatement.Option option) {
+
+                    }
+                });
+
+                mDS.setProductCallback(new DataAccessCallbacks<Product>() {
+                    @Override
+                    public void onDataProcessed(int processed, List<Product> dataList, Types.Operation operation, boolean result) {
+                        if (operation == Types.Operation.DELETE) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, processed + " products deleted.");
+                            mDS.deleteReceipts();
+                        }
+                    }
+
+                    @Override
+                    public void onDataReceived(List<Product> results) {
+
+                    }
+
+                    @Override
+                    public void onInfoReceived(Object result, AsyncStatement.Option option) {
+
+                    }
+                });
+
+                mDS.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
+                    @Override
+                    public void onDataProcessed(int processed, List<Receipt> dataList, Types.Operation operation, boolean result) {
+                        if (operation == Types.Operation.DELETE) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, processed + " receipts deleted.");
+                        }
+                    }
+
+                    @Override
+                    public void onDataReceived(List<Receipt> results) {
+
+                    }
+
+                    @Override
+                    public void onInfoReceived(Object result, AsyncStatement.Option option) {
+
+                    }
+                });
+
+                mDS.deleteShops();
+
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -234,38 +318,38 @@ public class TicketCompraActivity extends CloudBackendActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent;
             switch (position) { // item id -> position.
-            case DETAILED_RECEIPT:
-                // call detailed ticket sequence.
-                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
-                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddDetailedReceiptActivity.class);
-                startActivity(intent);
-                break;
-            case TOTAL_TICKET:
-                // call total ticket sequence.
-                intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
-                intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddTotalActivity.class);
-                startActivity(intent);
-                break;
-            case ADD_SHOP:
-                intent = new Intent(TicketCompraActivity.this, AddShopActivity.class);
-                startActivity(intent);
-                break;
-            case ADD_PRODUCT:
-                //intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
-                intent = new Intent(TicketCompraActivity.this, ProductSelectionActivityV2.class);
-                startActivity(intent);
-                break;
-            case CUMULATIVE_SPENDING:
-                showCumulativeSpending();
-                break;
-            case SPENDING_IN_TIME:
-                showSpendingInTime();
-                break;
-            case SPENDING_BY_CATEGORY:
-                showSpendingByCategory();
-                break;
-            default:
-                break;
+                case DETAILED_RECEIPT:
+                    // call detailed ticket sequence.
+                    intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
+                    intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddDetailedReceiptActivity.class);
+                    startActivity(intent);
+                    break;
+                case TOTAL_TICKET:
+                    // call total ticket sequence.
+                    intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
+                    intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddTotalActivity.class);
+                    startActivity(intent);
+                    break;
+                case ADD_SHOP:
+                    intent = new Intent(TicketCompraActivity.this, AddShopActivity.class);
+                    startActivity(intent);
+                    break;
+                case ADD_PRODUCT:
+                    //intent = new Intent(TicketCompraActivity.this, AddProductActivity.class);
+                    intent = new Intent(TicketCompraActivity.this, ProductSelectionActivityV2.class);
+                    startActivity(intent);
+                    break;
+                case CUMULATIVE_SPENDING:
+                    showCumulativeSpending();
+                    break;
+                case SPENDING_IN_TIME:
+                    showSpendingInTime();
+                    break;
+                case SPENDING_BY_CATEGORY:
+                    showSpendingByCategory();
+                    break;
+                default:
+                    break;
             }
 
             Toast.makeText(TicketCompraActivity.this, "Selected: " + position, Toast.LENGTH_SHORT)
@@ -274,17 +358,17 @@ public class TicketCompraActivity extends CloudBackendActivity {
     }
 
     private class DawerListAdapter extends BaseAdapter {
-        private final int            mFirstMenuCount  = mDrawerFirstMenu.length;
-        private final int            mSecondMenuCount = mDrawerSecondMenu.length;
-        private final int            mThirdMenuCount  = mDrawerThirdMenu.length;
+        private final int mFirstMenuCount  = mDrawerFirstMenu.length;
+        private final int mSecondMenuCount = mDrawerSecondMenu.length;
+        private final int mThirdMenuCount  = mDrawerThirdMenu.length;
 
-        private final int            mCount           = mDrawerMenuTitles.length
-                                                              + mDrawerFirstMenu.length
-                                                              + mDrawerSecondMenu.length
-                                                              + mDrawerThirdMenu.length;
+        private final int mCount = mDrawerMenuTitles.length
+                + mDrawerFirstMenu.length
+                + mDrawerSecondMenu.length
+                + mDrawerThirdMenu.length;
 
-        private final LayoutInflater mInflater        = LayoutInflater
-                                                              .from(TicketCompraActivity.this);
+        private final LayoutInflater mInflater = LayoutInflater
+                .from(TicketCompraActivity.this);
 
         @Override
         public int getCount() {

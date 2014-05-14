@@ -30,12 +30,10 @@ public class ShopInfo {
         mProductInfo = productInfo;
         mTownInfo = townInfo;
 
-        mData = new HashMap<Long, ShopStructure>(data.length);
         mShops = new ArrayList<Shop>(data.length);
 
         Shop shop;
         for (ShopStructure shopStructure : data) {
-            mData.put(shopStructure.getShopId(), shopStructure);
 
             shop = getShop(shopStructure);
             mShops.add(shop);
@@ -127,4 +125,13 @@ public class ShopInfo {
         return mDetailMap.get(receipt);
     }
 
+    @Override
+    public String toString() {
+        return "ShopInfo{" +
+                "mData=" + mData +
+                "\nmShops=" + mShops +
+                "\nmReceiptMap=" + mReceiptMap +
+                "\nmDetailMap=" + mDetailMap +
+                '}';
+    }
 }

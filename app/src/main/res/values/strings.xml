@@ -374,5 +374,6 @@
     <string name="msg_add_product_description">You must add a product description</string>
     <string name="title_activity_test">Tests</string>
     <string name="action_tests">Tests</string>
+    <string name="title_activity_list_shops">ListShopsActivity</string>
 
 </resources>

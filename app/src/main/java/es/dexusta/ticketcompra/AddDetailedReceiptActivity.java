@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dexusta.ticketcompra.AddDetailFragment.AddDetailCallback;
-import es.dexusta.ticketcompra.ListDetailsFragment.ListDetailsCallback;
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -28,6 +27,8 @@ import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Shop;
+import es.dexusta.ticketcompra.tests.ListDetailsFragment;
+import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 
 public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         AddDetailCallback, ListDetailsCallback {
