@@ -1,12 +1,13 @@
 package es.dexusta.ticketcompra.util;
 
+import android.content.res.XmlResourceParser;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.content.res.XmlResourceParser;
 import es.dexusta.ticketcompra.model.Category;
 import es.dexusta.ticketcompra.model.Subcategory;
 
@@ -64,7 +65,7 @@ public class CatSubcatXMLParser implements XmlParser {
         
         parser.require(XmlResourceParser.START_TAG, ns, TAG_SUBCATEGORY);
         
-        // parar· en end_tag de category.
+        // parar√° en end_tag de category.
         do {
             if (parser.getEventType() == XmlResourceParser.START_TAG) {
                 subcategory = new Subcategory();

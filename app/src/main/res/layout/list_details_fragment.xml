@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<es.dexusta.ticketcompra.view.SlideLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -10,14 +11,14 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1" >
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/tv_lbl_chain"
             style="@style/TitleLabel"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="@string/lbl_product" />
+            android:text="@string/lbl_product"/>
 
         <TextView
             android:id="@+id/tv_lbl_price"
@@ -26,12 +27,12 @@
             android:layout_alignBottom="@+id/tv_lbl_chain"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
-            android:text="@string/lbl_price" />
+            android:text="@string/lbl_price"/>
 
         <View
             android:id="@+id/div_h1"
             style="@style/TitleDiv"
-            android:layout_below="@+id/tv_lbl_chain" />
+            android:layout_below="@+id/tv_lbl_chain"/>
 
         <ListView
             android:id="@android:id/list"
@@ -39,13 +40,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tv_lbl_chain"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btt_add_detail"
@@ -58,7 +59,7 @@
             android:onClick="onClickAddDetail"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/btt_add_detail" />
+            android:text="@string/btt_add_detail"/>
     </LinearLayout>
 
-</LinearLayout>
+</es.dexusta.ticketcompra.view.SlideLinearLayout>

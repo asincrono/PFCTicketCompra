@@ -5,10 +5,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
 
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.StateFragment;
 import es.dexusta.ticketcompra.control.ReceiptAdapter;
@@ -57,29 +59,35 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
 
             // Creation of the Fragment to store data between
             // configuration changes.
-            Fragment fragment = new StateFragment();
-            transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
-
+            mStateFragment = new StateFragment();
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
 
             // We show the first fragment.
-            fragment = new ListReceiptsFragment();
+            Fragment fragment = new ListReceiptsFragment();
 
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left,
                     R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.add(android.R.id.content, fragment, TAG_LIST_RECEIPTS_FRAGMENT);
             transaction.commit();
+
+            mReceiptDetailMap = new HashMap<Receipt, List<Detail>>();
+            mStateFragment.put(Keys.KEY_RECEIPT_DETAIL_MAP, mReceiptDetailMap);
+
+            // We create (for the first time) the adapters that will transfer (made available) the data to do the fragments.
+            mReceiptAdapter = new ReceiptAdapter(this, null);
+            mReceiptDetailAdapter = new ReceiptDetailAdapter(this, null);
         } else {
+            mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
             // We retrieve all the possible data stored.
             mSelectedReceipt = (Receipt) mStateFragment.get(Keys.KEY_CURRENT_RECEIPT);
             mReceipts = (List<Receipt>) mStateFragment.get(Keys.KEY_RECEIPT_LIST);
             mReceiptDetailMap = (HashMap<Receipt, List<Detail>>) mStateFragment.get(Keys.KEY_DETAIL_LIST);
             mSelectedReceipt = (Receipt) mStateFragment.get(Keys.KEY_RECEIPT);
+            // We re-create the adapters that will transfer (made available) the data to do the fragments.
+            mReceiptAdapter = new ReceiptAdapter(this, mReceipts);
+            mReceiptDetailAdapter = new ReceiptDetailAdapter(this, mReceiptDetailMap.get(mSelectedReceipt));
             // We don't need to show any fragment, FragmentManager should take care of that.
         }
-
-        // We create the adapters that will transfer (made available) the data to do the fragments.
-        mReceiptAdapter = new ReceiptAdapter(this, mReceipts);
-        mReceiptDetailAdapter = new ReceiptDetailAdapter(this, mReceiptDetailMap.get(mSelectedReceipt));
 
         mDS = DataSource.getInstance(getApplicationContext());
 
@@ -101,6 +109,10 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
                     mStateFragment.put(Keys.KEY_RECEIPT_LIST, mReceipts);
                     // As we update de list in the ListAdapter, the ListView in the fragment will
                     // be automatically updated.
+
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "mReceiptAdapter = " + mReceiptAdapter);
+
                     mReceiptAdapter.swapList(mReceipts);
                 }
             }
@@ -123,10 +135,10 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
 
             @Override
             public void onDataReceived(List<Detail> results) {
-                mReceiptDetailMap.put(mSelectedReceipt, results);
                 // To avoid as many access to de DB as possible, we save all the accesses to the
                 // details in a HashMap using the Receipt as key.
-                mStateFragment.put(Keys.KEY_RECEIPT_DETAIL_MAP, mReceiptDetailMap);
+                mReceiptDetailMap.put(mSelectedReceipt, results);
+
                 mReceiptDetailAdapter.swapList(results);
             }
 
@@ -137,6 +149,9 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
 
             }
         });
+
+        // ???
+        mDS.listReceipts();
     }
 
     @Override
@@ -209,6 +224,7 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
                 R.animator.enter_from_left, R.animator.exit_to_right);
 
         Fragment fragment = manager.findFragmentByTag(TAG_LIST_DETAILS_FRAGMENT);
+
         if (fragment == null) {
             fragment = new ListDetailsFragment();
             transaction.replace(android.R.id.content, fragment, TAG_LIST_DETAILS_FRAGMENT);
@@ -219,6 +235,4 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
-
 }

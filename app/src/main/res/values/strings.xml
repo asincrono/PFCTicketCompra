@@ -375,5 +375,6 @@
     <string name="title_activity_test">Tests</string>
     <string name="action_tests">Tests</string>
     <string name="title_activity_list_shops">ListShopsActivity</string>
+    <string name="title_activity_list_products">ListProductsActivity</string>
 
 </resources>

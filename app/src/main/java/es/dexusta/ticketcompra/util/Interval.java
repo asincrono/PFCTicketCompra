@@ -1,16 +1,13 @@
 package es.dexusta.ticketcompra.util;
 
+import com.google.api.client.util.DateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import android.text.format.DateFormat;
-import android.view.animation.DecelerateInterpolator;
-
-import com.google.api.client.util.DateTime;
 
 public class Interval {
     public static final SimpleDateFormat DF_RFC3339    = new SimpleDateFormat(
@@ -21,7 +18,7 @@ public class Interval {
                                                                Locale.getDefault());
     public static final SimpleDateFormat DF_DIALY      = new SimpleDateFormat("EE dd MMM",
                                                                Locale.getDefault());
-    public static final SimpleDateFormat DF_WEEKLY     = new SimpleDateFormat("W'ª sem.' MMM",
+    public static final SimpleDateFormat DF_WEEKLY     = new SimpleDateFormat("W'Âª sem.' MMM",
                                                                Locale.getDefault());
     public static final SimpleDateFormat DF_MONTHLY    = new SimpleDateFormat("MMM yyyy",
                                                                Locale.getDefault());
@@ -94,13 +91,18 @@ public class Interval {
         mEnd.add(Calendar.MILLISECOND, -1);
     }
     
+    public static String toRfc3339ZuluString(Calendar calendar) {
+        DateTime dt = new DateTime(false, calendar.getTimeInMillis(), 0);
+        return dt.toStringRfc3339();
+    }
+
     public boolean contains(Calendar date) {
         if (mStart.equals(date)) return true;
         if (mEnd.equals(date)) return true;
         if (mStart.before(date) && mEnd.after(date)) return true;
         return false;
     }
-
+    
     public boolean contains(String date) {
         DateTime dt = new DateTime(date);
         long date_millis = dt.getValue();
@@ -109,10 +111,10 @@ public class Interval {
         }
         return false;
     }
-    
+
     public boolean contains(DateTime date) {
         long date_millis = date.getValue();
-        
+
         return (mStart.getTimeInMillis() <= date_millis) && (date_millis <= mEnd.getTimeInMillis());
     }
 
@@ -141,18 +143,18 @@ public class Interval {
         increase(mStart);
         increase(mEnd);
     }
-
+    
     public void decrease() {
         decrease(mStart);
         decrease(mEnd);
     }
-    
+
     public Interval getNext() {
         Calendar newStart = (Calendar) mStart.clone();
         increase(newStart);
         return new Interval(newStart, mPeriodicity, false);
     }
-
+    
     public Interval getPrevious() {
         Calendar newStart = (Calendar) mStart.clone();
         decrease(newStart);
@@ -175,7 +177,7 @@ public class Interval {
             date.add(Calendar.YEAR, 1);
         }
     }
-    
+
     private void decrease(Calendar date) {
         switch (mPeriodicity) {
         case DAILY:
@@ -243,14 +245,9 @@ public class Interval {
         sb.append("End: ").append(DF_RFC3339.format(mEnd.getTime())).append("\n");
         return sb.toString();
     }
-
+    
     public enum Periodicity {
         DAILY, WEEKLY, MONTHLY, ANNUAL
-    }
-    
-    public static String toRfc3339ZuluString(Calendar calendar) {        
-        DateTime dt = new DateTime(false, calendar.getTimeInMillis(), 0);
-        return dt.toStringRfc3339();
     }
 
 }

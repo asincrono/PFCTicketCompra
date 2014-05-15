@@ -1,16 +1,5 @@
 package es.dexusta.ticketcompra;
 
-import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -18,9 +7,22 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.renderer.DefaultRenderer;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import es.dexusta.ticketcompra.EndingDatePickerFragment.SetEndingDateCallbacks;
 import es.dexusta.ticketcompra.StartDatePickerFragment.SetStartDateCallbacks;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -32,34 +34,34 @@ import es.dexusta.ticketcompra.model.Receipt;
 
 public class SpendingByCategoryGraphActivity extends Activity implements SetStartDateCallbacks,
         SetEndingDateCallbacks {
-    private static final boolean DEBUG              = true;
-    private static final String  TAG                = "SpendingByCategoryGraph";
+    private static final boolean DEBUG = true;
+    private static final String  TAG   = "SpendingByCategoryGraph";
 
-    private static final String  STATE_FRAGMENT     = "state_fragment";
-    private static final String  START_DATE_PICKER  = "start_date_picker";
-    private static final String  ENDING_DATE_PICKER = "ending_date_picker";
-    private static final String  START_DATE_MILLIS  = "start_date_millis";
-    private static final String  ENDING_DATE_MILLIS = "ending_date_millis";
+    private static final String STATE_FRAGMENT     = "state_fragment";
+    private static final String START_DATE_PICKER  = "start_date_picker";
+    private static final String ENDING_DATE_PICKER = "ending_date_picker";
+    private static final String START_DATE_MILLIS  = "start_date_millis";
+    private static final String ENDING_DATE_MILLIS = "ending_date_millis";
 
-    private static final String  DETAILS_LIST       = "details";
-    private static final String  RECEIPTS_LIST      = "receipts";
-    private static final String  DATASET            = "dataset";
-    private static final String  RENDERER           = "renderer";
+    private static final String DETAILS_LIST  = "details";
+    private static final String RECEIPTS_LIST = "receipts";
+    private static final String DATASET       = "dataset";
+    private static final String RENDERER      = "renderer";
 
-    private boolean              mChanged           = true;
+    private boolean mChanged = true;
 
-    private StateFragment        mStateFragment;
+    private StateFragment mStateFragment;
 
-    private Calendar             mStartDate;
-    private Calendar             mEndingDate;
+    private Calendar mStartDate;
+    private Calendar mEndingDate;
 
-    private TextView             mTvStartDate;
-    private TextView             mTvEndingDate;
-    private TextView             mLblPeriodicity;
-    private View                 mDivPeriodicity;
-    private Spinner              mSpnPeriodicity;
+    private TextView mTvStartDate;
+    private TextView mTvEndingDate;
+    private TextView mLblPeriodicity;
+    private View     mDivPeriodicity;
+    private Spinner  mSpnPeriodicity;
 
-    private DataSource           mDS;
+    private DataSource mDS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +105,7 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
 
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -149,7 +151,7 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
 
             @Override
             public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -219,13 +221,20 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
             renderer.addSeriesRenderer(r);
         }
 
+        //renderer.setMargins(new int[] {0, 0, 0, 0});
+        //renderer.setLegendHeight(35);
+
         renderer.setBackgroundColor(Color.BLACK);
         renderer.setApplyBackgroundColor(true);
-        renderer.setLabelsTextSize(15);
+        renderer.setLabelsTextSize(25f);
+        renderer.setLegendTextSize(25f);
         renderer.setDisplayValues(true);
-        renderer.setShowLabels(false);
-        renderer.setLegendTextSize(20);
-        renderer.setFitLegend(false);
+        renderer.setShowLabels(true);
+        //renderer.setLegendTextSize(30f);
+
+        renderer.setShowLegend(false);
+        //renderer.setFitLegend(true);
+        //renderer.setFitLegend(false);
 
         return renderer;
     }
@@ -240,16 +249,20 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
         for (Detail detail : details) {
             category_name = mDS.getProductCategoryName(detail.getProductId());
             value = seriesMap.get(category_name);
+
             // value += value == null ? 0 : detail.getPrice();
             if (value == null) {
-                value = 0;
+                value = detail.getPrice();
             } else {
                 value += detail.getPrice();
                 total += detail.getPrice();
             }
 
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, category_name + " value: " + value);
             seriesMap.put(category_name, value);
         }
+
 
         for (Map.Entry<String, Integer> entry : seriesMap.entrySet()) {
             category_series.add(entry.getKey(), entry.getValue() / total);
@@ -267,8 +280,8 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
     private int[] getColors(int number) {
         int[] colors = new int[number];
 
-        float[][] hsv_colors = { colorToHSV(0xFFCC0000), colorToHSV(0xFFFF8800),
-                colorToHSV(0xFF669900), colorToHSV(0XFF9833CC), colorToHSV(0XFF0099CC) };
+        float[][] hsv_colors = {colorToHSV(0xFFCC0000), colorToHSV(0xFFFF8800),
+                colorToHSV(0xFF669900), colorToHSV(0XFF9833CC), colorToHSV(0XFF0099CC)};
 
         // I will have 5 base colors.
         // I check if it's divisible by the highest number (from 5 to 1);

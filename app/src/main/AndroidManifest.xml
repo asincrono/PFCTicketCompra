@@ -124,6 +124,10 @@
             android:name="es.dexusta.ticketcompra.tests.ListShopsActivity"
             android:label="@string/title_activity_list_shops" >
         </activity>
+        <activity
+            android:name="es.dexusta.ticketcompra.tests.ListProductsActivity"
+            android:label="@string/title_activity_list_products" >
+        </activity>
     </application>
 
 </manifest>

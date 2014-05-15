@@ -1,16 +1,17 @@
 package es.dexusta.ticketcompra.model;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.List;
+
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.dataaccess.CategoryDataAccess;
 import es.dexusta.ticketcompra.dataaccess.ChainDataAccess;
@@ -27,59 +28,40 @@ import es.dexusta.ticketcompra.util.RegionXMLParser;
 import es.dexusta.ticketcompra.util.SubregionList;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME                = "ticketcompra.db";
-    private static final int    DB_VERSION             = 1;
-
-    private Context             mContext;
-
-    /*
-     * Comienzo del apartado de cadenas de creación de tablas: Prefijos de las
-     * constantes: TBL, T = tabla. F = campo. SQL_CREATE = sentencia SQL de
-     * creación de la tabla.
-     */
-
-    private static final String INTEGER_PRIMARY_KEY    = "INTEGER PRIMARY KEY";
-    private static final String INTEGER_NOT_NULL       = "INTEGER NOT NULL";
-    private static final String INTEGER_DEFAULT_NULL   = "INTEGER DEFAULT NULL";
-    private static final String INTEGER_DEFAULT_ZERO   = "INTEGER DEFAULT 0";
-    private static final String TEXT_DEFAULT_NULL      = "TEXT DEFAULT NULL";
-    private static final String TEXT_NOT_NULL          = "TEXT NOT NULL";
-    private static final String REAL_DEFAULT_NULL      = "REAL DEFAULT NULL";
-    private static final String REAL_NOT_NULL          = "REAL NOT NULL";
-
-    // Tabla de regiones (comunidades autónomas).
+    // Tabla de regiones (comunidades autÃ³nomas).
     public static final String  TBL_REGION             = "region";
     // Campos:
     public static final String  T_REGION_ID            = "_id";
     public static final String  T_REGION_NAME          = "name";
 
+    /*
+     * Comienzo del apartado de cadenas de creaciÃ³n de tablas: Prefijos de las
+     * constantes: TBL, T = tabla. F = campo. SQL_CREATE = sentencia SQL de
+     * creaciÃ³n de la tabla.
+     */
     // Tabla de sub-regiones (provicias).
     public static final String  TBL_SUBREGION          = "subregion";
     // Campos:
     public static final String  T_SUBREGION_ID         = "_id";
     public static final String  T_SUBREGION_REGION_ID  = "region_id";
     public static final String  T_SUBREGION_NAME       = "name";
-
     // Tabla de puelos (municipios)
     public static final String  TBL_TOWN               = "town";
     public static final String  T_TOWN_ID              = "_id";
     public static final String  T_TOWN_SUBREGION_ID    = "subregion_id";
     public static final String  T_TOWN_NAME            = "name";
-
     // Tabla de usuarios.
     public static final String  TBL_USER               = "user";
     // Campos:
     public static final String  T_USER_ID              = "_id";
     public static final String  T_USER_NAME            = "name";
     public static final String  T_USER_EMAIL           = "email";
-
     // Tabla de cadenas.
     public static final String  TBL_CHAIN              = "chain";
     // Campos:
     public static final String  T_CHAIN_ID             = "_id";
     public static final String  T_CHAIN_NAME           = "name";
     public static final String  T_CHAIN_CODE           = "code";
-
     // Tabla de tiendas.
     public static final String  TBL_SHOP               = "shop";
     // Campos:
@@ -93,7 +75,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_SHOP_LONGT           = "longitude";
     public static final String  T_SHOP_ADDR            = "address";
     public static final String  T_SHOP_UPDATED         = "updated";
-
     // Tabla de direcciones.
     public static final String  TBL_ADDRESS            = "address";
     // Campos:
@@ -103,28 +84,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_ADDR_TYPE            = "type";
     public static final String  T_ADDR_NAME            = "name";
     public static final String  T_ADDR_NUMBER          = "number";
-
-    // Tabla de categorías.
+    // Tabla de categorÃ­as.
     public static final String  TBL_CATEGORY           = "category";
     // Campos:
     public static final String  T_CAT_ID               = "_id";
     public static final String  T_CAT_NAME             = "name";
     public static final String  T_CAT_DESCR            = "description";
-
-    // Tabla de subcategorías.
+    // Tabla de subcategorÃ­as.
     public static final String  TBL_SUBCATEGORY        = "subcategory";
     // Campos:
     public static final String  T_SUBCAT_ID            = "_id";
     public static final String  T_SUBCAT_CAT_ID        = "category_id";
     public static final String  T_SUBCAT_NAME          = "name";
     public static final String  T_SUBCAT_DESCR         = "description";
-
     // Product table.
     public static final String  TBL_PRODUCT            = "product";
     // Columns:
     public static final String  T_PROD_ID              = "_id";
     public static final String  T_PROD_UNIVERSAL_ID    = "universal_id";
-
     public static final String  T_PROD_SUBCAT_ID       = "subcategory_id";
     public static final String  T_PROD_NAME            = "name";
     public static final String  T_PROD_DESCR           = "description";
@@ -135,7 +112,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_PROD_SUBCAT_ID_ALT   = "alt_product_subcategory_id";
     public static final String  T_PROD_NAME_ALT        = "alt_product_name";
     public static final String  T_PROD_UPDATED         = "updated";
-
     // Tabla de recivos.
     public static final String  TBL_RECEIPT            = "receipt";
     // Campos:
@@ -147,7 +123,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_RECPT_TOTAL          = "total";
     public static final String  T_RECPT_TIMESTAMP      = "timestamp";
     public static final String  T_RECPT_UPDATED        = "updated";
-
     // Detail table.
     public static final String  TBL_DETAIL             = "detail";
     // Columns:
@@ -163,13 +138,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_DETAIL_WEIGHT        = "weight";
     // volume will be stored in ml.
     public static final String  T_DETAIL_VOLUME        = "volume";
-
     // Alternative names to avoid possible collision in joins.
     public static final String  T_DETAIL_ID_ALT        = "alt_detail_id";
     public static final String  T_DETAIL_RECPT_ID_ALT  = "alt_detail_receipt_id";
     public static final String  T_DETAIL_PROD_ID_ALT   = "alt_detail_product_id";
     public static final String  T_DETAIL_UPDATED       = "updated";
-
     // Tabla de totales.
     public static final String  TBL_TOTAL              = "total";
     // Campos:
@@ -179,6 +152,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_TOTAL_RECPT_UNIV_ID  = "receipt_universal_id";
     public static final String  T_TOTAL_VALUE          = "value";
     public static final String  T_TOTAL_UPDATED        = "updated";
+    private static final String DB_NAME                = "ticketcompra.db";
+    private static final int    DB_VERSION             = 1;
+    private static final String INTEGER_PRIMARY_KEY    = "INTEGER PRIMARY KEY";
+    private static final String INTEGER_NOT_NULL       = "INTEGER NOT NULL";
+    private static final String INTEGER_DEFAULT_NULL   = "INTEGER DEFAULT NULL";
+    private static final String INTEGER_DEFAULT_ZERO   = "INTEGER DEFAULT 0";
+    private static final String TEXT_DEFAULT_NULL      = "TEXT DEFAULT NULL";
+    private static final String TEXT_NOT_NULL          = "TEXT NOT NULL";
+    private static final String REAL_DEFAULT_NULL      = "REAL DEFAULT NULL";
+    private static final String REAL_NOT_NULL          = "REAL NOT NULL";
+    private Context             mContext;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

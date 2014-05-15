@@ -7,6 +7,12 @@
         android:id="@+id/list_shops"
         android:title="List shops"></item>
     <item
+        android:id="@+id/list_products"
+        android:title="List products"></item>
+    <item
+        android:id="@+id/list_receipts"
+        android:title="List receipts"></item>
+    <item
         android:id="@+id/delete"
         android:title="Delete"></item>
 </menu>

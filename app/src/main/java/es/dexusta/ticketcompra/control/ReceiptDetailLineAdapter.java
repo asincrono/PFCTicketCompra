@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra.control;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -11,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import es.dexusta.ticketcompra.R;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
+import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Total;
 
@@ -21,8 +20,8 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
     private static final int TYPE_DETAIL_LINE = 0;
     private static final int TYPE_TOTAL_LINE  = 1;
 
-    // Alt+0164 ¤ stands for currency symbol (according to locale).
-    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00¤");
+    // Alt+0164 Â¤ stands for currency symbol (according to locale).
+    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00Â¤");
     private NumberFormat     mWeightFormatter = new DecimalFormat("###.###g");
     private LayoutInflater   mInflater;
 
@@ -68,7 +67,7 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
 
     @Override
     public int getCount() {
-        // Si el cursor está vacío, nada. Si no, uno más (el total).
+        // Si el cursor estï¿½ vacï¿½o, nada. Si no, uno mï¿½s (el total).
         int count = super.getCount();
 
         if (count > 0) {
@@ -117,8 +116,8 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Si es la posición total: devuelve total.
-        // Si es la posición normal llama a super.
+        // Si es la posiciï¿½n total: devuelve total.
+        // Si es la posiciï¿½n normal llama a super.
 
         View view;
         int itemViewType = getItemViewType(position);

@@ -1,18 +1,19 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Category;
 import es.dexusta.ticketcompra.model.DBHelper;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class CategoryDataAccess extends DataAccess<Category> {
     private static final String TABLE_NAME = DBHelper.TBL_CATEGORY;
@@ -27,45 +28,6 @@ public class CategoryDataAccess extends DataAccess<Category> {
         mHelper = helper;
     }
 
-    public void list() {
-        DataAccessCallbacks<Category> listener = getCallback();
-        if (listener!= null) {
-            String rawQueryString = "SELECT * FROM " + DBHelper.TBL_CATEGORY;
-            new CategoryAsyncQuery(mHelper, rawQueryString, null, listener).execute();
-        }
-    }
-
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Category> listener = getCallback();
-        if (listener != null) {
-            new CategoryAsyncQuery(mHelper, rawQuery, args, listener).execute(); 
-        }
-    }
-
-    public void insert(List<Category> dataList) {
-        // La operación debe de hacerse haya o no listeners atentos a ella.
-        new CategoryAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();        
-
-    }
-
-
-    public void update(List<Category> dataList) {                           
-        new CategoryAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();        
-    }
-
-    public void delete(List<Category> dataList) {
-        if (dataList == null) {            
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }                
-        new CategoryAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();        
-    }
-
-
-    @Override
-    public void deleteAll() {
-        new CategoryAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
     public static ContentValues getValues(Category c) {
         ContentValues cv = null;
 
@@ -74,7 +36,7 @@ public class CategoryDataAccess extends DataAccess<Category> {
 
             long id = c.getId();
             if (id > 0) {
-                cv.put(ID, id);    
+                cv.put(ID, id);
             }
 
             cv.put(NAME, c.getName());
@@ -84,7 +46,7 @@ public class CategoryDataAccess extends DataAccess<Category> {
     }
 
     public static Category cursorToCategory(Cursor c) {
-        Category cat = null;        
+        Category cat = null;
 
         if (c != null && c.getCount() > 0) {
             cat = new Category();
@@ -93,7 +55,7 @@ public class CategoryDataAccess extends DataAccess<Category> {
             cat.setDescription(c.getString(c.getColumnIndex(DESCRIPTION)));
         }
         return cat;
-    } 
+    }
 
     public static  List<Category> cursorToCategoryList(Cursor c) {
         List<Category> list = null;
@@ -122,6 +84,43 @@ public class CategoryDataAccess extends DataAccess<Category> {
         }
 
         return list;
+    }
+
+    public void list() {
+        DataAccessCallbacks<Category> listener = getCallback();
+        if (listener!= null) {
+            String rawQueryString = "SELECT * FROM " + DBHelper.TBL_CATEGORY;
+            new CategoryAsyncQuery(mHelper, rawQueryString, null, listener).execute();
+        }
+    }
+
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Category> listener = getCallback();
+        if (listener != null) {
+            new CategoryAsyncQuery(mHelper, rawQuery, args, listener).execute();
+        }
+    }
+
+    public void insert(List<Category> dataList) {
+        // La operaciÃ³n debe de hacerse haya o no listeners atentos a ella.
+        new CategoryAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+
+    }
+
+    public void update(List<Category> dataList) {
+        new CategoryAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    }
+
+    public void delete(List<Category> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+        }
+        new CategoryAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new CategoryAsyncInput(mHelper, null, DELETE, getCallback()).execute();
     }
 
     public void getCount() {

@@ -42,37 +42,37 @@ import es.dexusta.ticketcompra.util.Interval.Periodicity;
 
 public class SpendingInTimeGraphActivity extends Activity implements SetStartDateCallbacks,
         SetEndingDateCallbacks, OnItemSelectedListener {
-    private static final boolean DEBUG              = true;
-    private static final String  TAG                = "SpendingInTimeGraphActivity";
+    private static final boolean DEBUG = true;
+    private static final String  TAG   = "SpendingInTimeGraphActivity";
 
-    private static final String  STATE_FRAGMENT     = "state_fragment";
-    private static final String  RECEIPTS_LIST      = "receipts";
+    private static final String TAG_STATE_FRAGMENT = "state_fragment";
+    private static final String RECEIPTS_LIST      = "receipts";
     // private static final String INTERVALS_LIST = "intervals";
-    private static final String  DATASET            = "dataset";
-    private static final String  RENDERER           = "renderer";
+    private static final String DATASET            = "dataset";
+    private static final String RENDERER           = "renderer";
 
-    private static final String  START_DATE         = "start_date";
-    private static final String  ENDING_DATE        = "ending_date";
+    private static final String START_DATE  = "start_date";
+    private static final String ENDING_DATE = "ending_date";
 
-    private static final String  START_DATE_PICKER  = "start_date_picker";
-    private static final String  ENDING_DATE_PICKER = "ending_date_picker";
+    private static final String START_DATE_PICKER  = "start_date_picker";
+    private static final String ENDING_DATE_PICKER = "ending_date_picker";
 
-    private StateFragment        mStateFragment;
+    private StateFragment mStateFragment;
 
-    private boolean              mChanged           = true;
+    private boolean mChanged = true;
 
-    private DataSource           mDS;
+    private DataSource     mDS;
     // private List<Receipt> mReceipts;
-    private List<Interval>       mIntervals;
+    private List<Interval> mIntervals;
 
-    private Calendar             mStartDate;
-    private Calendar             mEndingDate;
+    private Calendar mStartDate;
+    private Calendar mEndingDate;
 
-    private TextView             mTvStartDate;
-    private TextView             mTvEndingDate;
-    private Spinner              mSpnPeriodicity;
+    private TextView mTvStartDate;
+    private TextView mTvEndingDate;
+    private Spinner  mSpnPeriodicity;
 
-    private Periodicity          mPeriodicity;
+    private Periodicity mPeriodicity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +107,10 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
 
         FragmentManager fm = getFragmentManager();
 
-        mStateFragment = (StateFragment) fm.findFragmentByTag(STATE_FRAGMENT);
+        mStateFragment = (StateFragment) fm.findFragmentByTag(TAG_STATE_FRAGMENT);
         if (mStateFragment == null) {
             mStateFragment = new StateFragment();
-            fm.beginTransaction().add(mStateFragment, STATE_FRAGMENT).commit();
+            fm.beginTransaction().add(mStateFragment, TAG_STATE_FRAGMENT).commit();
         }
 
         DataAccessCallbacks<Receipt> callback = new DataAccessCallbacks<Receipt>() {
@@ -240,8 +240,14 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
     private XYMultipleSeriesRenderer getRenderer(String[] xLabels, double yMax) {
         XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
 
+        // Setting scroll (pan) limits and zoom.
+        double xMax = xLabels.length + 2;
+        renderer.setPanLimits(new double[] {0d, xMax, 0d, 0d});
+        renderer.setZoomEnabled(true, false);
+
         renderer.setMargins(new int[] { 16, 100, 150, 8 });
         renderer.setLegendHeight(75);
+
 
         renderer.setLabelsColor(0xFF0099CC);
         renderer.setLabelsTextSize(20f);
@@ -249,7 +255,7 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
 
         renderer.setBackgroundColor(Color.BLACK);
         renderer.setApplyBackgroundColor(true);
-        renderer.setPanEnabled(true, false);
+
         renderer.setXLabelsAlign(Align.LEFT);
         renderer.setXLabelsAngle(60f);
         renderer.setYLabelsAlign(Align.RIGHT);
@@ -263,12 +269,16 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
         renderer.setYAxisMax(yMax + (yMax * 0.05));
         
         renderer.setYLabels(0);
+
         double auxValue = yMax;
+        String yLabel;
+        //DecimalFormat df = new DecimalFormat("##.00");
         for (int i = 0; i < 10; ++i) {
-            renderer.addYTextLabel(auxValue, auxValue/100 + " €  ");
+            yLabel =  Long.toString(Math.round(auxValue/100));
+            //yLabel = df.format(auxValue / 100);
+            renderer.addYTextLabel(auxValue, yLabel + " €  ");
             auxValue -= yMax * 0.1;
         }
-        
 
         renderer.setXAxisMin(0d);
         renderer.setXAxisMax(30d);

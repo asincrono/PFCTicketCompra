@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.internal.c;
 import com.google.cloud.backend.android.CloudEntity;
 
 import es.dexusta.ticketcompra.util.Installation;
@@ -17,7 +16,19 @@ public class Product extends ReplicatedDBObject {
     public static final String PROPERTY_NAME           = "name";
     public static final String PROPERTY_DESCRIPTION    = "description";
     public static final String PROPERTY_ARTICLE_NUMBER = "article_number";
+    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
 
+                                                                @Override
+                                                                public Product createFromParcel(
+                                                                        Parcel source) {
+                                                                    return new Product(source);
+                                                                }
+
+                                                                @Override
+                                                                public Product[] newArray(int size) {
+                                                                    return new Product[size];
+                                                                }
+                                                            };
     private long               subcategoryId;
     private String             name;
     private String             description;
@@ -44,11 +55,11 @@ public class Product extends ReplicatedDBObject {
         description = (String) entity.get(PROPERTY_DESCRIPTION);
         articleNumber = (String) entity.get(PROPERTY_ARTICLE_NUMBER);
 
-        // TODO: ¿Qué hago con los favoritos?.
-        // Cada usuario tendría una lista de favoritos.
+        // TODO: Â¿QuÃ© hago con los favoritos?.
+        // Cada usuario tendrÃ­a una lista de favoritos.
         // En resumen, faborito no se guarda en la entity Product ya que es
-        // información
-        // única de cada usuario.
+        // informaciÃ³n
+        // Ãºnica de cada usuario.
     }
 
     public Product(CloudEntity entity) {
@@ -60,6 +71,23 @@ public class Product extends ReplicatedDBObject {
         articleNumber = (String) entity.get(PROPERTY_ARTICLE_NUMBER);
     }
 
+    private Product(Parcel in) {
+        super(in);
+        subcategoryId = in.readLong();
+        name = in.readString();
+        description = in.readString();
+        if (description.length() == 0) {
+            description = null;
+        }
+
+        articleNumber = in.readString();
+        if (articleNumber.length() == 0) {
+            articleNumber = null;
+        }
+
+        favorite = (in.readInt() == 1) ? true : false;
+    }
+    
     @Override
     public String getKindName() {
         return KIND_NAME;
@@ -69,7 +97,7 @@ public class Product extends ReplicatedDBObject {
     public String getTableName() {
         return DBHelper.TBL_PRODUCT;
     }
-    
+
     @Override
     public DBOCloudEntity getEntity(Context context) {
         long id = getId();
@@ -192,35 +220,4 @@ public class Product extends ReplicatedDBObject {
             dest.writeInt(0);
         }
     }
-
-    private Product(Parcel in) {
-        super(in);
-        subcategoryId = in.readLong();
-        name = in.readString();
-        description = in.readString();
-        if (description.length() == 0) {
-            description = null;
-        }
-
-        articleNumber = in.readString();
-        if (articleNumber.length() == 0) {
-            articleNumber = null;
-        }
-
-        favorite = (in.readInt() == 1) ? true : false;
-    }
-
-    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
-
-                                                                @Override
-                                                                public Product createFromParcel(
-                                                                        Parcel source) {
-                                                                    return new Product(source);
-                                                                }
-
-                                                                @Override
-                                                                public Product[] newArray(int size) {
-                                                                    return new Product[size];
-                                                                }
-                                                            };
 }

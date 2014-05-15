@@ -1,10 +1,5 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -18,6 +13,11 @@ import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
 import com.google.cloud.backend.android.CloudQuery;
 import com.google.cloud.backend.android.F;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -312,10 +312,10 @@ public class BackendDataAccess {
 
     public static void uploadReceiptDetails(final Receipt receipt, final List<Detail> details,
             final Context context, final CloudBackendMessaging backend) {
-        // Se considera que el receipt est· completo (tiene id ya que fue insertado en la BD.
+        // Se considera que el receipt est√° completo (tiene id ya que fue insertado en la BD.
         // Se considera que la lista de details es completa (tienen id y receipt_id porque fueron
         // insertados en la BD.
-        // Simplemente se encadena la inserciÛn de ambos (receipt y lista de details) en el backend.
+        // Simplemente se encadena la inserci√≥n de ambos (receipt y lista de details) en el backend.
         
     }
 

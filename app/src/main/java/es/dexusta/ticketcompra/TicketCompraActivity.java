@@ -36,6 +36,8 @@ import es.dexusta.ticketcompra.dataaccess.Types;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Shop;
+import es.dexusta.ticketcompra.tests.ListProductsActivity;
+import es.dexusta.ticketcompra.tests.ListReceiptsActivity;
 import es.dexusta.ticketcompra.tests.ListShopsActivity;
 import es.dexusta.ticketcompra.tests.TestActivity;
 
@@ -203,6 +205,16 @@ public class TicketCompraActivity extends CloudBackendActivity {
                 startActivity(intent);
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Menu option \"List shops\" selected");
+                break;
+            case R.id.list_products:
+                // TODO: Test this.
+                intent = new Intent(this, ListProductsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.list_receipts:
+                // TODO: Test this.
+                intent = new Intent(this, ListReceiptsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.delete:
                 mDS.setShopCallback(new DataAccessCallbacks<Shop>() {
@@ -514,6 +526,5 @@ public class TicketCompraActivity extends CloudBackendActivity {
                 v.setTag(this);
             }
         }
-
     }
 }

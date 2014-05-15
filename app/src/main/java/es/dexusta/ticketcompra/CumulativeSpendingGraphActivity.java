@@ -74,7 +74,6 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
 
     private TextView                     mTvStartDate;
     private TextView                     mTvEndingDate;
-    private Spinner                      mSpnPeriodicity;
 
     // private LinkedHashMap<Receipt, Integer> mReceiptSpendingMap;
     // private LinkedHashMap<Interval, Integer> mIntervalSpendingMap;
@@ -101,14 +100,14 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
 
         mTvStartDate = (TextView) findViewById(R.id.tv_start_date);
         mTvEndingDate = (TextView) findViewById(R.id.tv_ending_date);
-        mSpnPeriodicity = (Spinner) findViewById(R.id.spn_periocidity);
+        Spinner spnPeriodicity = (Spinner) findViewById(R.id.spn_periocidity);
 
         ArrayAdapter<CharSequence> spnAdapter = ArrayAdapter.createFromResource(this,
                 R.array.periodicity, android.R.layout.simple_spinner_item);
         spnAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpnPeriodicity.setAdapter(spnAdapter);
+        spnPeriodicity.setAdapter(spnAdapter);
 
-        mSpnPeriodicity.setOnItemSelectedListener(this);
+        spnPeriodicity.setOnItemSelectedListener(this);
 
         FragmentManager fm = getFragmentManager();
         mStateFragment = (StateFragment) fm.findFragmentByTag(STATE_FRAGMENT);
@@ -205,10 +204,15 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
         endingDatePickerFragment.show(fm, ENDING_DATE_PICKER);
     }
 
-    private XYMultipleSeriesRenderer getRenderer(List<String> xLabels, double maxY) {
+    private XYMultipleSeriesRenderer getRenderer(List<String> xLabels, double yMax) {
         XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
 
-        renderer.setMargins(new int[] { 16, 100, 150, 8 });
+        // Setting scroll (pan) limits and zoom.
+        double xMax = xLabels.size() + 2;
+        renderer.setPanLimits(new double[] {0d, xMax, 0d, 0d});
+        renderer.setZoomEnabled(true, false);
+
+        renderer.setMargins(new int[]{16, 100, 150, 8});
         renderer.setLegendHeight(75);
 
         renderer.setPointSize(10f);
@@ -219,7 +223,6 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
 
         renderer.setBackgroundColor(Color.BLACK);
         renderer.setApplyBackgroundColor(true);
-        renderer.setPanEnabled(true, false);
 
         renderer.setXLabelsAlign(Align.LEFT);
         renderer.setXLabelsAngle(60f);
@@ -230,13 +233,13 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
         renderer.setXAxisMax(30d);
 
         renderer.setYAxisMin(0d);
-        renderer.setYAxisMax(maxY + (maxY * 0.05));
+        renderer.setYAxisMax(yMax + (yMax * 0.05));
 
         renderer.setYLabels(0);
-        double auxValue = maxY;
+        double auxValue = yMax;
         for (int i = 0; i < 10; ++i) {
             renderer.addYTextLabel(auxValue, auxValue / 100 + "  €  ");
-            auxValue -= maxY * 0.1;
+            auxValue -= yMax * 0.1;
         }
 
         XYSeriesRenderer r = new XYSeriesRenderer();

@@ -38,6 +38,8 @@ public class ShopInfo {
             shop = getShop(shopStructure);
             mShops.add(shop);
 
+            int totalReceipt = 0;
+
             ReceiptStructure[] receiptStructures = shopStructure.getReceipts();
             List<Receipt> receipts = new ArrayList<Receipt>(receiptStructures.length);
             Receipt receipt;
@@ -49,8 +51,11 @@ public class ShopInfo {
                 List<Detail> details = new ArrayList<Detail>(detailStructures.length);
                 for (DetailStructure detailStructure : detailStructures) {
                     details.add(getDetail(detailStructure));
+                    totalReceipt += detailStructure.getPrice();
                 }
 
+                receipt.setTotal(totalReceipt);
+                totalReceipt = 0;
                 mDetailMap.put(receipt, details);
             }
             mReceiptMap.put(shop, receipts);
