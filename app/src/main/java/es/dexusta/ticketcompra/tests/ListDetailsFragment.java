@@ -1,6 +1,5 @@
 package es.dexusta.ticketcompra.tests;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
-import es.dexusta.ticketcompra.control.ActionBarController;
+import es.dexusta.ticketcompra.control.FragmentABCallback;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 
 public class ListDetailsFragment extends ListFragment implements OnClickListener {
@@ -45,25 +44,42 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
 
         if (BuildConfig.DEBUG) Log.d(TAG, " onStart");
 
-        ActionBar actionBar = getActivity().getActionBar();
+        mCallbacks.showAcceptCancelActionBar(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), TAG + " accept pressed", Toast.LENGTH_SHORT).show();
+                        mCallbacks.onListDetailsAccepted();
+                    }
+                },
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), TAG + " cancel pressed", Toast.LENGTH_SHORT).show();
+                        mCallbacks.onListDetailsCanceled();
+                    }
+                }
+        );
 
-        OnClickListener onClickAccept = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), TAG + " accept pressed", Toast.LENGTH_SHORT).show();
-                mCallbacks.onListDetailsAccepted();
-            }
-        };
-
-        OnClickListener onClickCancel = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), TAG + " cancel pressed", Toast.LENGTH_SHORT).show();
-                mCallbacks.onListDetailsCanceled();
-            }
-        };
-
-        ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
+//        ActionBar actionBar = getActivity().getActionBar();
+//
+//        OnClickListener onClickAccept = new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(), TAG + " accept pressed", Toast.LENGTH_SHORT).show();
+//                mCallbacks.onListDetailsAccepted();
+//            }
+//        };
+//
+//        OnClickListener onClickCancel = new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(), TAG + " cancel pressed", Toast.LENGTH_SHORT).show();
+//                mCallbacks.onListDetailsCanceled();
+//            }
+//        };
+//
+//        ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
 
         setListAdapter(mCallbacks.getReceiptDetailListAdapter());
     }
@@ -86,11 +102,19 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onStop");
+        mCallbacks.hideAcceptCancelActionBar();
+    }
+
+    @Override
     public void onClick(View v) {
         mCallbacks.onAddDetail();
     }
 
-    public interface ListDetailsCallback {
+    public interface ListDetailsCallback extends FragmentABCallback {
         public boolean isInsertionActive();
 
         public void onAddDetail();

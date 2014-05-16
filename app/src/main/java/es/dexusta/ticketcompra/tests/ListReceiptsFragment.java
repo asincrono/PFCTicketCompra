@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import es.dexusta.ticketcompra.R;
+import es.dexusta.ticketcompra.control.FragmentABCallback;
 import es.dexusta.ticketcompra.control.ReceiptAdapter;
 import es.dexusta.ticketcompra.model.Receipt;
 
@@ -43,6 +44,11 @@ public class ListReceiptsFragment extends ListFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mCalback = null;
@@ -54,7 +60,7 @@ public class ListReceiptsFragment extends ListFragment {
         mCalback.onReceiptSelected(receipt);
     }
 
-    interface ListReceiptsCallback {
+    interface ListReceiptsCallback extends FragmentABCallback {
         public void onReceiptSelected(Receipt receipt);
 
         public void onCancelReceiptSelection();

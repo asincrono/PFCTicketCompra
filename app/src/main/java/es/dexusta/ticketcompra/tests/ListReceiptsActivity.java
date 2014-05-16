@@ -1,11 +1,14 @@
 package es.dexusta.ticketcompra.tests;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.StateFragment;
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.ReceiptAdapter;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -27,13 +31,11 @@ import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 
 public class ListReceiptsActivity extends Activity implements ListDetailsCallback,
         ListReceiptsFragment.ListReceiptsCallback {
-    private static final boolean DEBUG = true;
     private static final String  TAG   = "ListReceiptsActivity";
-
     private static final String TAG_STATE_FRAGMENT         = "state_fragment";
     private static final String TAG_LIST_RECEIPTS_FRAGMENT = "list_receipts_fragment";
     private static final String TAG_LIST_DETAILS_FRAGMENT  = "list_details_fragment";
-
+    private boolean mShowingClassicAB = true;
     private Receipt                        mSelectedReceipt;
     private List<Receipt>                  mReceipts;
     private HashMap<Receipt, List<Detail>> mReceiptDetailMap;
@@ -234,5 +236,43 @@ public class ListReceiptsActivity extends Activity implements ListDetailsCallbac
 
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
+                                          View.OnClickListener onClickCancel) {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            mShowingClassicAB = false;
+            ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
+        }
+    }
+
+    @Override
+    public void hideAcceptCancelActionBar() {
+        final ActionBar actionBar = getActionBar();
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Action bar = " + actionBar);
+        if (actionBar != null && !mShowingClassicAB) {
+            mShowingClassicAB = true;
+            ActionBarController.setDisplayDefault(actionBar);
+        }
+    }
+
+    @Override
+    public boolean isABAvaliable() {
+        return (getActionBar() != null);
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

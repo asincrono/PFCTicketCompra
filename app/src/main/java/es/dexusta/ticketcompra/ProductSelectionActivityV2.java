@@ -65,6 +65,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
 
     private DataSource mDS;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -358,6 +360,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
         resultIntent.putExtra(Keys.KEY_SELECTED_PRODUCT, mSelectedProduct);
         setResult(RESULT_OK, resultIntent);
         // TODO RETURN SELECTED PRODUCT TO THE ORIGIN ACTIVITY.
+        finish();
     }
 
     @Override

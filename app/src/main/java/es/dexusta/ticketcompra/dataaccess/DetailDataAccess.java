@@ -25,6 +25,7 @@ public class DetailDataAccess extends DataAccess<Detail> {
     private static final String  UNIV_ID         = DBHelper.T_DETAIL_UNIVERSAL_ID;
     private static final String  PRODUCT_ID      = DBHelper.T_DETAIL_PROD_ID;
     private static final String  PRODUCT_UNIV_ID = DBHelper.T_DETAIL_PROD_UNIV_ID;
+    private static final String  PRODUCT_NAME    = DBHelper.T_DETAIL_PROD_NAME;
     private static final String  RECEIPT_ID      = DBHelper.T_DETAIL_RECPT_ID;
     private static final String  RECEIPT_UNIV_ID = DBHelper.T_DETAIL_RECPT_UNIV_ID;
     private static final String  PRICE           = DBHelper.T_DETAIL_PRICE;
@@ -59,6 +60,8 @@ public class DetailDataAccess extends DataAccess<Detail> {
 
             cv.put(PRODUCT_ID, data.getProductId());
             cv.put(PRODUCT_UNIV_ID, data.getProductUnivId());
+            cv.put(PRODUCT_NAME, data.getProductName());
+
             cv.put(RECEIPT_ID, data.getReceiptId());
             cv.put(RECEIPT_UNIV_ID, data.getReceiptUnivId());
             cv.put(PRICE, data.getPrice());
@@ -77,6 +80,8 @@ public class DetailDataAccess extends DataAccess<Detail> {
             detail.setUniversalId(c.getString(c.getColumnIndexOrThrow(UNIV_ID)));
             detail.setProductId(c.getLong(c.getColumnIndexOrThrow(PRODUCT_ID)));
             detail.setProductUnivId(c.getString(c.getColumnIndexOrThrow(PRODUCT_UNIV_ID)));
+            detail.setProductName(c.getString(c.getColumnIndexOrThrow(PRODUCT_NAME)));
+
             detail.setReceiptId(c.getLong(c.getColumnIndexOrThrow(RECEIPT_ID)));
             detail.setReceiptUnivId(c.getString(c.getColumnIndexOrThrow(RECEIPT_UNIV_ID)));
             detail.setPrice(c.getInt(c.getColumnIndexOrThrow(PRICE)));
@@ -103,6 +108,8 @@ public class DetailDataAccess extends DataAccess<Detail> {
                 int receiptUnivIdIndex = c.getColumnIndexOrThrow(RECEIPT_UNIV_ID);
                 int productIdIndex = c.getColumnIndexOrThrow(PRODUCT_ID);
                 int productUnivIdIndex = c.getColumnIndexOrThrow(PRODUCT_UNIV_ID);
+                int productNameIndex = c.getColumnIndexOrThrow(PRODUCT_NAME);
+
                 int priceIndex = c.getColumnIndexOrThrow(PRICE);
                 int unitsIndex = c.getColumnIndexOrThrow(UNITS);
                 int weightIndex = c.getColumnIndexOrThrow(WEIGHT);
@@ -115,6 +122,8 @@ public class DetailDataAccess extends DataAccess<Detail> {
                     detail.setUniversalId(c.getString(univIdIndex));
                     detail.setProductId(c.getLong(productIdIndex));
                     detail.setProductUnivId(c.getString(productUnivIdIndex));
+                    detail.setProductName(c.getString(productNameIndex));
+
                     detail.setReceiptId(c.getLong(receiptIdIndex));
                     detail.setReceiptUnivId(c.getString(receiptUnivIdIndex));
                     detail.setPrice(c.getInt(priceIndex));

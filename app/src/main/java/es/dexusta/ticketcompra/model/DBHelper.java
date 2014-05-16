@@ -131,6 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String  T_DETAIL_RECPT_ID      = "receipt_id";
     public static final String  T_DETAIL_RECPT_UNIV_ID = "receipt_universal_id";
     public static final String  T_DETAIL_PROD_ID       = "product_id";
+    public static final String  T_DETAIL_PROD_NAME     = "product_name";
     public static final String  T_DETAIL_PROD_UNIV_ID  = "product_universal_id";
     public static final String  T_DETAIL_PRICE         = "price";
     public static final String  T_DETAIL_UNITS         = "units";
@@ -300,19 +301,36 @@ public class DBHelper extends SQLiteOpenHelper {
          */
         String sqlCreateDetail = buildCreateString(
                 TBL_DETAIL,
-                new String[] { T_DETAIL_ID, T_DETAIL_UNIVERSAL_ID, T_DETAIL_RECPT_ID,
-                        T_DETAIL_RECPT_UNIV_ID, T_DETAIL_PROD_ID, T_DETAIL_PROD_UNIV_ID,
-                        T_DETAIL_PRICE, T_DETAIL_UNITS, T_DETAIL_WEIGHT, T_DETAIL_VOLUME,
+                new String[] { T_DETAIL_ID, T_DETAIL_UNIVERSAL_ID,
+
+                        T_DETAIL_RECPT_ID,
+                        T_DETAIL_RECPT_UNIV_ID,
+
+                        T_DETAIL_PROD_ID,
+                        T_DETAIL_PROD_UNIV_ID,
+                        T_DETAIL_PROD_NAME,
+
+                        T_DETAIL_PRICE,
+                        T_DETAIL_UNITS,
+                        T_DETAIL_WEIGHT,
+                        T_DETAIL_VOLUME,
                         T_DETAIL_UPDATED },
                 new String[] {
-                        INTEGER_PRIMARY_KEY,
-                        TEXT_DEFAULT_NULL,
+                        INTEGER_PRIMARY_KEY, TEXT_DEFAULT_NULL,
+
                         buildForeignKeyConstraint(TBL_RECEIPT, new String[] { T_RECPT_ID },
                                 Action.CASCADE),
                         TEXT_DEFAULT_NULL,
+
                         buildForeignKeyConstraint(TBL_PRODUCT, new String[] { T_PROD_ID },
-                                Action.CASCADE), TEXT_DEFAULT_NULL, INTEGER_NOT_NULL,
-                        INTEGER_NOT_NULL, INTEGER_DEFAULT_NULL, INTEGER_DEFAULT_NULL,
+                                Action.CASCADE),
+                        TEXT_DEFAULT_NULL,
+                        TEXT_DEFAULT_NULL,
+
+                        INTEGER_NOT_NULL,
+                        INTEGER_NOT_NULL,
+                        INTEGER_DEFAULT_NULL,
+                        INTEGER_DEFAULT_NULL,
                         INTEGER_DEFAULT_ZERO });
 
         db.execSQL(sqlCreateDetail);

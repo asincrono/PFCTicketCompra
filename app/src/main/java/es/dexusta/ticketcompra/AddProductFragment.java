@@ -156,5 +156,6 @@ public class AddProductFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mCallback.hideSoftKeyboard(mEdtProductName);
+        mCallback.hideAcceptCancelActionBar();
     }
 }

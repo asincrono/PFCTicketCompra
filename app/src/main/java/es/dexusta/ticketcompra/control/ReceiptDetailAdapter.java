@@ -15,15 +15,15 @@ import es.dexusta.ticketcompra.model.Detail;
 public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
     private static final int TYPE_DETAIL_LINE = 0;
     private static final int TYPE_TOTAL_LINE  = 1;
-    
-    // Alt+0164 � stands for currency symbol (according to locale).
-    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00�");
+
+    // Alt+0164 or \u00A4 = ¤ stands for currency symbol (according to locale).
+    private NumberFormat     mPriceFormatter  = new DecimalFormat("###0.00¤");
     private NumberFormat     mWeightFormatter = new DecimalFormat("###.###g");
-    
+
     public ReceiptDetailAdapter(Context context) {
-        super(context);        
+        super(context);
     }
-    
+
     public ReceiptDetailAdapter(Context context, List<Detail> list) {
         super(context, list);
     }
@@ -31,11 +31,11 @@ public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
     @Override
     public int getCount() {
         int count = super.getCount();
-        
+
         if (count > 0) {
             ++count;
         }
-        
+
         return count;
     }
 

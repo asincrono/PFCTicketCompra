@@ -51,7 +51,7 @@ public class ProductSelectionFragment extends ListFragment {
             Log.d(TAG, "onResume.");
 
         setListAdapter(mCallback.getProductAdapter());
-        mCallback.hideAcceptCancelActionBar();
+        //mCallback.hideAcceptCancelActionBar();
     }
 
     @Override

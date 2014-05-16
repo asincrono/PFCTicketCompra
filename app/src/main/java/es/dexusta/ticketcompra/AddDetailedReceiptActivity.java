@@ -5,9 +5,11 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import es.dexusta.ticketcompra.AddDetailFragment.AddDetailCallback;
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -33,15 +36,12 @@ import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         AddDetailCallback, ListDetailsCallback {
     private static final String  TAG   = "DetailedReceiptAcitivity";
-    private static final boolean DEBUG = true;
-
     private static final String TAG_STATE_FRAGMENT        = "state_fragment";
     private static final String TAG_LIST_DETAILS_FRAGMENT = "list_details_fragment";
     private static final String TAG_ADD_DETAIL_FRAGMENT   = "add_detail_fragment";
-
     // Won't show current activity until second activity returns.
     private static final int REQUEST_PRODUCT_SELECTION = 0;
-
+    private boolean mShowingClassicAB;
     private Shop         mSelectedShop;
     private Product      mSelectedProduct;
     private Receipt      mReceipt;
@@ -63,7 +63,8 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(new StateFragment(), TAG_STATE_FRAGMENT);
+            mStateFragment = new StateFragment();
+            transaction.add(mStateFragment, TAG_STATE_FRAGMENT);
             transaction.add(android.R.id.content, new ListDetailsFragment(), TAG_LIST_DETAILS_FRAGMENT);
 
             transaction.commit();
@@ -287,7 +288,10 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     @Override
     public void onDetailAdded(Detail detail) {
         if (mDetails == null) {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Details list was null.");
             mDetails = new ArrayList<Detail>();
+            mDetailAdapter.swapList(mDetails);
         }
         mDetails.add(detail);
         onBackPressed();
@@ -301,5 +305,42 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     @Override
     public boolean isInsertionActive() {
         return true;
+    }
+
+
+    @Override
+    public void showAcceptCancelActionBar(View.OnClickListener onClickAccept,
+                                          View.OnClickListener onClickCancel) {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            mShowingClassicAB = false;
+            ActionBarController.setAcceptCancel(actionBar, onClickAccept, onClickCancel);
+        }
+    }
+
+    @Override
+    public void hideAcceptCancelActionBar() {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null && !mShowingClassicAB) {
+            mShowingClassicAB = true;
+            ActionBarController.setDisplayDefault(actionBar);
+        }
+    }
+
+    @Override
+    public boolean isABAvaliable() {
+        return (getActionBar() != null);
+    }
+
+    @Override
+    public void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

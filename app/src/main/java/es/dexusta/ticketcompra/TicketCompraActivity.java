@@ -303,8 +303,8 @@ public class TicketCompraActivity extends CloudBackendActivity {
 
         if (resultCode == RESULT_OK) {
 
-            if (BuildConfig.DEBUG && data.getParcelableExtra(Keys.KEY_SELECTED_SHOP) == null)
-                throw new AssertionError("If RESULT_OK, returned show shouldn't be null");
+//            if (BuildConfig.DEBUG && data.getParcelableExtra(Keys.KEY_SELECTED_SHOP) == null)
+//                throw new AssertionError("If RESULT_OK, returned show shouldn't be null");
 
             switch (requestCode) {
                 case REQUEST_SHOP_FOR_DETAILED_RECEIPT:

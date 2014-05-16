@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra.model;
 
-import java.math.BigDecimal;
-import java.security.InvalidParameterException;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Parcel;
@@ -11,14 +8,28 @@ import android.util.Log;
 
 import com.google.cloud.backend.android.CloudEntity;
 
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
+
 import es.dexusta.ticketcompra.util.Installation;
 
 public class Detail extends ReplicatedDBObject implements Persistent {
+    public static final String   KIND_NAME                = "detail";
+    public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
+
+                                                               @Override
+                                                               public Detail createFromParcel(
+                                                                       Parcel source) {
+                                                                   return new Detail(source);
+                                                               }
+
+                                                               @Override
+                                                               public Detail[] newArray(int size) {
+                                                                   return new Detail[size];
+                                                               }
+                                                           };
     private static final String  TAG                      = "Detail";
     private static final boolean DEBUG                    = true;
-
-    public static final String   KIND_NAME                = "detail";
-
     private static final String  PROPERTY_RECEIPT_ID      = "receipt_id";
     private static final String  PROPERTY_RECEIPT_UNIV_ID = "receipt_universal_id";
     private static final String  PROPERTY_PRODUCT_ID      = "product_id";
@@ -28,7 +39,6 @@ public class Detail extends ReplicatedDBObject implements Persistent {
     private static final String  PROPERTY_WEIGHT          = "weight";
     private static final String  PROPERTY_VOLUME          = "volume";
     private static final String  PROPERTY_PRICE           = "price";
-
     private long                 receiptId;
     private String               receiptUnivId;
     private long                 productId;
@@ -49,10 +59,6 @@ public class Detail extends ReplicatedDBObject implements Persistent {
 
     public Detail(Context context) {
         super(context);
-    }
-
-    public Detail(String installation) {
-        super(installation);
     }
 
     // public static Detail getDetail(DBOCloudEntity entity) {
@@ -83,6 +89,54 @@ public class Detail extends ReplicatedDBObject implements Persistent {
     // }
     // return detail;
     // }
+
+    public Detail(String installation) {
+        super(installation);
+    }
+
+    public Detail(CloudEntity entity) {
+        super(entity);
+        // receiptId = Long.parseLong((String) entity.get(PROPERTY_RECEIPT_ID));
+        receiptUnivId = (String) entity.get(PROPERTY_RECEIPT_UNIV_ID);
+        // productId = Long.parseLong((String) entity.get(PROPERTY_PRODUCT_ID));
+        productUnivId = (String) entity.get(PROPERTY_PRODUCT_UNIV_ID);
+        productName = (String) entity.get(PROPERTY_PRODUCT_NAME);
+
+        int price = translate(entity.get(PROPERTY_PRICE));
+        setPrice(price);
+
+        int units = translate(entity.get(PROPERTY_UNITS));
+        setUnits(units);
+
+        // I need to check if this two return null as they are optional.
+        Object returned = entity.get(PROPERTY_VOLUME);
+
+        if (returned != null) {
+            int volume = translate(returned);
+            setVolume(volume);
+            // Log.d(TAG, "Volume returned: " + volume);
+        }
+
+        returned = entity.get(PROPERTY_WEIGHT);
+        if (returned != null) {
+            int weight = translate(returned);
+            setWeight(weight);
+            // Log.d(TAG, "Weight returned: " + weight);
+        }
+    }
+    
+    private Detail(Parcel in) {
+        super(in);
+        receiptId = in.readLong();
+        productId = in.readLong();
+        productName = in.readString();
+        units = in.readInt();
+        weight = in.readInt();
+        volume = in.readInt();
+        price = in.readInt();
+        pricePerUnit = in.readFloat();
+        pricePerKilo = in.readFloat();
+    }
 
     @Override
     public ContentValues getValues() {
@@ -115,7 +169,7 @@ public class Detail extends ReplicatedDBObject implements Persistent {
     public String getKindName() {
         return KIND_NAME;
     }
-    
+
     @Override
     public String getTableName() {
         return DBHelper.TBL_DETAIL;
@@ -169,37 +223,6 @@ public class Detail extends ReplicatedDBObject implements Persistent {
         return value;
     }
 
-    public Detail(CloudEntity entity) {
-        super(entity);
-        // receiptId = Long.parseLong((String) entity.get(PROPERTY_RECEIPT_ID));
-        receiptUnivId = (String) entity.get(PROPERTY_RECEIPT_UNIV_ID);
-        // productId = Long.parseLong((String) entity.get(PROPERTY_PRODUCT_ID));
-        productUnivId = (String) entity.get(PROPERTY_PRODUCT_UNIV_ID);
-        productName = (String) entity.get(PROPERTY_PRODUCT_NAME);
-
-        int price = translate(entity.get(PROPERTY_PRICE));
-        setPrice(price);
-
-        int units = translate(entity.get(PROPERTY_UNITS));
-        setUnits(units);
-
-        // I need to check if this two return null as they are optional.
-        Object returned = entity.get(PROPERTY_VOLUME);
-
-        if (returned != null) {
-            int volume = translate(returned);
-            setVolume(volume);
-            // Log.d(TAG, "Volume returned: " + volume);
-        }
-
-        returned = entity.get(PROPERTY_WEIGHT);
-        if (returned != null) {
-            int weight = translate(returned);
-            setWeight(weight);
-            // Log.d(TAG, "Weight returned: " + weight);
-        }
-    }
-
     public long getReceiptId() {
         return receiptId;
     }
@@ -212,22 +235,23 @@ public class Detail extends ReplicatedDBObject implements Persistent {
         return productId;
     }
 
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
     public void setProduct(Product product) {
         productId = product.getId();
         productUnivId = product.getUniversalId();
         productName = product.getName();
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public CharSequence getProductName() {
+    // NOTA: ESTABA A CharSequence.
+    public String getProductName() {
         return productName;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getReceiptUnivId() {
@@ -327,12 +351,12 @@ public class Detail extends ReplicatedDBObject implements Persistent {
         return pricePerKilo;
     }
 
-    public float getPricePerLiter() {
-        return pricePerLiter;
-    }
-
     public void setPricePerKilo(float pricePerKilo) {
         this.pricePerKilo = pricePerKilo;
+    }
+
+    public float getPricePerLiter() {
+        return pricePerLiter;
     }
 
     @Override
@@ -350,22 +374,10 @@ public class Detail extends ReplicatedDBObject implements Persistent {
         text.append("\n").append("receiptId : ").append(receiptId);
         text.append("\n").append("receiptUnivId : ").append(receiptUnivId);
         text.append("\n").append("productId : ").append(productId);
+        text.append("\n").append("productName : ").append(productName);
         text.append("\n").append("productUnivId : ").append(productUnivId).append("\n");
 
         return text.toString();
-    }
-
-    private Detail(Parcel in) {
-        super(in);
-        receiptId = in.readLong();
-        productId = in.readLong();
-        productName = in.readString();
-        units = in.readInt();
-        weight = in.readInt();
-        volume = in.readInt();
-        price = in.readInt();
-        pricePerUnit = in.readFloat();
-        pricePerKilo = in.readFloat();
     }
 
     @Override
@@ -381,20 +393,6 @@ public class Detail extends ReplicatedDBObject implements Persistent {
         dest.writeFloat(pricePerUnit);
         dest.writeFloat(pricePerKilo);
     }
-
-    public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
-
-                                                               @Override
-                                                               public Detail createFromParcel(
-                                                                       Parcel source) {
-                                                                   return new Detail(source);
-                                                               }
-
-                                                               @Override
-                                                               public Detail[] newArray(int size) {
-                                                                   return new Detail[size];
-                                                               }
-                                                           };
 
     // public static Detail getDetail(DBOCloudEntity entity) {
     // Detail detail = null;

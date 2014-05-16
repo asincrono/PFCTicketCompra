@@ -33,8 +33,8 @@ public class AddShopActivity extends CloudBackendActivity implements
     private static final String  TAG   = "AddShopV2Activity";
     private static final boolean DEBUG = true;
 
-    private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain";
-    private static final String TAG_ADD_SHOP_FRAGMENT     = "add_shop";
+    private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain_fragment";
+    private static final String TAG_ADD_SHOP_FRAGMENT     = "add_shop_fragment";
     private static final String TAG_STATE_FRAGMENT        = "state_fragment";
 
     private Chain         mSelectedChain;

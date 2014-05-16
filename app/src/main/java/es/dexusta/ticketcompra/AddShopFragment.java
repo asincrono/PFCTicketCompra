@@ -183,9 +183,11 @@ public class AddShopFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
+        //mCallbacks.hideAcceptCancelActionBar();
         mCallbacks = null;
     }
 
@@ -264,8 +266,6 @@ public class AddShopFragment extends Fragment {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "onStop.");
         mCallbacks.hideSoftKeyboard(mEdtAddress);
-
+        mCallbacks.hideAcceptCancelActionBar();
     }
-
-
 }
