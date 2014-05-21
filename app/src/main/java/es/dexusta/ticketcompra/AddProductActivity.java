@@ -18,7 +18,7 @@ import com.google.cloud.backend.android.CloudBackendActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
@@ -28,28 +28,28 @@ import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Subcategory;
 
 public class AddProductActivity extends CloudBackendActivity {
-    private static final String              TAG                 = "AddProductActivity";
-    private static final boolean             DEBUG               = true;
+    private static final String  TAG   = "AddProductActivity";
+    private static final boolean DEBUG = true;
 
-    private static final String              KEY_CAT_POSITION    = "category_position";
-    private static final String              KEY_SUBCAT_POSITION = "subcategory_position";
+    private static final String KEY_CAT_POSITION    = "category_position";
+    private static final String KEY_SUBCAT_POSITION = "subcategory_position";
 
-    private EditText                         mEdtName;
-    private EditText                         mEdtDescription;
-    private Spinner                          mSpnCategory;
-    private Spinner                          mSpnSubcategory;
-    private int                              mSpnCatPosition     = Spinner.INVALID_POSITION;
-    private int                              mSpnSubcatPosition  = Spinner.INVALID_POSITION;
+    private EditText mEdtName;
+    private EditText mEdtDescription;
+    private Spinner  mSpnCategory;
+    private Spinner  mSpnSubcategory;
+    private int mSpnCatPosition    = Spinner.INVALID_POSITION;
+    private int mSpnSubcatPosition = Spinner.INVALID_POSITION;
 
-    private boolean                          mPaused;
+    private boolean mPaused;
 
     private DataSource                       mDS;
     private DataAccessCallbacks<Category>    mCategoryListener;
     private DataAccessCallbacks<Subcategory> mSubcategoryListener;
     private DataAccessCallbacks<Product>     mProductListener;
 
-    private Subcategory                      mSubcategory;
-    private Product                          mProduct;
+    private Subcategory mSubcategory;
+    private Product     mProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class AddProductActivity extends CloudBackendActivity {
 
             @Override
             public void onDataProcessed(int processed, List<Category> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -178,7 +178,7 @@ public class AddProductActivity extends CloudBackendActivity {
 
             @Override
             public void onDataProcessed(int processed, List<Subcategory> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -188,16 +188,15 @@ public class AddProductActivity extends CloudBackendActivity {
 
             @Override
             public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 if (result) {
-                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadProducts(dataList, getApplicationContext(),
-                                getCloudBackend());
-                    }
-                    
+//                    BackendDataAccess.uploadProducts(dataList, getApplicationContext(),
+//                            getCloudBackend());
+                    BackendDataAccessV2.uploadProducts(dataList, getApplicationContext(), getCloudBackend());
+
                     mDS.addToProductSubcategoryIdMap(dataList.get(0));
                 } else {
-                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insert� el producto.");
+                    if (DEBUG) Log.wtf(TAG, "La jodimos que no insertó el producto.");
                 }
 
             }
@@ -253,7 +252,7 @@ public class AddProductActivity extends CloudBackendActivity {
     }
 
     private void showAcceptCancelActionBar(OnClickListener onClickAccept,
-            OnClickListener onClickCancel) {
+                                           OnClickListener onClickCancel) {
         final ActionBar actionBar = getActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(getActionBar().getThemedContext());

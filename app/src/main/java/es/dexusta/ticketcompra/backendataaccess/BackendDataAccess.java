@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -28,35 +29,20 @@ import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Shop;
-import es.dexusta.ticketcompra.model.Total;
 
 public class BackendDataAccess {
     private static final boolean DEBUG = true;
     private static final String  TAG   = "BackendDataAccess";
 
-//    public static void upload(final ReplicatedDBObject repDBObject, final Context context,
-//            CloudBackendMessaging backend) {
-//        CloudEntity entity = repDBObject.getEntity(context);
-//
-//        CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
-//
-//            @Override
-//            public void onComplete(CloudEntity results) {
-//                if (DEBUG) Log.d(TAG, repDBObject.getKindName() + " uploaded");
-//                repDBObject.setUpdated(true);
-//                DataSource.getInstance(context).simpleInsert(repDBObject);
-//            }
-//        };
-//
-//        backend.insert(entity, handler);
 //    }
 
     public static boolean hasConnectivity(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();        
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-    
+
+    @Deprecated
     public static void downloadShops(Context context, CloudBackendMessaging backend, boolean chain) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
@@ -84,39 +70,48 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
+    @Deprecated
     public static void uploadShop(final Shop shop, final Context context,
-            CloudBackendMessaging backend) {
+                                  CloudBackendMessaging backend, final CloudCallbackHandler<CloudEntity> handler) {
+
         final DataSource ds = DataSource.getInstance(context);
-        final DataAccessCallbacks<Shop> callback = new DataAccessCallbacks<Shop>() {
-
-            @Override
-            public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
-                if (DEBUG) Log.d(TAG, "shop updated");
-            }
-
-            @Override
-            public void onDataReceived(List<Shop> results) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-                
-            }
-        };
+        final DataAccessCallbacks<Shop> callback = null;
 
         CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
 
             @Override
             public void onComplete(CloudEntity result) {
-                if (DEBUG) Log.d(TAG, "one shop uploaded");
+
+                if (DEBUG) Log.d(TAG, "(uploadShop) One shop uploaded");
+
+                ds.setShopCallback(new DataAccessCallbacks<Shop>() {
+
+                    @Override
+                    public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
+                                                boolean result) {
+                        if (DEBUG) Log.d(TAG, "shop updated");
+                        ds.addShopUpdatedInfo(shop);
+
+                        if (handler != null) handler.onComplete(dataList.get(0).getEntity(context));
+                    }
+
+                    @Override
+                    public void onDataReceived(List<Shop> results) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onInfoReceived(Object result, Option option) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
                 shop.setUpdated(true);
-                List<Shop> shops = new ArrayList<Shop>();
+                List<Shop> shops = new ArrayList<Shop>(1);
                 shops.add(shop);
-                ds.setShopCallback(callback);
+
                 ds.updateShops(shops);
             }
         };
@@ -125,8 +120,10 @@ public class BackendDataAccess {
     }
 
     public static void uploadPendingShops(final Context context,
-            final CloudBackendMessaging backend, final boolean chain) {
-        DataAccessCallbacks<Shop> shopCallbacks = new DataAccessCallbacks<Shop>() {
+                                          final CloudBackendMessaging backend, final boolean chain) {
+        final DataSource ds = DataSource.getInstance(context);
+
+        ds.setShopCallback(new DataAccessCallbacks<Shop>() {
 
             @Override
             public void onInfoReceived(Object result, Option option) {
@@ -137,7 +134,7 @@ public class BackendDataAccess {
             @Override
             public void onDataReceived(List<Shop> results) {
                 if (results != null) {
-                    List<CloudEntity> entities = new ArrayList<CloudEntity>();
+                    List<CloudEntity> entities = new ArrayList<CloudEntity>(results.size());
                     for (Shop shop : results) {
                         entities.add(shop.getEntity(context));
                     }
@@ -145,25 +142,22 @@ public class BackendDataAccess {
                             context, backend, chain);
                     backend.insertAll(entities, handler);
                 } else if (chain) {
-                    uploadPendingProducts(context, backend, chain);
+                    uploadPendingProducts(context, backend, true);
                 }
             }
 
             @Override
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
-
             }
-        };
+        });
 
-        DataSource ds = DataSource.getInstance(context);
-        ds.setShopCallback(shopCallbacks);
         ds.listPendingShops();
     }
 
     public static void downloadNewProducts(Context context, CloudBackendMessaging backend,
-            boolean chain) {
+                                           boolean chain) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -190,32 +184,78 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
-    public static void uploadProduct(Product product, Context context, CloudBackendMessaging backend) {
-        CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
-            
+    public static void uploadProduct(final Product product,
+                                     final Context context, CloudBackendMessaging backend,
+                                     final CloudCallbackHandler<CloudEntity> handler) {
+
+        final DataSource ds = DataSource.getInstance(context);
+        ds.setProductCallback(new DataAccessCallbacks<Product>() {
             @Override
-            public void onComplete(CloudEntity results) {
-                if (DEBUG) Log.d(TAG, "one product uploaded");
+            public void onDataProcessed(int processed, List<Product> dataList, Operation operation, boolean result) {
+                if (handler != null) handler.onComplete(dataList.get(0).getEntity(context));
+            }
+
+            @Override
+            public void onDataReceived(List<Product> results) {
+
+            }
+
+            @Override
+            public void onInfoReceived(Object result, Option option) {
+
+            }
+        });
+
+        CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
+
+            @Override
+            public void onComplete(CloudEntity result) {
+                if (DEBUG) Log.d(TAG, "One product uploaded");
+
+                product.setUpdated(true);
+                List<Product> productList = new ArrayList<Product>(1);
+                productList.add(product);
+                ds.updateProducts(productList);
             }
         };
-        
+
         backend.insert(product.getEntity(context), callbackHandler);
     }
-    
+
     public static void uploadProducts(List<Product> products, Context context,
-            CloudBackendMessaging backend) {
-        List<CloudEntity> entities = new ArrayList<CloudEntity>();
+                                      CloudBackendMessaging backend) {
+        List<CloudEntity> entities = new ArrayList<CloudEntity>(products.size());
         for (Product product : products) {
             entities.add(product.getEntity(context));
         }
 
-        UploadProductsCallbackHandler handler = new UploadProductsCallbackHandler(products,
+        UploadPendingProductsCallbackHandler handler = new UploadPendingProductsCallbackHandler(products,
                 context, null, false);
         backend.insertAll(entities, handler);
     }
 
+    //    public static void upload(final ReplicatedDBObject repDBObject, final Context context,
+//            CloudBackendMessaging backend) {
+//        CloudEntity entity = repDBObject.getEntity(context);
+//
+//        CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
+//
+//            @Override
+//            public void onComplete(CloudEntity results) {
+//                if (DEBUG) Log.d(TAG, repDBObject.getKindName() + " uploaded");
+//                repDBObject.setUpdated(true);
+//                DataSource.getInstance(context).simpleInsert(repDBObject);
+//            }
+//        };
+//
+//        backend.insert(entity, handler);
+
+
     public static void uploadPendingProducts(final Context context, final CloudBackendMessaging backend,
-            final boolean chain) {
+                                             final boolean chain) {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Call to uploadPendingProducts.");
+
         DataAccessCallbacks<Product> productCallbacks = new DataAccessCallbacks<Product>() {
 
             @Override
@@ -227,22 +267,22 @@ public class BackendDataAccess {
             @Override
             public void onDataReceived(List<Product> results) {
                 if (results != null) {
-                    List<CloudEntity> entities = new ArrayList<CloudEntity>();
+                    List<CloudEntity> entities = new ArrayList<CloudEntity>(results.size());
                     for (Product product : results) {
                         entities.add(product.getEntity(context));
                     }
 
-                    UploadProductsCallbackHandler handler = new UploadProductsCallbackHandler(
+                    UploadPendingProductsCallbackHandler handler = new UploadPendingProductsCallbackHandler(
                             results, context, backend, chain);
                     backend.insertAll(entities, handler);
                 } else if (chain) {
-                    uploadPendingReceipts(context, backend, chain);
+                    uploadPendingReceipts(context, backend, true);
                 }
             }
 
             @Override
             public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -254,7 +294,7 @@ public class BackendDataAccess {
     }
 
     public static void downloadReceipts(Context context, CloudBackendMessaging backend,
-            boolean chain) {
+                                        boolean chain) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -284,43 +324,101 @@ public class BackendDataAccess {
 
         backend.list(query, handler);
     }
-    
-    public static void uploadReceipt(Receipt receipt, Context context, CloudBackendMessaging backend) {
-        CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
-
-            @Override
-            public void onComplete(CloudEntity results) {
-                if (DEBUG) Log.d(TAG, "one receipt uploaded");
-            }
-            
-        };
-        
-        backend.insert(receipt.getEntity(context), callbackHandler);
-    }
-
-    public static void uploadReceipts(List<Receipt> receipts, Context context,
-            CloudBackendMessaging backend) {
-        List<CloudEntity> entities = new ArrayList<CloudEntity>();
-        for (Receipt receipt : receipts) {
-            entities.add(receipt.getEntity(context));
-        }
-
-        UploadReceiptsCallbackHandler handler = new UploadReceiptsCallbackHandler(receipts,
-                context, null, false);
-        backend.insertAll(entities, handler);
-    }
 
     public static void uploadReceiptDetails(final Receipt receipt, final List<Detail> details,
-            final Context context, final CloudBackendMessaging backend) {
+                                            final Context context, final CloudBackendMessaging backend) {
         // Se considera que el receipt está completo (tiene id ya que fue insertado en la BD.
         // Se considera que la lista de details es completa (tienen id y receipt_id porque fueron
         // insertados en la BD.
         // Simplemente se encadena la inserción de ambos (receipt y lista de details) en el backend.
-        
+
+        // Comprobar si ya tenemos subida la shop asociada al receipt.
+        final DataSource ds = DataSource.getInstance(context);
+
+        if (ds.isShopUpdated(receipt.getShopId())) {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "La tienda ya estaba actualizada.");
+
+            CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
+                @Override
+                public void onComplete(CloudEntity results) {
+                    // We need to mark the receipt as updated.
+
+                    ds.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
+                        @Override
+                        public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation, boolean result) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "el receipt está marcado como \"updated\".");
+                            // Upload details after upload receipt.
+                            uploadDetails(details, context, backend);
+                        }
+
+                        @Override
+                        public void onDataReceived(List<Receipt> results) {
+
+                        }
+
+                        @Override
+                        public void onInfoReceived(Object result, Option option) {
+
+                        }
+                    });
+
+                    receipt.setUpdated(true);
+
+                    List<Receipt> list = new ArrayList<Receipt>(1);
+                    list.add(receipt);
+
+                    ds.updateReceipts(list);
+                }
+            };
+
+            backend.insert(receipt.getEntity(context), callbackHandler);
+        } else {
+
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "La tienda no estaba actualizada.");
+            ds.setShopCallback(new DataAccessCallbacks<Shop>() {
+                @Override
+                public void onDataProcessed(int processed, List<Shop> dataList, Operation operation, boolean result) {
+
+                }
+
+                @Override
+                public void onDataReceived(List<Shop> results) {
+                    // We need to upload the shop before be able to upload receipt and details.
+
+                    uploadShopReceiptDetails(results.get(0), receipt, details, context, backend);
+                }
+
+                @Override
+                public void onInfoReceived(Object result, Option option) {
+
+                }
+            });
+
+            ds.getShop(receipt.getShopId());
+        }
     }
 
+    public static void uploadShopReceiptDetails(Shop shop, final Receipt receipt, final List<Detail> details,
+                                                final Context context, final CloudBackendMessaging backend) {
+        CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
+            @Override
+            public void onComplete(CloudEntity result) {
+                uploadReceiptDetails(receipt, details, context, backend);
+            }
+        };
+
+        uploadShop(shop, context, backend, handler);
+    }
+
+
     public static void uploadPendingReceipts(final Context context, final CloudBackendMessaging backend,
-            final boolean chain) {
+                                             final boolean chain) {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Call to uploadPendingReceipts.");
+
         DataAccessCallbacks<Receipt> receiptDataAccessCallbacks = new DataAccessCallbacks<Receipt>() {
 
             @Override
@@ -337,17 +435,17 @@ public class BackendDataAccess {
                         entities.add(receipt.getEntity(context));
                     }
 
-                    UploadReceiptsCallbackHandler handler = new UploadReceiptsCallbackHandler(
+                    UploadPendingReceiptsCallbackHandler handler = new UploadPendingReceiptsCallbackHandler(
                             results, context, backend, chain);
                     backend.insertAll(entities, handler);
                 } else if (chain) {
-                    uploadTotals(context, backend, chain);
+                    uploadPendingDetails(context, backend);
                 }
             }
 
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -358,129 +456,7 @@ public class BackendDataAccess {
         ds.listPendingReceipts();
     }
 
-    public static void downloadTotals(Context context, CloudBackendMessaging backend, boolean chain) {
-        TimeZone tzUTC = TimeZone.getTimeZone("UTC");
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String lastUpdateStr = sp.getString(Consts.PREF_TOTALS_LAST_UPDATE, null);
-
-        DateTime lastUpdate;
-        if (lastUpdateStr == null) {
-            lastUpdate = new DateTime(new Date(1), tzUTC);
-        } else {
-            lastUpdate = DateTime.parseRfc3339(lastUpdateStr);
-        }
-
-        DateTime thisUpdate = new DateTime(new Date(), tzUTC);
-
-        CloudQuery query = new CloudQuery(Total.KIND_NAME);
-
-        F filterCreateAt = F.gt(CloudEntity.PROP_CREATED_AT, lastUpdate);
-        F filterCreateBy = F.eq(CloudEntity.PROP_CREATED_BY, backend.getCredential()
-                .getSelectedAccountName());
-
-        F filter = F.and(filterCreateBy, filterCreateAt);
-
-        query.setFilter(filter);
-
-        DownloadTotalsCallbackHandler handler = new DownloadTotalsCallbackHandler(context,
-                thisUpdate, backend, chain);
-
-        backend.list(query, handler);
-    }
-    
-    public static void uploadTotal(final Total total, final Context context, CloudBackendMessaging backend) {
-        final DataSource ds = DataSource.getInstance(context);
-        final DataAccessCallbacks<Total> callback = new DataAccessCallbacks<Total>() {
-
-            @Override
-            public void onDataProcessed(int processed, List<Total> dataList, Operation operation,
-                    boolean result) {
-                if (DEBUG) Log.d(TAG, "total updated");                
-            }
-
-            @Override
-            public void onDataReceived(List<Total> results) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-                
-            }
-        };
-        CloudCallbackHandler<CloudEntity> callbackHandler = new CloudCallbackHandler<CloudEntity>() {
-
-            @Override
-            public void onComplete(CloudEntity results) {
-                
-                total.setUpdated(true);
-                List<Total> totals = new ArrayList<Total>();
-                totals.add(total);
-                ds.setTotalCallback(callback);        
-                ds.updateTotals(totals);
-                if (DEBUG) Log.d(TAG, "one total inserted");
-            }
-        };
-        
-        backend.insert(total.getEntity(context), callbackHandler);
-    }
-
-    public static void uploadTotals(List<Total> totals, Context context,
-            CloudBackendMessaging backend) {
-        List<CloudEntity> entities = new ArrayList<CloudEntity>();
-        for (Total total : totals) {
-            entities.add(total.getEntity(context));
-        }
-
-        UploadTotalsCallbackHandler handler = new UploadTotalsCallbackHandler(totals, context,
-                null, false);
-
-        backend.insertAll(entities, handler);
-    }
-
-    public static void uploadTotals(final Context context, final CloudBackendMessaging backend,
-            final boolean chain) {
-        DataAccessCallbacks<Total> totalCallbacks = new DataAccessCallbacks<Total>() {
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataReceived(List<Total> results) {
-                if (results != null) {
-                    List<CloudEntity> entities = new ArrayList<CloudEntity>();
-                    for (Total total : results) {
-                        entities.add(total.getEntity(context));
-                    }
-
-                    UploadTotalsCallbackHandler handler = new UploadTotalsCallbackHandler(results,
-                            context, backend, chain);
-                    backend.insertAll(entities, handler);
-                } else if (chain) {
-                    uploadPendingDetails(context, backend);
-                }
-            }
-
-            @Override
-            public void onDataProcessed(int processed, List<Total> dataList, Operation operation,
-                    boolean result) {
-                // TODO Auto-generated method stub
-
-            }
-        };
-
-        DataSource ds = DataSource.getInstance(context);
-        ds.setTotalCallback(totalCallbacks);
-        ds.listPendingTotals();
-    }
-
-    public static void downloadDetails(Context context, CloudBackendMessaging backend, boolean chain) {
+    public static void downloadDetails(Context context, CloudBackendMessaging backend) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -509,19 +485,65 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
-    public static void uploadDetails(List<Detail> details, Context context,
-            CloudBackendMessaging backend) {
+    public static void uploadDetails(final List<Detail> details, Context context,
+                                     CloudBackendMessaging backend) {
+
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Call to uploadDetails.");
+
         List<CloudEntity> entities = new ArrayList<CloudEntity>();
         for (Detail detail : details) {
             entities.add(detail.getEntity(context));
         }
 
-        UploadDetailsCallbackHandler handler = new UploadDetailsCallbackHandler(details, context);
+        final DataSource ds = DataSource.getInstance(context);
+
+        CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
+            @Override
+            public void onComplete(List<CloudEntity> results) {
+                for (Detail detail : details) {
+                    detail.setUpdated(true);
+                }
+
+                ds.setDetailCallback(new DataAccessCallbacks<Detail>() {
+                    @Override
+                    public void onDataProcessed(int processed, List<Detail> dataList, Operation operation, boolean result) {
+                        if (operation == Operation.UPDATE) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, dataList.size() + " detail(s) marked as updated.");
+                        }
+                        ds.listPendingDetails();
+                    }
+
+                    @Override
+                    public void onDataReceived(List<Detail> results) {
+                        if (results != null) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, results.size() + " details still marked as not updated.");
+                        } else {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "No pending detials.");
+                        }
+                    }
+
+                    @Override
+                    public void onInfoReceived(Object result, Option option) {
+
+                    }
+                });
+
+                ds.updateDetails(details);
+            }
+        };
 
         backend.insertAll(entities, handler);
     }
 
     public static void uploadPendingDetails(final Context context, final CloudBackendMessaging backend) {
+
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Call to uploadPendingDetails.");
+
         DataAccessCallbacks<Detail> detailCallbacks = new DataAccessCallbacks<Detail>() {
 
             @Override
@@ -533,12 +555,14 @@ public class BackendDataAccess {
             @Override
             public void onDataReceived(List<Detail> results) {
                 if (results != null) {
-                    List<CloudEntity> entities = new ArrayList<CloudEntity>();
+                    List<CloudEntity> entities = new ArrayList<CloudEntity>(results.size());
+
+
                     for (Detail detail : results) {
                         entities.add(detail.getEntity(context));
                     }
 
-                    UploadDetailsCallbackHandler handler = new UploadDetailsCallbackHandler(
+                    UploadPendingDetailsCallbackHandler handler = new UploadPendingDetailsCallbackHandler(
                             results, context);
                     backend.insertAll(entities, handler);
                 }
@@ -546,7 +570,7 @@ public class BackendDataAccess {
 
             @Override
             public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }

@@ -2,6 +2,7 @@ package es.dexusta.ticketcompra.control;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,13 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Total;
 
 public class ReceiptDetailLineAdapter extends CursorAdapter {
+    private static final String TAG = "ReceiptDetailLineAdapter";
 
     private static final int TYPE_DETAIL_LINE = 0;
     private static final int TYPE_TOTAL_LINE  = 1;
@@ -67,7 +70,7 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
 
     @Override
     public int getCount() {
-        // Si el cursor est� vac�o, nada. Si no, uno m�s (el total).
+        // Si el cursor está vacío, nada. Si no, uno más (el total).
         int count = super.getCount();
 
         if (count > 0) {
@@ -116,8 +119,8 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Si es la posici�n total: devuelve total.
-        // Si es la posici�n normal llama a super.
+        // Si es la posición total: devuelve total.
+        // Si es la posición normal llama a super.
 
         View view;
         int itemViewType = getItemViewType(position);
@@ -172,6 +175,8 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "bindView.");
 
         ViewHolderDetail holder = (ViewHolderDetail) view.getTag();
 
@@ -184,6 +189,8 @@ public class ReceiptDetailLineAdapter extends CursorAdapter {
         holder.tvUnits.setText("X" + units);
         if (weight > 0) {
             holder.tvWeight.setText(mWeightFormatter.format(weight));
+        } else {
+            holder.tvWeight.setText("");
         }
         holder.tvPrice.setText(mPriceFormatter.format(price));
     }

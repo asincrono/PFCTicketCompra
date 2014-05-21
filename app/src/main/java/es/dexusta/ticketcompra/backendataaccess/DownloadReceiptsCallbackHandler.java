@@ -1,19 +1,19 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 import com.google.cloud.backend.android.CloudBackendMessaging;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -51,27 +51,38 @@ public class DownloadReceiptsCallbackHandler extends CloudCallbackHandler<List<C
     @Override
     public void onComplete(List<CloudEntity> results) {
         if (results.size() > 0) {
-            Toast.makeText(mContext, "Downloaded " + results.size() + " receipts", Toast.LENGTH_SHORT).show();
-            if (DEBUG) Log.d(TAG, results.size() + " receipts downloaded");
-            
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, results.size() + " receipts downloaded.");
+
             List<Receipt> receipts = new ArrayList<Receipt>();
             Receipt receipt;
             String receiptUnivId;
             
             long shopId;
+
             for (CloudEntity entity : results) {
                 receipt = new Receipt(entity);
                 receipt.setUpdated(true);
                 receiptUnivId = receipt.getUniversalId();
+
                 if (!receiptUnivId.startsWith(mInstallation)) {
-                    String shopUnivId = receipt.getShopUnivId();                    
+                    String shopUnivId = receipt.getShopUnivId();
+                    // If we get no shopId we can't insert the receipt.
+                    // We shouldn't allow receipts without shop.
+
                     shopId = mDS.getShopLocIdFromUnivId(shopUnivId);
+
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "associated shopId = " + shopId);
+
 //                    shopId = mDS.getShopLocIdFromUnivId(receipt.getShopUnivId());
                     receipt.setShopId(shopId);
                     receipts.add(receipt);
                 }
             }
             if (receipts.size() > 0) {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Inserting the receipts in the database.");
                 mDS.setReceiptCallback(new ReceiptDACallbacks());
                 mDS.insertReceipts(receipts);
             }
@@ -79,10 +90,6 @@ public class DownloadReceiptsCallbackHandler extends CloudCallbackHandler<List<C
 
         mSP.edit().putString(Consts.PREF_RECEIPTS_LAST_UPDATE, mThisUpdate.toStringRfc3339())
                 .commit();
-
-        if (mChain) {
-            BackendDataAccess.downloadTotals(mContext, mBackend, mChain);
-        }
     }
 
     class ReceiptDACallbacks implements DataAccessCallbacks<Receipt> {
@@ -94,6 +101,9 @@ public class DownloadReceiptsCallbackHandler extends CloudCallbackHandler<List<C
                 for (Receipt receipt : dataList) {
                     mDS.addToUnivIdLocIdMap(receipt);
                 }
+            }
+            if (mChain) {
+                BackendDataAccess.downloadDetails(mContext, mBackend);
             }
         }
 

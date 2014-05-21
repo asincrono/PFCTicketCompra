@@ -179,7 +179,7 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
                 // Try to insert in the datastore.
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend());
+                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend(), null);
                         if (DEBUG) Log.d(TAG, "Product inserted :" + dataList.get(0));
                         Toast.makeText(ProductSelectionActivity.this, "Product inserted", Toast.LENGTH_SHORT).show();
                         mDS.getProductsBy(mSelectedSubcategory);

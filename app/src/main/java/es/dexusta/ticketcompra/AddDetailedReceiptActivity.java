@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dexusta.ticketcompra.AddDetailFragment.AddDetailCallback;
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
@@ -35,13 +35,13 @@ import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 
 public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         AddDetailCallback, ListDetailsCallback {
-    private static final String  TAG   = "DetailedReceiptAcitivity";
+    private static final String TAG                       = "AddDetailedReceiptAcitivity";
     private static final String TAG_STATE_FRAGMENT        = "state_fragment";
     private static final String TAG_LIST_DETAILS_FRAGMENT = "list_details_fragment";
     private static final String TAG_ADD_DETAIL_FRAGMENT   = "add_detail_fragment";
     // Won't show current activity until second activity returns.
-    private static final int REQUEST_PRODUCT_SELECTION = 0;
-    private boolean mShowingClassicAB;
+    private static final int    REQUEST_PRODUCT_SELECTION = 0;
+    private boolean      mShowingClassicAB;
     private Shop         mSelectedShop;
     private Product      mSelectedProduct;
     private Receipt      mReceipt;
@@ -97,8 +97,6 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
             }
 
-
-
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
                                         boolean result) {
@@ -135,8 +133,13 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
                 Toast.makeText(AddDetailedReceiptActivity.this,
                         " Details inserted: " + dataList.size() + ".", Toast.LENGTH_SHORT).show();
 
-                if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                    BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
+                if (BackendDataAccessV2.hasConnectivity(getApplicationContext())) {
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "about to upload receipt & details.");
+
+                    //BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
+                    // getApplicationContext(), getCloudBackend());
+                    BackendDataAccessV2.uploadReceiptAndDetails(mReceipt, dataList,
                             getApplicationContext(), getCloudBackend());
                 }
             }

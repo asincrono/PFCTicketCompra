@@ -27,6 +27,7 @@ import com.google.cloud.backend.android.CloudBackendActivity;
 
 import java.util.List;
 
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
@@ -139,10 +140,10 @@ public class TicketCompraActivity extends CloudBackendActivity {
     protected void onPostCreate() {
         mDS = DataSource.getInstance(getApplicationContext());
         // Puede que se entretejan download y upload.
-        // En cualquier caso no deber�a de representar un problema a no ser
+        // En cualquier caso no debería de representar un problema a no ser
         // que "sobreescriban". Para evitarlo: encadenarlas.
-        mDS.downloadData(getCloudBackend());
-        mDS.uploadData(getCloudBackend());
+
+        BackendDataAccessV2.updateData(getApplicationContext(), getCloudBackend());
     }
 
     private void initData() {

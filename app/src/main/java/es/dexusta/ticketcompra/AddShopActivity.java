@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.ChainAdapter;
@@ -30,7 +29,7 @@ import es.dexusta.ticketcompra.model.Shop;
 
 public class AddShopActivity extends CloudBackendActivity implements
         ChainSelectionCallback, AddShopCallbacks {
-    private static final String  TAG   = "AddShopV2Activity";
+    private static final String  TAG   = "AddShopActivity";
     private static final boolean DEBUG = true;
 
     private static final String TAG_SELECT_CHAIN_FRAGMENT = "select_chain_fragment";
@@ -122,13 +121,14 @@ public class AddShopActivity extends CloudBackendActivity implements
                     Log.d(TAG, "Shop processed, result = " + result);
 
                 if (result) {
-                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
-                                getCloudBackend());
-
-                        Toast.makeText(getApplicationContext(), "Shop inserted.",
-                                Toast.LENGTH_SHORT).show();
-                    }
+//                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
+//                        BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
+//                                getCloudBackend(), null);
+//
+//                        Toast.makeText(getApplicationContext(), "Shop inserted.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+                    BackendDataAccessV2.uploadShops(dataList, getApplicationContext(), getCloudBackend());
                 }
             }
         };

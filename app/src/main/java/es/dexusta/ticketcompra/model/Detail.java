@@ -14,22 +14,23 @@ import java.security.InvalidParameterException;
 import es.dexusta.ticketcompra.util.Installation;
 
 public class Detail extends ReplicatedDBObject implements Persistent {
-    public static final String   KIND_NAME                = "detail";
+    public static final String KIND_NAME = "detail";
+
     public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
 
-                                                               @Override
-                                                               public Detail createFromParcel(
-                                                                       Parcel source) {
-                                                                   return new Detail(source);
-                                                               }
+        @Override
+        public Detail createFromParcel(
+                Parcel source) {
+            return new Detail(source);
+        }
 
-                                                               @Override
-                                                               public Detail[] newArray(int size) {
-                                                                   return new Detail[size];
-                                                               }
-                                                           };
+        @Override
+        public Detail[] newArray(int size) {
+            return new Detail[size];
+        }
+    };
+
     private static final String  TAG                      = "Detail";
-    private static final boolean DEBUG                    = true;
     private static final String  PROPERTY_RECEIPT_ID      = "receipt_id";
     private static final String  PROPERTY_RECEIPT_UNIV_ID = "receipt_universal_id";
     private static final String  PROPERTY_PRODUCT_ID      = "product_id";
@@ -39,19 +40,19 @@ public class Detail extends ReplicatedDBObject implements Persistent {
     private static final String  PROPERTY_WEIGHT          = "weight";
     private static final String  PROPERTY_VOLUME          = "volume";
     private static final String  PROPERTY_PRICE           = "price";
-    private long                 receiptId;
-    private String               receiptUnivId;
-    private long                 productId;
-    private String               productUnivId;
-    private String               productName;
-    private int                  units                    = 1;
-    private int                  weight;
+    private long   receiptId;
+    private String receiptUnivId;
+    private long   productId;
+    private String productUnivId;
+    private String productName;
+    private int units = 1;
+    private int   weight;
     // volume will be in ml.
-    private int                  volume;
-    private int                  price;
-    private float                pricePerUnit;
-    private float                pricePerKilo;
-    private float                pricePerLiter;
+    private int   volume;
+    private int   price;
+    private float pricePerUnit;
+    private float pricePerKilo;
+    private float pricePerLiter;
 
     public Detail() {
 
@@ -124,7 +125,7 @@ public class Detail extends ReplicatedDBObject implements Persistent {
             // Log.d(TAG, "Weight returned: " + weight);
         }
     }
-    
+
     private Detail(Parcel in) {
         super(in);
         receiptId = in.readLong();

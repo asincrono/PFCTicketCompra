@@ -160,7 +160,7 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                 if (result) {
                     if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
                         BackendDataAccess.uploadProduct(dataList.get(0),
-                                getApplicationContext(), getCloudBackend());
+                                getApplicationContext(), getCloudBackend(), null);
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Tried to upload new product.");
                     }

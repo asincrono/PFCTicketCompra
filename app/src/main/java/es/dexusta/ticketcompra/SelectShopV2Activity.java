@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.AddShopCallbacks;
 import es.dexusta.ticketcompra.control.ChainAdapter;
@@ -148,17 +147,18 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
                                         boolean result) {
                 if (result) {
-                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
-                                getCloudBackend());
-
-                        if (DEBUG)
-                            Log.d(TAG, "Shop inserted: " + dataList.get(0));
-                        Toast.makeText(getApplicationContext(), "Shop inserted.",
-                                Toast.LENGTH_SHORT).show();
-                        // TESTING
-                        mDS.getShopsBy(mSelectedChain);
-                    }
+//                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
+//                        BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
+//                                getCloudBackend(), null);
+//
+//                        if (DEBUG)
+//                            Log.d(TAG, "Shop inserted: " + dataList.get(0));
+//                        Toast.makeText(getApplicationContext(), "Shop inserted.",
+//                                Toast.LENGTH_SHORT).show();
+//                        // TESTING
+//                        mDS.getShopsBy(mSelectedChain);
+//                    }
+                    BackendDataAccessV2.uploadShops(dataList, getApplicationContext(), getCloudBackend());
                 }
 
             }

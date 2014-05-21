@@ -110,7 +110,9 @@ public class AddDetailFragment extends Fragment {
                     }
                 }
                 detail.setProductId(mProduct.getId());
+                detail.setProductUnivId(mProduct.getUniversalId());
                 detail.setProductName(mProduct.getName());
+
 
                 clear();
 

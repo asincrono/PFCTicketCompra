@@ -1,7 +1,5 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.List;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +7,8 @@ import android.widget.Toast;
 import com.google.cloud.backend.android.CloudBackendMessaging;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
+
+import java.util.List;
 
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.model.Shop;
@@ -39,6 +39,7 @@ public class UploadShopsCallbackHandler extends CloudCallbackHandler<List<CloudE
             if (DEBUG) Log.d(TAG, results.size() + " shops uploaded");
             for (Shop shop : mShops) {
                 shop.setUpdated(true);
+                mDS.addShopUpdatedInfo(shop);
             }
             
             //TODO: CHECK IF THIS IS SAFE.

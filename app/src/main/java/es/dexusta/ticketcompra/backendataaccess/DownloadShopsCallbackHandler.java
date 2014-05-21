@@ -1,8 +1,5 @@
 package es.dexusta.ticketcompra.backendataaccess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +11,10 @@ import com.google.cloud.backend.android.CloudBackendMessaging;
 import com.google.cloud.backend.android.CloudCallbackHandler;
 import com.google.cloud.backend.android.CloudEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
@@ -23,9 +24,8 @@ import es.dexusta.ticketcompra.model.Shop;
 import es.dexusta.ticketcompra.util.Installation;
 
 public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<CloudEntity>> {
-    private static boolean        DEBUG  = true;
     private static final String   TAG    = "DownloadShopsCallbacksHandler";
-
+    private static boolean        DEBUG  = true;
     private static String         mInstallation;
     private SharedPreferences     mSP;
     private DataSource            mDS;
@@ -53,10 +53,10 @@ public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<Clou
     public void onComplete(List<CloudEntity> results) {
 
         if (results.size() > 0) {
-            Toast.makeText(mContext, "Uploaded " + results.size() + " shops", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Downloaded " + results.size() + " shops", Toast.LENGTH_SHORT).show();
             if (DEBUG) Log.d(TAG, results.size() + " shops downloaded.");
 
-            List<Shop> shops = new ArrayList<Shop>();
+            List<Shop> shops = new ArrayList<Shop>(results.size());
             Shop shop;
             String shopUnivId;
             for (CloudEntity entity : results) {
@@ -71,17 +71,16 @@ public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<Clou
             if (shops.size() > 0) {
                 mDS.setShopCallback(new ShopDACallbacks());
                 mDS.insertShops(shops);
+            } else {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "No new shops added.");
             }
-            
+
         } else {
             if (DEBUG) Log.d(TAG, "No new shops downloaded.");
         }
         
         mSP.edit().putString(Consts.PREF_SHOPS_LAST_UPDATE, mThisUpdate.toStringRfc3339()).commit();
-        
-        if (mChain) {
-            BackendDataAccess.downloadNewProducts(mContext, mBackend, mChain);
-        }
     }
 
     class ShopDACallbacks implements DataAccessCallbacks<Shop> {
@@ -91,8 +90,13 @@ public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<Clou
                 boolean result) {
             if (result) {
                 for (Shop shop : dataList) {
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "shopId = " + shop.getId());
                     mDS.addToUnivIdLocIdMap(shop);
                 }
+            }
+            if (mChain) {
+                BackendDataAccess.downloadNewProducts(mContext, mBackend, true);
             }
         }
 

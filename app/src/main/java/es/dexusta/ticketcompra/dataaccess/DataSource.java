@@ -6,14 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.LongSparseArray;
 
-import com.google.cloud.backend.android.CloudBackendMessaging;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.InitializeDBTask.InitializerCallback;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
@@ -82,9 +79,8 @@ import static es.dexusta.ticketcompra.model.DBHelper.T_TOWN_SUBREGION_ID;
 
 /**
  * Singleton que agrupa todo el sistema de acceso a los datos.
- * 
+ *
  * @author asincrono
- * 
  */
 // TODO: Realizar como fragmento en lugar de singleton?
 public class DataSource {
@@ -101,11 +97,13 @@ public class DataSource {
     private DBHelper mHelper;
     private Context  mContext;
 
-    private HashMap<Long, String>   mCategoryIdNameMap        = new HashMap<Long, String>();
-    private LongSparseArray<String> mCategoryIdSparseArray    = new LongSparseArray<String>();// ???
+    private HashMap<Long, String>   mCategoryIdNameMap     = new HashMap<Long, String>();
+    private LongSparseArray<String> mCategoryIdSparseArray = new LongSparseArray<String>();// ???
 
-    private HashMap<Long, String>   mSubcategoryIdNameMap     = new HashMap<Long, String>();
-    private HashMap<Long, Long>     mSubcategoryCategoryIdMap = new HashMap<Long, Long>();
+    private LongSparseArray<Boolean> mShopUpdated = new LongSparseArray<Boolean>();
+
+    private HashMap<Long, String> mSubcategoryIdNameMap     = new HashMap<Long, String>();
+    private HashMap<Long, Long>   mSubcategoryCategoryIdMap = new HashMap<Long, Long>();
 
     private HashMap<String, Long> mShopUnivIdLocIdMap    = new HashMap<String, Long>();
     private HashMap<String, Long> mProductUnivIdLocIdMap = new HashMap<String, Long>();
@@ -233,10 +231,8 @@ public class DataSource {
      * Receives a receipt and a bundle and attach the receipt data to the
      * bundle. To be detached with {@link #detachReceipt(Bundle)}
      *
-     * @param receipt
-     *            the receipt to attach to the bundle.
-     * @param bundle
-     *            the bundle to attach the receipt to.
+     * @param receipt the receipt to attach to the bundle.
+     * @param bundle  the bundle to attach the receipt to.
      * @return a bundle with the receipt data attached.
      */
     public static Bundle attachToBundle(Receipt receipt, Bundle bundle) {
@@ -259,9 +255,8 @@ public class DataSource {
      * bundle with {@link #attachToBundle(Receipt, Bundle)}) and returns a
      * receipt or null if isn't any.
      *
-     * @param bundle
-     *            the {@code bundle} from which we will try to extract the
-     *            receipt.
+     * @param bundle the {@code bundle} from which we will try to extract the
+     *               receipt.
      * @return the receipt.
      */
     public static Receipt detachReceipt(Bundle bundle) {
@@ -302,11 +297,13 @@ public class DataSource {
         buildCategoryIdNameMap();
         buildSubcategoriesMaps();
         buildShopUnivIdLocIdMap();
+        buildShopUpdated();
         buildProductMaps();
         buildShopUnivIdLocIdMap();
         buildChainIdNameMap();
         buildShopIdChainIdMap();
     }
+
 
     public void initDatabase(InitializerCallback callback) {
         // I don't need to check if db is already initialized cause:
@@ -338,12 +335,44 @@ public class DataSource {
         }
     }
 
-    public void downloadData(CloudBackendMessaging backend) {
-        BackendDataAccess.downloadShops(mContext, backend, true);
-    }
+//    public void downloadData(CloudBackendMessaging backend) {
+//        //BackendDataAccess.downloadShops(mContext, backend, true);
+//        BackendDataAccessV2.downloadData(mContext, backend);
+//    }
+//
+//    public void uploadData(final CloudBackendMessaging backend) {
+//        //BackendDataAccess.uploadPendingShops(mContext, backend, true);
+//        BackendDataAccessV2.uploadPendingData(mContext, backend);
+//    }
 
-    public void uploadData(final CloudBackendMessaging backend) {
-        BackendDataAccess.uploadPendingShops(mContext, backend, true);
+
+    private void buildShopUpdated() {
+        setShopCallback(new DataAccessCallbacks<Shop>() {
+            @Override
+            public void onDataProcessed(int processed, List<Shop> dataList, Operation operation, boolean result) {
+
+            }
+
+            @Override
+            public void onDataReceived(List<Shop> results) {
+                if (results != null) {
+                    for (Shop shop : results) {
+                        if (shop.isUpdated()) {
+                            mShopUpdated.put(shop.getId(), Boolean.TRUE);
+                        } else {
+                            mShopUpdated.put(shop.getId(), Boolean.FALSE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onInfoReceived(Object result, Option option) {
+
+            }
+        });
+
+        listShops();
     }
 
     private void buildCategoryIdNameMap() {
@@ -365,7 +394,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Category> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -395,7 +424,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Subcategory> dataList,
-                    Operation operation, boolean result) {
+                                        Operation operation, boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -439,7 +468,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -453,7 +482,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -494,7 +523,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -546,7 +575,7 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Chain> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
@@ -574,11 +603,20 @@ public class DataSource {
 
             @Override
             public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                    boolean result) {
+                                        boolean result) {
                 // TODO Auto-generated method stub
 
             }
         };
+    }
+
+    public boolean isShopUpdated(long shopId) {
+        Boolean updated = mShopUpdated.get(shopId);
+        return updated != null ? updated : false;
+    }
+
+    public void addShopUpdatedInfo(Shop shop) {
+        mShopUpdated.put(shop.getId(), shop.isUpdated());
     }
 
     public String getCategoryName(long categoryId) {
@@ -597,7 +635,7 @@ public class DataSource {
         long categoryId = mSubcategoryCategoryIdMap.get(product.getSubcategoryId());
         return mCategoryIdNameMap.get(categoryId);
     }
-    
+
     public long getProductSubcategoryId(Product product) {
         return mProductSubcategoryId.get(product.getId());
     }
@@ -630,16 +668,20 @@ public class DataSource {
     }
 
     public long getShopLocIdFromUnivId(String univId) {
-        String str = univId;
-        return mShopUnivIdLocIdMap.get(univId);
+        Long localId = mShopUnivIdLocIdMap.get(univId);
+
+        return localId == null ? -1 : localId;
     }
 
     public long getProductLocIdFromUnivId(String univId) {
-        return mProductUnivIdLocIdMap.get(univId);
+        Long localId = mProductUnivIdLocIdMap.get(univId);
+        return localId == null ? -1 : localId;
     }
 
     public long getReceiptLocIdFromUnivId(String univId) {
-        return mReceiptUnivIdLocIdMap.get(univId);
+        Long localId = mReceiptUnivIdLocIdMap.get(univId);
+
+        return localId == null ? -1 : localId;
     }
 
     public DataAccessCallbacks<Category> getCategoryCallback() {
@@ -1514,7 +1556,7 @@ public class DataSource {
     }
 
     private void populateTestData(int nProducts, int nReceipts, int nTotals, int nDetails,
-            int nDetailsPerReceipt) {
+                                  int nDetailsPerReceipt) {
         TownDACallbacks townDACallbacks = new TownDACallbacks();
         setTownCallback(townDACallbacks);
 
@@ -1536,7 +1578,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Town> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             // TODO Auto-generated method stub
 
         }
@@ -1569,7 +1611,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Chain> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             // TODO Auto-generated method stub
 
         }
@@ -1610,7 +1652,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             Receipt receipt;
             List<Receipt> receipts = new ArrayList<Receipt>();
 
@@ -1651,7 +1693,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Subcategory> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             // TODO Auto-generated method stub
 
         }
@@ -1691,7 +1733,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             PopulateReceiptDACallbacks receiptDAC = new PopulateReceiptDACallbacks();
             receiptDAC.setProductList(dataList);
             setReceiptCallback(receiptDAC);
@@ -1713,7 +1755,7 @@ public class DataSource {
 
     class PopulateReceiptDACallbacks implements DataAccessCallbacks<Receipt> {
         private List<Product> mProductList;
-        private int           mNumDetails = 5;
+        private int mNumDetails = 5;
 
         public int getNumDetails() {
             return mNumDetails;
@@ -1733,7 +1775,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             Total total;
             List<Total> totals = new ArrayList<Total>();
             Detail detail;
@@ -1788,7 +1830,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Total> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             // TODO Auto-generated method stub
 
         }
@@ -1811,7 +1853,7 @@ public class DataSource {
 
         @Override
         public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
-                boolean result) {
+                                    boolean result) {
             // TODO Auto-generated method stub
 
         }
