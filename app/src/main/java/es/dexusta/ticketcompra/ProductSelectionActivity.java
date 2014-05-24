@@ -6,16 +6,14 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
 import java.util.List;
 
-import es.dexusta.ticketcompra.backendataaccess.BackendDataAccess;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.control.AddProductCallback;
 import es.dexusta.ticketcompra.control.CategoryAdapter;
 import es.dexusta.ticketcompra.control.CategorySelectionCallback;
@@ -177,13 +175,20 @@ public class ProductSelectionActivity extends CloudBackendActivity implements
             public void onDataProcessed(int processed, List<Product> dataList, Operation operation,
                                         boolean result) {
                 // Try to insert in the datastore.
+//                if (result) {
+//                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
+//                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend(), null);
+//                        if (DEBUG) Log.d(TAG, "Product inserted :" + dataList.get(0));
+//                        Toast.makeText(ProductSelectionActivity.this, "Product inserted", Toast.LENGTH_SHORT).show();
+//                        mDS.getProductsBy(mSelectedSubcategory);
+//                    }
+//                }
+
                 if (result) {
-                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-                        BackendDataAccess.uploadProduct(dataList.get(0), getApplicationContext(), getCloudBackend(), null);
-                        if (DEBUG) Log.d(TAG, "Product inserted :" + dataList.get(0));
-                        Toast.makeText(ProductSelectionActivity.this, "Product inserted", Toast.LENGTH_SHORT).show();
-                        mDS.getProductsBy(mSelectedSubcategory);
-                    }
+
+                    BackendDataAccessV2.uploadProducts(dataList,
+                            getApplicationContext(), getCloudBackend());
+                    mDS.getProductsBy(mSelectedSubcategory);
                 }
             }
         });

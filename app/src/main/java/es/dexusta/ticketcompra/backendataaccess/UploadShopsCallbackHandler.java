@@ -46,7 +46,7 @@ public class UploadShopsCallbackHandler extends CloudCallbackHandler<List<CloudE
             mDS.setShopCallback(null);
             mDS.updateShops(mShops);  
             if (mChain) {
-                BackendDataAccess.uploadPendingProducts(mContext, mBackend, mChain);
+                //BackendDataAccess.uploadPendingProducts(mContext, mBackend, mChain);
             }
         }
         else {

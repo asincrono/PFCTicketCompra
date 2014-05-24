@@ -56,7 +56,7 @@ public class UploadReceiptDetailsCallbackHandler extends CloudCallbackHandler<Li
 
 
                 // 2.- Insertar los Details en el backend.
-                BackendDataAccess.uploadDetails(mDetails, mContext, mBackend);
+                //BackendDataAccess.uploadDetails(mDetails, mContext, mBackend);
                 mDS.listPendingReceipts();
             }
 

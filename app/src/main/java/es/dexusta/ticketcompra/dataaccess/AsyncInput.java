@@ -1,10 +1,11 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+
+import java.util.List;
+
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.DBObject;
@@ -98,55 +99,6 @@ public abstract class AsyncInput<T extends DBObject> extends AsyncTask<Void, Voi
         }
 
         return mDataList;
-        //
-        // ContentValues cv = getValues(mData);
-        //
-        // SQLiteDatabase db = mHelper.getWritableDatabase();
-        // switch (mOperation) {
-        // case INSERT:
-        // long id = db.insert(getTableName(), null, cv);
-        // if (id > 0) {
-        // mData.setId(id);
-        // mResult = true;
-        // return mData;
-        // } else {
-        // mResult = false;
-        // return null;
-        // }
-        //
-        // case UPDATE:
-        // if (db.update(getTableName(), cv, getIdName() + " = " +
-        // cv.getAsString(getIdName()),
-        // null) > 0) {
-        // mResult = true;
-        // return mData;
-        // } else {
-        // mResult = false;
-        // return null;
-        // }
-        // case DELETE:
-        // // TODO: TEST IF CAN PASS NULL ARGUMENT.
-        // if (mData == null) {
-        // if (db.delete(getTableName(), null, null) > 0) {
-        // mResult = true;
-        // return null;
-        // } else {
-        // mResult = false;
-        // return null;
-        // }
-        // } else {
-        // if (db.delete(getTableName(), getIdName() + " = " +
-        // cv.getAsString(getIdName()),
-        // null) > 0) {
-        // mResult = true;
-        // return mData;
-        // } else {
-        // mResult = false;
-        // return mData;
-        // }
-        // }
-        // }
-        //      return null;
     }
 
     @Override

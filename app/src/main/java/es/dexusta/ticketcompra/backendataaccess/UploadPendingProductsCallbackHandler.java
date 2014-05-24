@@ -50,7 +50,7 @@ public class UploadPendingProductsCallbackHandler extends CloudCallbackHandler<L
             mDS.setProductCallback(new DataAccessCallbacks<Product>() {
                 @Override
                 public void onDataProcessed(int processed, List<Product> dataList, Types.Operation operation, boolean result) {
-                    if (mChain) BackendDataAccess.uploadPendingReceipts(mContext, mBackend, true);
+                    //if (mChain) BackendDataAccess.uploadPendingReceipts(mContext, mBackend, true);
 
                 }
 

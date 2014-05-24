@@ -12,21 +12,21 @@ import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Region;
 
 public class RegionDataAccess extends DataAccess<Region> {
-    private static final String TAG = "RegionDataAccess";
+    private static final String  TAG   = "RegionDataAccess";
     private static final boolean DEBUG = true;
 
     private static final String TABLE_NAME = DBHelper.TBL_REGION;
 
-    private static final String ID = DBHelper.T_REGION_ID;
+    private static final String ID   = DBHelper.T_REGION_ID;
     private static final String NAME = DBHelper.T_REGION_NAME;
 
     private DBHelper mHelper;
 
     public RegionDataAccess(DBHelper helper) {
-        mHelper = helper;        
+        mHelper = helper;
     }
-    
-    public static final Region cursorToData(Cursor c) {
+
+    public static Region cursorToData(Cursor c) {
         Region region = null;
         if (c != null && c.getCount() > 0) {
             region = new Region();
@@ -36,7 +36,7 @@ public class RegionDataAccess extends DataAccess<Region> {
         return region;
     }
 
-    public static final List<Region> cursorToDataList(Cursor c) {
+    public static List<Region> cursorToDataList(Cursor c) {
         List<Region> list = null;
 
         if (c != null && c.getCount() > 0) {
@@ -64,8 +64,8 @@ public class RegionDataAccess extends DataAccess<Region> {
 
         return list;
     }
-    
-    public static final ContentValues getValues(Region data) {
+
+    public static ContentValues getValues(Region data) {
         ContentValues values = null;
 
         if (data != null) {
@@ -81,7 +81,7 @@ public class RegionDataAccess extends DataAccess<Region> {
 
         return values;
     }
-   
+
     @Override
     public void query(String rawQuery, String[] args) {
         DataAccessCallbacks<Region> listener = getCallback();
@@ -89,10 +89,10 @@ public class RegionDataAccess extends DataAccess<Region> {
             new RegionAsyncQuery(mHelper, rawQuery, args, listener).execute();
         }
     }
-        
+
 
     // TODO: PROBAR BORRADO REGIONES ESPECÍFICAS.
-    
+
     @Override
     public void list() {
         DataAccessCallbacks<Region> listener = getCallback();
@@ -116,7 +116,7 @@ public class RegionDataAccess extends DataAccess<Region> {
         // we need to check that data != null as we internally use data = null to
         // erase ALL THE TABLE. See deleteAll();
         if (list == null) {
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+            throw new IllegalArgumentException("Data supplied to delete can't be null.");
         }
         new RegionAsyncInput(mHelper, list, Operation.DELETE, getCallback()).execute();
     }
@@ -125,7 +125,7 @@ public class RegionDataAccess extends DataAccess<Region> {
     public void deleteAll() {
         new RegionAsyncInput(mHelper, null, Operation.DELETE, getCallback()).execute();
     }
-    
+
     @Override
     public void getCount() {
         DataAccessCallbacks<Region> listener = getCallback();
@@ -138,7 +138,7 @@ public class RegionDataAccess extends DataAccess<Region> {
     class RegionAsyncQuery extends AsyncQuery<Region> {
 
         public RegionAsyncQuery(DBHelper helper, String rawQuery, String[] args,
-                DataAccessCallbacks<Region> listener) {
+                                DataAccessCallbacks<Region> listener) {
             super(helper, rawQuery, args, listener);
         }
 
@@ -156,7 +156,7 @@ public class RegionDataAccess extends DataAccess<Region> {
     class RegionAsyncInput extends AsyncInput<Region> {
 
         public RegionAsyncInput(DBHelper helper, List<Region> data, Operation operation,
-                DataAccessCallbacks<Region> listener) {
+                                DataAccessCallbacks<Region> listener) {
             super(helper, data, operation, listener);
         }
 
@@ -180,10 +180,10 @@ public class RegionDataAccess extends DataAccess<Region> {
     class RegionAsyncStatement extends AsyncStatement<Region> {
 
         public RegionAsyncStatement(DBHelper helper, String sqlStatement,
-                es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option option,
-                DataAccessCallbacks<Region> listener) {
+                                    es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option option,
+                                    DataAccessCallbacks<Region> listener) {
             super(helper, sqlStatement, option, listener);
-        }        
+        }
 
     }
 }

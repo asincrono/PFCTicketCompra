@@ -31,6 +31,7 @@ import java.util.TimeZone;
 
 import es.dexusta.ticketcompra.Consts;
 import es.dexusta.ticketcompra.R;
+import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
@@ -356,11 +357,11 @@ public class TesterCloudBackendActivtity extends CloudBackendActivity {
     }
 
     public void onClickUpload(View v) {
-        mDS.uploadData(getCloudBackend());
+        BackendDataAccessV2.uploadPendingData(getApplicationContext(), getCloudBackend());
     }
 
     public void onClickDownload(View v) {
-        mDS.downloadData(getCloudBackend());
+        BackendDataAccessV2.uploadPendingData(getApplicationContext(), getCloudBackend());
     }
 
     public void onClickCheck(View v) {

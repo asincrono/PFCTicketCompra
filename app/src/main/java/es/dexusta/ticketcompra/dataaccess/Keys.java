@@ -51,4 +51,13 @@ public final class Keys {
     public static final String KEY_DETAIL_LIST        = "detail_list";
     public static final String KEY_RECEIPT_DETAIL_MAP = "receipt_detail_map";
     public static final String KEY_SELECTED_SHOP      = "selected_shop";
+
+    public static final String KEY_CATEGORY_DA_CALLBACKS    = "category_da_callbacks";
+    public static final String KEY_SUBCATEGORY_DA_CALLBACKS = "subcategoy_da_callbacks";
+    public static final String KEY_PRODUCT_DA_CALLBACKS     = "product_da_callbacks";
+    public static final String KEY_CHAIN_DA_CALLBACKS       = "chain_da_callbacks";
+    public static final String KEY_SHOP_DA_CALLBACKS        = "shop_da_callbacks";
+    public static final String KEY_RECEIPT_DA_CALLBACKS     = "receipt_da_callbacks";
+    public static final String KEY_DETAIL_DA_CALLBACKS      = "detail_da_callbacks";
+
 }

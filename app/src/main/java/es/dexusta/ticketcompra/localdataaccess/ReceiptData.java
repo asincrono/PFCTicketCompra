@@ -1,4 +1,4 @@
-package es.dexusta.ticketcompra.dataaccess;
+package es.dexusta.ticketcompra.localdataaccess;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,18 +6,14 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
-import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Receipt;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
-
-public class ReceiptDataAccess extends DataAccess<Receipt> {
-    private static final String TAG = "ReceiptDataAccess";
-    private static final boolean DEBUG = true;
+/**
+ * Created by asincrono on 22/05/14.
+ */
+public class ReceiptData extends DataAccess<Receipt> {
+    private static final String TAG = "ReceiptData";
 
     private static final String TABLE_NAME = DBHelper.TBL_RECEIPT;
 
@@ -29,10 +25,9 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
     private static final String TIMESTAMP    = DBHelper.T_RECPT_TIMESTAMP;
     private static final String UPDATED      = DBHelper.T_RECPT_UPDATED;
 
-    
     private DBHelper mHelper;
 
-    public ReceiptDataAccess(DBHelper helper) {        
+    public ReceiptData(DBHelper helper) {
         mHelper = helper;
     }
 
@@ -60,7 +55,7 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
         return cv;
     }
 
-    public static Receipt cursorToData(Cursor c) {
+    public static Receipt cursorToReceipt(Cursor c) {
         Receipt receipt = null;
 
         if (c != null && c.getCount() > 0) {
@@ -77,7 +72,7 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
         return receipt;
     }
 
-    public static List<Receipt> cursorToDataList(Cursor c) {
+    public static List<Receipt> cursorToReceiptList(Cursor c) {
         List<Receipt> list = null;
         if (c != null) {
             int savedPosition = c.getPosition();
@@ -92,7 +87,7 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
 
             if (c.moveToFirst()) {
                 list = new ArrayList<Receipt>();
-                Receipt receipt = null;
+                Receipt receipt;
                 do {
                     receipt = new Receipt();
 
@@ -117,78 +112,58 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
     }
 
     @Override
-    public void list() {
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + TIMESTAMP;
-            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
+    public void list(DataAccessCallback<Receipt> callback) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + TIMESTAMP;
+        new ReceiptAsyncRead(mHelper, sql, null, callback).execute();
     }
 
     @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            new ReceiptAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
+    public void read(String sql, String[] args, DataAccessCallback<Receipt> callback) {
+        new ReceiptAsyncRead(mHelper, sql, args, callback).execute();
     }
 
     @Override
-    public void insert(List<Receipt> dataList) {
-        new ReceiptAsyncInput(mHelper, dataList, INSERT, getCallback()).execute();
+    public void insert(List<Receipt> dataList, DataAccessCallback<Receipt> callback) {
+        new ReceiptAsyncInsert(mHelper, dataList, callback).execute();
     }
 
     @Override
-    public void update(List<Receipt> dataList) {
-        new ReceiptAsyncInput(mHelper, dataList, UPDATE, getCallback()).execute();
+    public void update(List<Receipt> dataList, DataAccessCallback<Receipt> callback) {
+        new ReceiptAsyncUpdate(mHelper, dataList, callback).execute();
     }
 
     @Override
-    public void delete(List<Receipt> dataList) {
+    public void delete(List<Receipt> dataList, DataAccessCallback<Receipt> callback) {
         if (dataList == null) {
             throw new IllegalArgumentException("Data supplied to delete can't be null.");
         }
-        new ReceiptAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+        new ReceiptAsyncDelete(mHelper, dataList, callback).execute();
     }
 
     @Override
-    public void deleteAll() {
-        new ReceiptAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    public void deleteAll(DataAccessCallback<Receipt> callback) {
+        new ReceiptAsyncDelete(mHelper, null, callback).execute();
     }
 
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Receipt> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new ReceiptAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+    class ReceiptAsyncRead extends AsyncRead<Receipt> {
+        ReceiptAsyncRead(DBHelper helper, String sql, String[] args, DataAccessCallback<Receipt> callback) {
+            super(helper, sql, args, callback);
         }
 
-    }
-
-    class ReceiptAsyncQuery extends AsyncQuery<Receipt> {
-
-        public ReceiptAsyncQuery(DBHelper helper, String rawQuery, String[] args,
-                DataAccessCallbacks<Receipt> listener) {
-            super(helper, rawQuery, args, listener);        }
-
         @Override
-        public Receipt cursorToData(Cursor c) {           
-            return ReceiptDataAccess.cursorToData(c);
+        public Receipt cursorToData(Cursor c) {
+            return ReceiptData.cursorToReceipt(c);
         }
 
         @Override
         public List<Receipt> cursorToDataList(Cursor c) {
-            return ReceiptDataAccess.cursorToDataList(c);
+            return ReceiptData.cursorToReceiptList(c);
         }
-
     }
 
-    class ReceiptAsyncInput extends AsyncInput<Receipt> {
-
-        public ReceiptAsyncInput(DBHelper helper, List<Receipt> dataList, Operation operation,
-                DataAccessCallbacks<Receipt> listener) {
-            super(helper, dataList, operation, listener);
+    class ReceiptAsyncInsert extends AsyncInsert<Receipt> {
+        ReceiptAsyncInsert(DBHelper helper, List<Receipt> data, DataAccessCallback<Receipt> callback) {
+            super(helper, data, callback);
         }
 
         @Override
@@ -203,17 +178,44 @@ public class ReceiptDataAccess extends DataAccess<Receipt> {
 
         @Override
         public ContentValues getValues(Receipt data) {
-            return ReceiptDataAccess.getValues(data);
-        }        
+            return ReceiptData.getValues(data);
+        }
     }
 
-    class ReceiptAsyncStatement extends AsyncStatement<Receipt> {
-
-        public ReceiptAsyncStatement(DBHelper helper, String sqlStatement,
-                Option option,
-                DataAccessCallbacks<Receipt> listener) {
-            super(helper, sqlStatement, option, listener);
+    class ReceiptAsyncUpdate extends AsyncUpdate<Receipt> {
+        ReceiptAsyncUpdate(DBHelper helper, List<Receipt> data, DataAccessCallback<Receipt> callback) {
+            super(helper, data, callback);
         }
 
+        @Override
+        public String getTableName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String getIdName() {
+            return ID;
+        }
+
+        @Override
+        public ContentValues getValues(Receipt data) {
+            return ReceiptData.getValues(data);
+        }
+    }
+
+    class ReceiptAsyncDelete extends AsyncDelete<Receipt> {
+        ReceiptAsyncDelete(DBHelper helper, List<Receipt> dataList, DataAccessCallback<Receipt> callback) {
+            super(helper, dataList, callback);
+        }
+
+        @Override
+        public String getTableName() {
+            return TABLE_NAME;
+        }
+
+        @Override
+        public String getIdName() {
+            return ID;
+        }
     }
 }

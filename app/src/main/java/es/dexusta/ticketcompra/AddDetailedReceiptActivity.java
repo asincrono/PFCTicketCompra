@@ -35,12 +35,14 @@ import es.dexusta.ticketcompra.tests.ListDetailsFragment.ListDetailsCallback;
 
 public class AddDetailedReceiptActivity extends CloudBackendActivity implements
         AddDetailCallback, ListDetailsCallback {
-    private static final String TAG                       = "AddDetailedReceiptAcitivity";
+    private static final String TAG                       = "AddDetailedReceiptActivity";
     private static final String TAG_STATE_FRAGMENT        = "state_fragment";
     private static final String TAG_LIST_DETAILS_FRAGMENT = "list_details_fragment";
     private static final String TAG_ADD_DETAIL_FRAGMENT   = "add_detail_fragment";
+
     // Won't show current activity until second activity returns.
     private static final int    REQUEST_PRODUCT_SELECTION = 0;
+
     private boolean      mShowingClassicAB;
     private Shop         mSelectedShop;
     private Product      mSelectedProduct;

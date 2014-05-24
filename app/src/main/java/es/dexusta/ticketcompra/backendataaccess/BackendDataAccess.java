@@ -71,7 +71,7 @@ public class BackendDataAccess {
     }
 
     @Deprecated
-    public static void uploadShop(final Shop shop, final Context context,
+    private static void uploadShop(final Shop shop, final Context context,
                                   CloudBackendMessaging backend, final CloudCallbackHandler<CloudEntity> handler) {
 
         final DataSource ds = DataSource.getInstance(context);
@@ -156,7 +156,7 @@ public class BackendDataAccess {
         ds.listPendingShops();
     }
 
-    public static void downloadNewProducts(Context context, CloudBackendMessaging backend,
+    private static void downloadNewProducts(Context context, CloudBackendMessaging backend,
                                            boolean chain) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
@@ -184,7 +184,7 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
-    public static void uploadProduct(final Product product,
+    private static void uploadProduct(final Product product,
                                      final Context context, CloudBackendMessaging backend,
                                      final CloudCallbackHandler<CloudEntity> handler) {
 
@@ -251,7 +251,7 @@ public class BackendDataAccess {
 //        backend.insert(entity, handler);
 
 
-    public static void uploadPendingProducts(final Context context, final CloudBackendMessaging backend,
+    private static void uploadPendingProducts(final Context context, final CloudBackendMessaging backend,
                                              final boolean chain) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Call to uploadPendingProducts.");
@@ -293,7 +293,7 @@ public class BackendDataAccess {
         ds.listPendingProducts();
     }
 
-    public static void downloadReceipts(Context context, CloudBackendMessaging backend,
+    private static void downloadReceipts(Context context, CloudBackendMessaging backend,
                                         boolean chain) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
@@ -325,7 +325,7 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
-    public static void uploadReceiptDetails(final Receipt receipt, final List<Detail> details,
+    private static void uploadReceiptDetails(final Receipt receipt, final List<Detail> details,
                                             final Context context, final CloudBackendMessaging backend) {
         // Se considera que el receipt está completo (tiene id ya que fue insertado en la BD.
         // Se considera que la lista de details es completa (tienen id y receipt_id porque fueron
@@ -401,7 +401,7 @@ public class BackendDataAccess {
         }
     }
 
-    public static void uploadShopReceiptDetails(Shop shop, final Receipt receipt, final List<Detail> details,
+    private static void uploadShopReceiptDetails(Shop shop, final Receipt receipt, final List<Detail> details,
                                                 final Context context, final CloudBackendMessaging backend) {
         CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
             @Override
@@ -414,7 +414,7 @@ public class BackendDataAccess {
     }
 
 
-    public static void uploadPendingReceipts(final Context context, final CloudBackendMessaging backend,
+    private static void uploadPendingReceipts(final Context context, final CloudBackendMessaging backend,
                                              final boolean chain) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Call to uploadPendingReceipts.");
@@ -456,7 +456,7 @@ public class BackendDataAccess {
         ds.listPendingReceipts();
     }
 
-    public static void downloadDetails(Context context, CloudBackendMessaging backend) {
+    private static void downloadDetails(Context context, CloudBackendMessaging backend) {
         TimeZone tzUTC = TimeZone.getTimeZone("UTC");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -485,7 +485,7 @@ public class BackendDataAccess {
         backend.list(query, handler);
     }
 
-    public static void uploadDetails(final List<Detail> details, Context context,
+    private static void uploadDetails(final List<Detail> details, Context context,
                                      CloudBackendMessaging backend) {
 
         if (BuildConfig.DEBUG)
@@ -539,7 +539,7 @@ public class BackendDataAccess {
         backend.insertAll(entities, handler);
     }
 
-    public static void uploadPendingDetails(final Context context, final CloudBackendMessaging backend) {
+    private static void uploadPendingDetails(final Context context, final CloudBackendMessaging backend) {
 
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Call to uploadPendingDetails.");

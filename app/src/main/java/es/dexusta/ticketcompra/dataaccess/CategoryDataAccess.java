@@ -16,9 +16,10 @@ import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
 import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class CategoryDataAccess extends DataAccess<Category> {
-    private static final String TABLE_NAME = DBHelper.TBL_CATEGORY;
-    private static final String ID = DBHelper.T_CAT_ID;
-    private static final String NAME = DBHelper.T_CAT_NAME;
+
+    private static final String TABLE_NAME  = DBHelper.TBL_CATEGORY;
+    private static final String ID          = DBHelper.T_CAT_ID;
+    private static final String NAME        = DBHelper.T_CAT_NAME;
     private static final String DESCRIPTION = DBHelper.T_CAT_DESCR;
 
     private DBHelper                                 mHelper;
@@ -113,7 +114,7 @@ public class CategoryDataAccess extends DataAccess<Category> {
 
     public void delete(List<Category> dataList) {
         if (dataList == null) {
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
+            throw new IllegalArgumentException("Data supplied to delete can't be null.");
         }
         new CategoryAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
     }

@@ -86,7 +86,7 @@ public class DownloadProductsCallbackHandler extends CloudCallbackHandler<List<C
                 }
             }
             if (mChain) {
-                BackendDataAccess.downloadReceipts(mContext, mBackend, true);
+                //BackendDataAccess.downloadReceipts(mContext, mBackend, true);
             }
         }
 

@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<es.dexusta.ticketcompra.view.SlideRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<es.dexusta.ticketcompra.view.SlideLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-     <Button
-         android:id="@+id/btt_add_product"
-         style="?android:attr/borderlessButtonStyle"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true"
-         android:layout_alignParentLeft="true"
-         android:gravity="left|center_vertical"
-         android:paddingLeft="10dp"
-         android:text="@string/btt_add_product" />
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btt_add_product"
-        android:layout_alignParentLeft="true" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_weight="1"/>
 
-</es.dexusta.ticketcompra.view.SlideRelativeLayout>
+    <Button
+        android:id="@+id/btt_add_product"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:text="@string/btt_add_product"/>
+
+
+</es.dexusta.ticketcompra.view.SlideLinearLayout>

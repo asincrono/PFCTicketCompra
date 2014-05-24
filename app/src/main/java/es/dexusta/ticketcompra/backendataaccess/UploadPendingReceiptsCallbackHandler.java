@@ -48,7 +48,7 @@ public class UploadPendingReceiptsCallbackHandler extends CloudCallbackHandler<L
             mDS.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
                 @Override
                 public void onDataProcessed(int processed, List<Receipt> dataList, Types.Operation operation, boolean result) {
-                    if (mChain) BackendDataAccess.uploadPendingDetails(mContext, mBackend);
+                    //if (mChain) BackendDataAccess.uploadPendingDetails(mContext, mBackend);
                 }
 
                 @Override

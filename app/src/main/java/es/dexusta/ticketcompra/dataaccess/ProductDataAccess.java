@@ -1,18 +1,19 @@
 package es.dexusta.ticketcompra.dataaccess;
 
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
-import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.DBHelper;
 import es.dexusta.ticketcompra.model.Product;
+
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.DELETE;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.INSERT;
+import static es.dexusta.ticketcompra.dataaccess.Types.Operation.UPDATE;
 
 public class ProductDataAccess extends DataAccess<Product> {
     private static final String  TAG            = "ProductDataAccess";
@@ -33,58 +34,6 @@ public class ProductDataAccess extends DataAccess<Product> {
 
     public ProductDataAccess(DBHelper helper) {
         mHelper = helper;
-    }
-
-    @Override
-    public void query(String rawQuery, String[] args) {
-        DataAccessCallbacks<Product> listener = getCallback();
-        if (listener != null) {
-            new ProductAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void list() {
-        DataAccessCallbacks<Product> listener = getCallback();
-        if (listener != null) {
-            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
-            new ProductAsyncQuery(mHelper, rawQuery, null, listener).execute();
-        }
-    }
-
-    @Override
-    public void insert(List<Product> dataList) {
-        DataAccessCallbacks<Product> listener = getCallback();
-        new ProductAsyncInput(mHelper, dataList, INSERT, listener).execute();
-    }
-
-    @Override
-    public void update(List<Product> dataList) {
-        DataAccessCallbacks<Product> listener = getCallback();
-        new ProductAsyncInput(mHelper, dataList, UPDATE, listener).execute();
-    }
-
-    @Override
-    public void delete(List<Product> dataList) {
-        if (dataList == null) {
-            throw new IllegalArgumentException("Data suplied to delete can't be null.");
-        }
-        new ProductAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
-    }
-
-    @Override
-    public void deleteAll() {
-        new ProductAsyncInput(mHelper, null, DELETE, getCallback()).execute();
-    }
-
-    // TODO MAKE THIS AN ASYNC TASK TOO!!!
-    @Override
-    public void getCount() {
-        DataAccessCallbacks<Product> listener = getCallback();
-        if (listener != null) {
-            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
-            new ProductAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
-        }
     }
 
     public static ContentValues getValues(Product data) {
@@ -167,6 +116,58 @@ public class ProductDataAccess extends DataAccess<Product> {
         }
 
         return list;
+    }
+
+    @Override
+    public void query(String rawQuery, String[] args) {
+        DataAccessCallbacks<Product> listener = getCallback();
+        if (listener != null) {
+            new ProductAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void list() {
+        DataAccessCallbacks<Product> listener = getCallback();
+        if (listener != null) {
+            String rawQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + NAME;
+            new ProductAsyncQuery(mHelper, rawQuery, null, listener).execute();
+        }
+    }
+
+    @Override
+    public void insert(List<Product> dataList) {
+        DataAccessCallbacks<Product> listener = getCallback();
+        new ProductAsyncInput(mHelper, dataList, INSERT, listener).execute();
+    }
+
+    @Override
+    public void update(List<Product> dataList) {
+        DataAccessCallbacks<Product> listener = getCallback();
+        new ProductAsyncInput(mHelper, dataList, UPDATE, listener).execute();
+    }
+
+    @Override
+    public void delete(List<Product> dataList) {
+        if (dataList == null) {
+            throw new IllegalArgumentException("Data supplied to delete can't be null.");
+        }
+        new ProductAsyncInput(mHelper, dataList, DELETE, getCallback()).execute();
+    }
+
+    @Override
+    public void deleteAll() {
+        new ProductAsyncInput(mHelper, null, DELETE, getCallback()).execute();
+    }
+
+    // TODO MAKE THIS AN ASYNC TASK TOO!!!
+    @Override
+    public void getCount() {
+        DataAccessCallbacks<Product> listener = getCallback();
+        if (listener != null) {
+            String sqlStatement = "SELECT COUNT(*) FROM " + TABLE_NAME;
+            new ProductAsyncStatement(mHelper, sqlStatement, Option.LONG, listener).execute();
+        }
     }
 
     class ProductAsyncQuery extends AsyncQuery<Product> {

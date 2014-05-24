@@ -96,7 +96,7 @@ public class DownloadShopsCallbackHandler extends CloudCallbackHandler<List<Clou
                 }
             }
             if (mChain) {
-                BackendDataAccess.downloadNewProducts(mContext, mBackend, true);
+                //BackendDataAccess.downloadNewProducts(mContext, mBackend, true);
             }
         }
 

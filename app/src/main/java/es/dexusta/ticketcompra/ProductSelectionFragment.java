@@ -41,7 +41,6 @@ public class ProductSelectionFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);        
     }
 
     @Override

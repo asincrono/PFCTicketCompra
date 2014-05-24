@@ -143,6 +143,10 @@ public class TicketCompraActivity extends CloudBackendActivity {
         // En cualquier caso no debería de representar un problema a no ser
         // que "sobreescriban". Para evitarlo: encadenarlas.
 
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onPostCreate");
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "About to update data.");
         BackendDataAccessV2.updateData(getApplicationContext(), getCloudBackend());
     }
 
@@ -155,7 +159,6 @@ public class TicketCompraActivity extends CloudBackendActivity {
                 setProgressBarVisibility(false);
             }
         });
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
     private void showCumulativeSpending() {
