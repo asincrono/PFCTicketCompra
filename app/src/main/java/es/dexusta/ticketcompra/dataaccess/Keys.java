@@ -60,4 +60,11 @@ public final class Keys {
     public static final String KEY_RECEIPT_DA_CALLBACKS     = "receipt_da_callbacks";
     public static final String KEY_DETAIL_DA_CALLBACKS      = "detail_da_callbacks";
 
+    public static final String KEY_READ_CHAINS_CALLBACK     = "read_chains_callback";
+    public static final String KEY_READ_SHOPS_CALLBACK      = "read_shops_callback";
+    public static final String KEY_INSERT_SHOPS_CALLBACK    = "insert_shops_callback";
+    public static final String KEY_READ_RECEIPTS_CALLBACK   = "read_receipts_callback";
+    public static final String KEY_INSERT_RECEIPTS_CALLBACK = "insert_receipts_callback";
+    public static final String KEY_READ_DETAILS_CALLBACK    = "read_details_callback";
+    public static final String KEY_INSERT_DETAILS_CALLBACK  = "insert_details_callback";
 }

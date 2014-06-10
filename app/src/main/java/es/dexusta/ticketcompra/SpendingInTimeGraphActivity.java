@@ -37,8 +37,8 @@ import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Receipt;
-import es.dexusta.ticketcompra.util.Interval;
-import es.dexusta.ticketcompra.util.Interval.Periodicity;
+import es.dexusta.ticketcompra.util.Intervall;
+import es.dexusta.ticketcompra.util.Intervall.Periodicity;
 
 public class SpendingInTimeGraphActivity extends Activity implements SetStartDateCallbacks,
         SetEndingDateCallbacks, OnItemSelectedListener {
@@ -61,9 +61,9 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
 
     private boolean mChanged = true;
 
-    private DataSource     mDS;
+    private DataSource      mDS;
     // private List<Receipt> mReceipts;
-    private List<Interval> mIntervals;
+    private List<Intervall> mIntervals;
 
     private Calendar mStartDate;
     private Calendar mEndingDate;
@@ -186,12 +186,12 @@ public class SpendingInTimeGraphActivity extends Activity implements SetStartDat
 
     private XYMultipleSeriesDataset getDataset(List<Receipt> receipts) {
         XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-        mIntervals = new ArrayList<Interval>();
+        mIntervals = new ArrayList<Intervall>();
 
         int num_receipts = receipts.size();
         if (num_receipts > 0) {
             DateTime dtStart = receipts.get(0).getTimestamp();
-            Interval interval = new Interval(dtStart, mPeriodicity, true);
+            Intervall interval = new Intervall(dtStart, mPeriodicity, true);
 
             String title = getString(R.string.spending_in_time_title);
             CategorySeries catSeries = new CategorySeries(title);

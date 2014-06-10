@@ -28,7 +28,7 @@ import es.dexusta.ticketcompra.model.Subregion;
 import es.dexusta.ticketcompra.model.Total;
 import es.dexusta.ticketcompra.model.Town;
 import es.dexusta.ticketcompra.util.Installation;
-import es.dexusta.ticketcompra.util.Interval;
+import es.dexusta.ticketcompra.util.Intervall;
 
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CATEGORY;
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CHAIN;
@@ -1121,8 +1121,8 @@ public class DataSource {
                  * timestamp <= end;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " >= '"
-                        + Interval.toRfc3339ZuluString(beginning) + "' AND " + T_RECPT_TIMESTAMP
-                        + " <= '" + Interval.toRfc3339ZuluString(end) + "'";
+                        + Intervall.toRfc3339ZuluString(beginning) + "' AND " + T_RECPT_TIMESTAMP
+                        + " <= '" + Intervall.toRfc3339ZuluString(end) + "'";
                 mReceiptData.query(rawQuery, null);
                 return;
             }
@@ -1131,7 +1131,7 @@ public class DataSource {
                  * SELECT * FROM receipt WHERE timestamp >= beginning;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " >= '"
-                        + Interval.toRfc3339ZuluString(beginning) + "'";
+                        + Intervall.toRfc3339ZuluString(beginning) + "'";
                 mReceiptData.query(rawQuery, null);
                 return;
             }
@@ -1140,7 +1140,7 @@ public class DataSource {
                  * SELECT * FROM receipt WHERE timestamp <= end;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " <= '"
-                        + Interval.toRfc3339ZuluString(end) + "'";
+                        + Intervall.toRfc3339ZuluString(end) + "'";
                 mReceiptData.query(rawQuery, null);
                 return;
             }

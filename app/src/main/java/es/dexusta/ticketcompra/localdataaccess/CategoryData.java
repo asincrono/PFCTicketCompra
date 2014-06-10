@@ -91,8 +91,8 @@ public class CategoryData extends DataAccess<Category> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Category> callback) {
-        new CategoryAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Category> callback) {
+        new CategoryAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

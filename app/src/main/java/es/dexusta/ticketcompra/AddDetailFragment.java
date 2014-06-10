@@ -18,6 +18,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import es.dexusta.ticketcompra.control.ActionBarController;
+import es.dexusta.ticketcompra.control.FragmentABCallback;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 
@@ -30,6 +31,7 @@ public class AddDetailFragment extends Fragment {
     private TextView mTvLblProductName;
     private EditText mEdtPrice;
     private EditText mEdtUnits;
+
     // second unit is the edit text for weight/volume (optional).
     private EditText mEdtSecondUnit;
     private Spinner  mSpnSecondUnit;
@@ -82,7 +84,6 @@ public class AddDetailFragment extends Fragment {
 
         if (DEBUG) Log.d(TAG, " onActivityCreated");
 
-
         Activity activity = getActivity();
 
         if (BuildConfig.DEBUG && activity == null)
@@ -101,6 +102,12 @@ public class AddDetailFragment extends Fragment {
 
                 Detail detail = new Detail();
                 detail.setPrice(eurosToCents(mEdtPrice.getText().toString()));
+                String unitsText = mEdtUnits.getText().toString();
+                if (unitsText.length() == 0) {
+                    detail.setUnits(1);
+                } else {
+                    detail.setUnits(Integer.parseInt(unitsText));
+                }
                 String secondUnitStr = mEdtSecondUnit.getText().toString();
                 if (secondUnitStr.length() > 0) {
                     if (mSpnSecondUnit.getSelectedItemId() == 0) {
@@ -144,6 +151,12 @@ public class AddDetailFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mCallbacks.hideSoftKeyboard(mEdtPrice);
+    }
+
     private int eurosToCents(String priceStr) {
         int result = 0;
         if (priceStr.length() > 0) {
@@ -162,14 +175,14 @@ public class AddDetailFragment extends Fragment {
                     result += (strCents.length() == 1) ? Integer.parseInt(strCents) * 10 : Integer
                             .parseInt(strCents);
                 }
-            } else { // No decimal poing (and str. lenght > 0.
+            } else { // No decimal point (and str. length > 0.
                 result = Integer.parseInt(priceStr) * 100;
             }
         }
         return result;
     }
 
-    interface AddDetailCallback {
+    interface AddDetailCallback extends FragmentABCallback {
         public void onDetailAdded(Detail detail);
 
         public void onAddDetailCanceled();

@@ -1,25 +1,28 @@
 package es.dexusta.ticketcompra.control;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
+import es.dexusta.ticketcompra.BuildConfig;
 import es.dexusta.ticketcompra.R;
 import es.dexusta.ticketcompra.model.Detail;
 
 public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
+    private static final String TAG = "ReceiptDetailAdapter";
+
     private static final int TYPE_DETAIL_LINE = 0;
     private static final int TYPE_TOTAL_LINE  = 1;
 
     // Alt+0164 or \u00A4 = ¤ stands for currency symbol (according to locale).
-    private NumberFormat mPriceFormatter  = new DecimalFormat("###0.00 ¤");
-    private NumberFormat mWeightFormatter = new DecimalFormat("###.### g");
-    private NumberFormat mVolumeFormatter = new DecimalFormat("###.### ml");
+    private DecimalFormat mPriceFormatter  = new DecimalFormat("###0.00 ¤");
+    private DecimalFormat mWeightFormatter = new DecimalFormat("###.### g");
+    private DecimalFormat mVolumeFormatter = new DecimalFormat("###.### ml");
 
     public ReceiptDetailAdapter(Context context) {
         super(context);
@@ -83,7 +86,7 @@ public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
                     holder = new TotalViewHolder(view);
                 }
 
-                ((TotalViewHolder) holder).tvTotal.setText(Integer.toString(getTotal()));
+                ((TotalViewHolder) holder).tvTotal.setText(mPriceFormatter.format((double)getTotal() / 100d));
 
                 break;
 
@@ -110,8 +113,10 @@ public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
                 int volume = detail.getVolume();
                 int weight = detail.getWeight();
 
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "volume = " + volume + ", weight = " + weight);
+
                 if (volume != 0) {
-                    weightVolumeStr.append(volume);
                     weightVolumeStr.append(mVolumeFormatter.format(volume));
                 } else if (weight != 0) {
                     weightVolumeStr.append(mWeightFormatter.format(weight));
@@ -125,7 +130,11 @@ public class ReceiptDetailAdapter extends DBObjectAdapter<Detail> {
                     ((DetailViewHolder) holder).tvWeight.setText("");
                 }
 
-                ((DetailViewHolder) holder).tvPrice.setText(mPriceFormatter.format(detail.getPrice() / 100));
+                ((DetailViewHolder) holder).tvUnits.setText(detail.getUnits() + "X");
+
+                double price = ((double)detail.getPrice()) / 100d;
+
+                ((DetailViewHolder) holder).tvPrice.setText(mPriceFormatter.format(price));
                 break;
         }
 

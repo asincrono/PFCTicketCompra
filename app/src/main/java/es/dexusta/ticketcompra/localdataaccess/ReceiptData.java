@@ -118,8 +118,8 @@ public class ReceiptData extends DataAccess<Receipt> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Receipt> callback) {
-        new ReceiptAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Receipt> callback) {
+        new ReceiptAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

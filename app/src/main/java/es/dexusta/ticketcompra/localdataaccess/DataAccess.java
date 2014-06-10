@@ -9,7 +9,7 @@ import es.dexusta.ticketcompra.model.DBObject;
  */
 public abstract class DataAccess<T extends DBObject> {
     public abstract void list(DataAccessCallback<T> callback);
-    public abstract void read(String sql, String[] args, DataAccessCallback<T> callback);
+    public abstract void read(String sqlQuery, String[] args, DataAccessCallback<T> callback);
     public abstract void insert(List<T> dataList, DataAccessCallback<T> callback);
     public abstract void update(List<T> dataList, DataAccessCallback<T> callback);
     public abstract void delete(List<T> dataList, DataAccessCallback<T> callback);

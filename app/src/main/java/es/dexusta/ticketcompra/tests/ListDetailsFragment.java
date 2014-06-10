@@ -106,7 +106,6 @@ public class ListDetailsFragment extends ListFragment implements OnClickListener
         super.onStop();
         if (BuildConfig.DEBUG)
             Log.d(TAG, "onStop");
-        mCallbacks.hideAcceptCancelActionBar();
     }
 
     @Override

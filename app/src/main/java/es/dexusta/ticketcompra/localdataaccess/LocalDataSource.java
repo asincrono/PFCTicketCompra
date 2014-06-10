@@ -25,7 +25,7 @@ import es.dexusta.ticketcompra.model.Subcategory;
 import es.dexusta.ticketcompra.model.Subregion;
 import es.dexusta.ticketcompra.model.Town;
 import es.dexusta.ticketcompra.util.Installation;
-import es.dexusta.ticketcompra.util.Interval;
+import es.dexusta.ticketcompra.util.Intervall;
 
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CATEGORY;
 import static es.dexusta.ticketcompra.model.DBHelper.TBL_CHAIN;
@@ -775,8 +775,8 @@ public class LocalDataSource {
                  * timestamp <= end;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " >= '"
-                        + Interval.toRfc3339ZuluString(beginning) + "' AND " + T_RECPT_TIMESTAMP
-                        + " <= '" + Interval.toRfc3339ZuluString(end) + "'";
+                        + Intervall.toRfc3339ZuluString(beginning) + "' AND " + T_RECPT_TIMESTAMP
+                        + " <= '" + Intervall.toRfc3339ZuluString(end) + "'";
                 mReceiptData.read(rawQuery, null, callback);
                 return;
             }
@@ -785,7 +785,7 @@ public class LocalDataSource {
                  * SELECT * FROM receipt WHERE timestamp >= beginning;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " >= '"
-                        + Interval.toRfc3339ZuluString(beginning) + "'";
+                        + Intervall.toRfc3339ZuluString(beginning) + "'";
                 mReceiptData.read(rawQuery, null, callback);
                 return;
             }
@@ -794,7 +794,7 @@ public class LocalDataSource {
                  * SELECT * FROM receipt WHERE timestamp <= end;
                  */
                 rawQuery = BASIC_QUERY + TBL_RECEIPT + BASIC_WHERE + T_RECPT_TIMESTAMP + " <= '"
-                        + Interval.toRfc3339ZuluString(end) + "'";
+                        + Intervall.toRfc3339ZuluString(end) + "'";
                 mReceiptData.read(rawQuery, null, callback);
                 return;
             }

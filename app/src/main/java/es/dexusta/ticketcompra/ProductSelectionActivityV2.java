@@ -93,6 +93,8 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
 
             transaction.commit();
 
+            mProducts = new ArrayList<Product>();
+
 //            mCategoryDACallbacks = new DataAccessCallbacks<Category>() {
 //                @Override
 //                public void onDataProcessed(int processed, List<Category> dataList,
@@ -221,6 +223,10 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Tried to upload new product.");
 
+                        if (mProducts == null) {
+                            mProducts = new ArrayList<Product>(1);
+                        }
+
                         mProducts.add(results.get(0));
 
                         BackendDataAccessV2.uploadProducts(results,
@@ -241,13 +247,17 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
             mReadProductCallback = new DataAccessCallback<Product>() {
                 @Override
                 public void onComplete(List<Product> results, boolean result) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "Loaded " + results.size() + " products.");
+                    if (results != null) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "Loaded " + results.size() + " products.");
+                    }
                     mProducts = results;
                     mStateFragment.put(Keys.KEY_PRODUCT_LIST, mProducts);
                     mProductAdapter.swapList(mProducts);
                 }
             };
+
+            mStateFragment.put(Keys.KEY_PRODUCT_LIST, mProducts);
 
         } else {
             mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
@@ -273,12 +283,9 @@ public class ProductSelectionActivityV2 extends CloudBackendActivity implements
 //            mProductDACallbacks = (DataAccessCallbacks<Product>) mStateFragment
 //                    .get(Keys.KEY_PRODUCT_DA_CALLBACKS);
 
-            mReadCategoryCallback = (DataAccessCallback<Category>) mStateFragment
-                    .get(Keys.KEY_CATEGORY_DA_CALLBACKS);
-            mReadSubcategoryCallback = (DataAccessCallback<Subcategory>) mStateFragment
-                    .get(Keys.KEY_SUBCATEGORY_DA_CALLBACKS);
-            mReadProductCallback = (DataAccessCallback<Product>) mStateFragment
-                    .get(Keys.KEY_PRODUCT_DA_CALLBACKS);
+            mReadCategoryCallback = (DataAccessCallback<Category>) mStateFragment.get(Keys.KEY_CATEGORY_DA_CALLBACKS);
+            mReadSubcategoryCallback = (DataAccessCallback<Subcategory>) mStateFragment.get(Keys.KEY_SUBCATEGORY_DA_CALLBACKS);
+            mReadProductCallback = (DataAccessCallback<Product>) mStateFragment.get(Keys.KEY_PRODUCT_DA_CALLBACKS);
 
             mCategoryAdapter.swapList(mCategories);
             mSubcategoryAdapter.swapList(mSubcategories);

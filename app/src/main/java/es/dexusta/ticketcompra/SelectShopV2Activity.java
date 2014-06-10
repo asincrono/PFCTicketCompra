@@ -24,11 +24,9 @@ import es.dexusta.ticketcompra.control.ChainAdapter;
 import es.dexusta.ticketcompra.control.ChainSelectionCallback;
 import es.dexusta.ticketcompra.control.ShopAdapter;
 import es.dexusta.ticketcompra.control.ShopSelectionCallback;
-import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
-import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
-import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Keys;
-import es.dexusta.ticketcompra.dataaccess.Types.Operation;
+import es.dexusta.ticketcompra.localdataaccess.DataAccessCallback;
+import es.dexusta.ticketcompra.localdataaccess.LocalDataSource;
 import es.dexusta.ticketcompra.model.Chain;
 import es.dexusta.ticketcompra.model.Shop;
 
@@ -49,9 +47,14 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     private static final String KEY_CHAINS = "chains";
     private static final String KEY_SHOPS  = "shops";
 
-    private DataSource  mDS;
-    private List<Chain> mChains;
-    private List<Shop>  mShops;
+    private DataAccessCallback<Chain> mReadChainsCallback;
+    private DataAccessCallback<Shop>  mReadShopsCallback;
+    private DataAccessCallback<Shop>  mInsertShopsCallback;
+
+    private LocalDataSource mLDS;
+//    private DataSource      mDS;
+    private List<Chain>     mChains;
+    private List<Shop>      mShops;
 
     private ChainAdapter mChainAdapter;
     private ShopAdapter  mShopAdapter;
@@ -69,6 +72,8 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "savedInstanceState was null.");
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
 
@@ -80,11 +85,57 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
                     ChainSelectionFragment.newInstance(), TAG_SELECT_CHAIN_FRAGMENT);
 
             transaction.commit();
+
+            mReadChainsCallback = new DataAccessCallback<Chain>() {
+                @Override
+                public void onComplete(List<Chain> results, boolean result) {
+                    setProgressBarIndeterminateVisibility(false);
+
+                    mChains = results != null ? new ArrayList<Chain>(results) : null;
+                    mChainAdapter.swapList(mChains);
+
+                    mStateFragment.put(KEY_CHAINS, mChains);
+                }
+            };
+
+            mReadShopsCallback = new DataAccessCallback<Shop>() {
+                @Override
+                public void onComplete(List<Shop> results, boolean result) {
+                    setProgressBarIndeterminateVisibility(false);
+
+                    mShops = results != null ? new ArrayList<Shop>(results) : null;
+                    mShopAdapter.swapList(mShops);
+
+                    mStateFragment.put(KEY_SHOPS, mShops);
+                }
+            };
+
+            mInsertShopsCallback = new DataAccessCallback<Shop>() {
+                @Override
+                public void onComplete(List<Shop> results, boolean result) {
+                    if (results != null) {
+                        BackendDataAccessV2.uploadShops(results, getApplicationContext(), getCloudBackend());
+                    }
+                }
+            };
+
+            mStateFragment.put(Keys.KEY_READ_CHAINS_CALLBACK, mReadChainsCallback);
+            mStateFragment.put(Keys.KEY_READ_SHOPS_CALLBACK, mReadShopsCallback);
+            mStateFragment.put(Keys.KEY_INSERT_SHOPS_CALLBACK, mInsertShopsCallback);
+
         } else {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "savedInstanceState wasn't null.");
             mStateFragment = (StateFragment) getFragmentManager()
                     .findFragmentByTag(TAG_STATE_FRAGMENT);
             mChains = (List<Chain>) mStateFragment.get(KEY_CHAINS);
             mShops = (List<Shop>) mStateFragment.get(KEY_SHOPS);
+
+            mReadChainsCallback = (DataAccessCallback<Chain>) mStateFragment.get(Keys.KEY_READ_CHAINS_CALLBACK);
+            if (mReadChainsCallback == null) if (BuildConfig.DEBUG)
+                Log.d(TAG, "WTF, we just saved it.");
+            mReadShopsCallback = (DataAccessCallback<Shop>) mStateFragment.get(Keys.KEY_READ_SHOPS_CALLBACK);
+            mInsertShopsCallback = (DataAccessCallback<Shop>) mStateFragment.get(Keys.KEY_INSERT_SHOPS_CALLBACK);
         }
 
         // We don't really care if mChains and mShops are null,
@@ -99,75 +150,14 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
 
         setContentView(R.layout.pager_activity);
 
-        mDS = DataSource.getInstance(getApplicationContext());
-        mDS.setChainCallback(new DataAccessCallbacks<Chain>() {
+        mLDS = LocalDataSource.getInstance(getApplicationContext());
 
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataReceived(List<Chain> results) {
-                setProgressBarIndeterminateVisibility(false);
-
-                mChains = results != null ? new ArrayList<Chain>(results) : null;
-                mChainAdapter.swapList(mChains);
-
-                mStateFragment.put(KEY_CHAINS, mChains);
-            }
-
-            @Override
-            public void onDataProcessed(int processed, List<Chain> dataList, Operation operation,
-                                        boolean result) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
-        mDS.setShopCallback(new DataAccessCallbacks<Shop>() {
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataReceived(List<Shop> results) {
-                setProgressBarIndeterminateVisibility(false);
-                mShops = results != null ? new ArrayList<Shop>(results) : null;
-                mShopAdapter.swapList(mShops);
-
-                mStateFragment.put(KEY_SHOPS, mShops);
-            }
-
-            @Override
-            public void onDataProcessed(int processed, List<Shop> dataList, Operation operation,
-                                        boolean result) {
-                if (result) {
-//                    if (BackendDataAccess.hasConnectivity(getApplicationContext())) {
-//                        BackendDataAccess.uploadShop(dataList.get(0), getApplicationContext(),
-//                                getCloudBackend(), null);
-//
-//                        if (DEBUG)
-//                            Log.d(TAG, "Shop inserted: " + dataList.get(0));
-//                        Toast.makeText(getApplicationContext(), "Shop inserted.",
-//                                Toast.LENGTH_SHORT).show();
-//                        // TESTING
-//                        mDS.getShopsBy(mSelectedChain);
-//                    }
-                    BackendDataAccessV2.uploadShops(dataList, getApplicationContext(), getCloudBackend());
-                }
-
-            }
-        });
-
-        // setProgressBarIndeterminateVisibility(true);
+        if (mReadChainsCallback == null || mReadShopsCallback == null || mInsertShopsCallback == null) {
+            throw new AssertionError("DataAccessCallback for chain and shop shouldn't be null!");
+        }
 
         if (mChains == null) {
-            mDS.listChains();
+            mLDS.listChains(mReadChainsCallback);
         }
     }
 
@@ -182,7 +172,7 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     public void onChainSelected(Chain chain) {
         mSelectedChain = chain;
         setProgressBarIndeterminateVisibility(true);
-        mDS.getShopsBy(chain);
+        mLDS.getShopsBy(chain, mReadShopsCallback);
         showFragment(TAG_SELECT_SHOP_FRAGMENT);
     }
 
@@ -216,7 +206,7 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
     public void onAcceptAddShop(Shop shop) {
         List<Shop> shops = new ArrayList<Shop>();
         shops.add(shop);
-        mDS.insertShops(shops);
+        mLDS.insertShops(shops, mInsertShopsCallback);
     }
 
     @Override

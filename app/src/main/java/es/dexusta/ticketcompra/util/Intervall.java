@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class Interval {
+public class Intervall {
     public static final SimpleDateFormat DF_RFC3339    = new SimpleDateFormat(
                                                                "yyyy-MM-dd'T'HH:mm:ss.SSSz",
                                                                Locale.getDefault());
@@ -36,7 +36,7 @@ public class Interval {
 
     private Periodicity                  mPeriodicity;
 
-    public Interval(long start, Periodicity periodicity, boolean flat) {
+    public Intervall(long start, Periodicity periodicity, boolean flat) {
         mStart = Calendar.getInstance();
         mStart.setTimeInMillis(start);
         mPeriodicity = periodicity;
@@ -50,7 +50,7 @@ public class Interval {
         mEnd.add(Calendar.MILLISECOND, -1);
     }
 
-    public Interval(Calendar start, Periodicity periodicity, boolean flat) {
+    public Intervall(Calendar start, Periodicity periodicity, boolean flat) {
         mStart = start;
         mPeriodicity = periodicity;
 
@@ -63,7 +63,7 @@ public class Interval {
         mEnd.add(Calendar.MILLISECOND, -1);
     }
 
-    public Interval(Date start, Periodicity periodicity, boolean flat) {
+    public Intervall(Date start, Periodicity periodicity, boolean flat) {
         mStart = Calendar.getInstance();
         mStart.setTime(start);
         mPeriodicity = periodicity;
@@ -77,7 +77,7 @@ public class Interval {
         mEnd.add(Calendar.MILLISECOND, -1);
     }
 
-    public Interval(DateTime start, Periodicity periodicity, boolean flat) {        
+    public Intervall(DateTime start, Periodicity periodicity, boolean flat) {
         mStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));        
         mStart.setTimeInMillis(start.getValue());
         mPeriodicity = periodicity;
@@ -149,16 +149,16 @@ public class Interval {
         decrease(mEnd);
     }
 
-    public Interval getNext() {
+    public Intervall getNext() {
         Calendar newStart = (Calendar) mStart.clone();
         increase(newStart);
-        return new Interval(newStart, mPeriodicity, false);
+        return new Intervall(newStart, mPeriodicity, false);
     }
     
-    public Interval getPrevious() {
+    public Intervall getPrevious() {
         Calendar newStart = (Calendar) mStart.clone();
         decrease(newStart);
-        return new Interval(newStart, mPeriodicity, false);
+        return new Intervall(newStart, mPeriodicity, false);
     }
     
     private void increase(Calendar date) {

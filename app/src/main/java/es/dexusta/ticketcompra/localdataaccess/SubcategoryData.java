@@ -94,8 +94,8 @@ public class SubcategoryData extends DataAccess<Subcategory> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Subcategory> callback) {
-        new SubcategoryAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Subcategory> callback) {
+        new SubcategoryAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

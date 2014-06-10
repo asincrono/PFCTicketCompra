@@ -92,8 +92,8 @@ public class ChainData extends DataAccess<Chain> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Chain> callback) {
-        new ChainAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Chain> callback) {
+        new ChainAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

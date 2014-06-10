@@ -124,8 +124,8 @@ public class ShopData extends DataAccess<Shop> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Shop> callback) {
-        new ShopAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Shop> callback) {
+        new ShopAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

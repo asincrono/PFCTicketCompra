@@ -140,8 +140,8 @@ public class DetailData extends DataAccess<Detail> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Detail> callback) {
-        new DetailAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Detail> callback) {
+        new DetailAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

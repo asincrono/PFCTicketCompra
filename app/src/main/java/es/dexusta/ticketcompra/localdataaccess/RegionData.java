@@ -90,8 +90,8 @@ public class RegionData extends DataAccess<Region> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Region> callback) {
-        new RegionAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Region> callback) {
+        new RegionAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

@@ -1606,6 +1606,7 @@ public class BackendDataAccessV2 {
             };
 
             CloudCallbackHandler<List<CloudEntity>> receiptCallbackHandler = new CloudCallbackHandler<List<CloudEntity>>() {
+
                 @Override
                 public void onComplete(List<CloudEntity> results) {
                     if (results.size() > 0) {

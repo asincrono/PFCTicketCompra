@@ -38,30 +38,30 @@ import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
 import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Receipt;
-import es.dexusta.ticketcompra.util.Interval;
-import es.dexusta.ticketcompra.util.Interval.Periodicity;
+import es.dexusta.ticketcompra.util.Intervall;
+import es.dexusta.ticketcompra.util.Intervall.Periodicity;
 
 public class CumulativeSpendingGraphActivity extends Activity implements SetStartDateCallbacks,
         SetEndingDateCallbacks, OnItemSelectedListener {
-    private static final String          TAG                = "CumulativeSpendingGraphActivity";
-    private static final boolean         DEBUG              = true;
+    private static final String  TAG   = "CumulativeSpendingGraphActivity";
+    private static final boolean DEBUG = true;
 
-    private static final String          STATE_FRAGMENT     = "state_fragment";
-    private static final String          START_DATE_PICKER  = "start_date_picker";
-    private static final String          ENDING_DATE_PICKER = "ending_date_picker";
-    private static final String          RENDERER           = "renderer";
-    private static final String          DATASET            = "dataset";
+    private static final String STATE_FRAGMENT     = "state_fragment";
+    private static final String START_DATE_PICKER  = "start_date_picker";
+    private static final String ENDING_DATE_PICKER = "ending_date_picker";
+    private static final String RENDERER           = "renderer";
+    private static final String DATASET            = "dataset";
 
-    private static final String          START_DATE         = "start_date";
-    private static final String          ENDING_DATE        = "ending_date";
+    private static final String START_DATE  = "start_date";
+    private static final String ENDING_DATE = "ending_date";
 
-    private Button                       mBttShowGraph;
+    private Button mBttShowGraph;
 
-    private Interval.Periodicity         mPeriodicity;
-    private List<String>                 mXLabels;
+    private Intervall.Periodicity mPeriodicity;
+    private List<String>          mXLabels;
 
-    private StateFragment                mStateFragment;
-    private boolean                      mChanged           = true;
+    private StateFragment mStateFragment;
+    private boolean mChanged = true;
 
     private DataSource                   mDS;
     private DataAccessCallbacks<Receipt> mReceiptListener;
@@ -69,11 +69,11 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
     // private List<Receipt> mReceipts;
     // mirar de eliminar esta lista (intervals).
 
-    private Calendar                     mStartDate;
-    private Calendar                     mEndingDate;
+    private Calendar mStartDate;
+    private Calendar mEndingDate;
 
-    private TextView                     mTvStartDate;
-    private TextView                     mTvEndingDate;
+    private TextView mTvStartDate;
+    private TextView mTvEndingDate;
 
     // private LinkedHashMap<Receipt, Integer> mReceiptSpendingMap;
     // private LinkedHashMap<Interval, Integer> mIntervalSpendingMap;
@@ -278,7 +278,7 @@ public class CumulativeSpendingGraphActivity extends Activity implements SetStar
             String title = getString(R.string.cumulative_spending_title);
             CategorySeries catSeries = new CategorySeries(title);
 
-            Interval interval = new Interval(receipts.get(0).getTimestamp(), mPeriodicity, true);
+            Intervall interval = new Intervall(receipts.get(0).getTimestamp(), mPeriodicity, true);
 
             // TESTING ADDING A START OF 0 (PREVIOUS INTERVAL LABEL.
 

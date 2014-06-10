@@ -88,8 +88,8 @@ public class SubregionData extends DataAccess<Subregion> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Subregion> callback) {
-        new SubregionAsyncRead(mHelper, sql, args, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Subregion> callback) {
+        new SubregionAsyncRead(mHelper, sqlQuery, args, callback).execute();
     }
 
     @Override

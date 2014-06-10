@@ -21,11 +21,9 @@ import es.dexusta.ticketcompra.AddDetailFragment.AddDetailCallback;
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
 import es.dexusta.ticketcompra.control.ActionBarController;
 import es.dexusta.ticketcompra.control.ReceiptDetailAdapter;
-import es.dexusta.ticketcompra.dataaccess.AsyncStatement.Option;
-import es.dexusta.ticketcompra.dataaccess.DataAccessCallbacks;
-import es.dexusta.ticketcompra.dataaccess.DataSource;
 import es.dexusta.ticketcompra.dataaccess.Keys;
-import es.dexusta.ticketcompra.dataaccess.Types.Operation;
+import es.dexusta.ticketcompra.localdataaccess.DataAccessCallback;
+import es.dexusta.ticketcompra.localdataaccess.LocalDataSource;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Product;
 import es.dexusta.ticketcompra.model.Receipt;
@@ -41,7 +39,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     private static final String TAG_ADD_DETAIL_FRAGMENT   = "add_detail_fragment";
 
     // Won't show current activity until second activity returns.
-    private static final int    REQUEST_PRODUCT_SELECTION = 0;
+    private static final int REQUEST_PRODUCT_SELECTION = 0;
 
     private boolean      mShowingClassicAB;
     private Shop         mSelectedShop;
@@ -53,7 +51,10 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
     private StateFragment mStateFragment;
 
-    private DataSource mDS;
+    //private DataSource mDS;
+    private LocalDataSource             mLDS;
+    private DataAccessCallback<Receipt> mInsertReceiptsCallback;
+    private DataAccessCallback<Detail>  mInsertDetailsCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,47 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             transaction.add(android.R.id.content, new ListDetailsFragment(), TAG_LIST_DETAILS_FRAGMENT);
 
             transaction.commit();
+
+            mInsertDetailsCallback = new DataAccessCallback<Detail>() {
+                @Override
+                public void onComplete(List<Detail> results, boolean result) {
+                    if (results != null && results.size() > 0) {
+                        Toast.makeText(AddDetailedReceiptActivity.this,
+                                " Details inserted: " + results.size() + ".", Toast.LENGTH_SHORT).show();
+
+                        if (BackendDataAccessV2.hasConnectivity(getApplicationContext())) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "about to upload receipt & details.");
+
+                            //BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
+                            // getApplicationContext(), getCloudBackend());
+                            BackendDataAccessV2.uploadReceiptAndDetails(mReceipt, results,
+                                    getApplicationContext(), getCloudBackend());
+                        }
+                    }
+                }
+            };
+
+            mInsertReceiptsCallback = new DataAccessCallback<Receipt>() {
+                @Override
+                public void onComplete(List<Receipt> results, boolean result) {
+                    if (results != null && results.size() > 0) {
+                        mReceipt = results.get(0);
+
+                        for (Detail detail : mDetails) {
+                            detail.setReceiptId(mReceipt.getId());
+                        }
+
+                        mLDS.insertDetails(mDetails, mInsertDetailsCallback);
+                    }
+                }
+            };
+
+            mStateFragment.put(Keys.KEY_INSERT_RECEIPTS_CALLBACK, mInsertReceiptsCallback);
+            mStateFragment.put(Keys.KEY_INSERT_DETAILS_CALLBACK, mInsertDetailsCallback);
+
         } else {
+
             mStateFragment = (StateFragment) manager.findFragmentByTag(TAG_STATE_FRAGMENT);
 
             if (BuildConfig.DEBUG && (mStateFragment == null))
@@ -78,74 +119,79 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
 
             mSelectedProduct = (Product) mStateFragment.get(Keys.KEY_PRODUCT);
             mDetails = (List<Detail>) mStateFragment.get(Keys.KEY_DETAIL_LIST);
+
+            mInsertReceiptsCallback = (DataAccessCallback<Receipt>) mStateFragment.get(Keys.KEY_INSERT_RECEIPTS_CALLBACK);
+            mInsertDetailsCallback = (DataAccessCallback<Detail>) mStateFragment.get(Keys.KEY_INSERT_DETAILS_CALLBACK);
         }
 
         mDetailAdapter = new ReceiptDetailAdapter(this, mDetails);
 
-        mDS = DataSource.getInstance(getApplicationContext());
+        mLDS = LocalDataSource.getInstance(getApplicationContext());
 
-        // Set listeners:
-        mDS.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataReceived(List<Receipt> results) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
-                                        boolean result) {
-                if (result) {
-                    mReceipt = dataList.get(0);
-
-                    for (Detail detail : mDetails) {
-                        detail.setReceiptId(mReceipt.getId());
-                    }
-                    mDS.insertDetails(mDetails);
-                }
-            }
-        });
-
-        mDS.setDetailCallback(new DataAccessCallbacks<Detail>() {
-
-            @Override
-            public void onInfoReceived(Object result, Option option) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataReceived(List<Detail> results) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
-                                        boolean result) {
-                // SHOW DIALOG INDICATING DETAILS INSERTED / OR ERROR.
-                // Then finish().
-                Toast.makeText(AddDetailedReceiptActivity.this,
-                        " Details inserted: " + dataList.size() + ".", Toast.LENGTH_SHORT).show();
-
-                if (BackendDataAccessV2.hasConnectivity(getApplicationContext())) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "about to upload receipt & details.");
-
-                    //BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
-                    // getApplicationContext(), getCloudBackend());
-                    BackendDataAccessV2.uploadReceiptAndDetails(mReceipt, dataList,
-                            getApplicationContext(), getCloudBackend());
-                }
-            }
-        });
+//        mDS = DataSource.getInstance(getApplicationContext());
+//
+//        // Set listeners:
+//        mDS.setReceiptCallback(new DataAccessCallbacks<Receipt>() {
+//
+//            @Override
+//            public void onInfoReceived(Object result, Option option) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void onDataReceived(List<Receipt> results) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void onDataProcessed(int processed, List<Receipt> dataList, Operation operation,
+//                                        boolean result) {
+//                if (result) {
+//                    mReceipt = dataList.get(0);
+//
+//                    for (Detail detail : mDetails) {
+//                        detail.setReceiptId(mReceipt.getId());
+//                    }
+//                    mDS.insertDetails(mDetails);
+//                }
+//            }
+//        });
+//
+//        mDS.setDetailCallback(new DataAccessCallbacks<Detail>() {
+//
+//            @Override
+//            public void onInfoReceived(Object result, Option option) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void onDataReceived(List<Detail> results) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void onDataProcessed(int processed, List<Detail> dataList, Operation operation,
+//                                        boolean result) {
+//                // SHOW DIALOG INDICATING DETAILS INSERTED / OR ERROR.
+//                // Then finish().
+//                Toast.makeText(AddDetailedReceiptActivity.this,
+//                        " Details inserted: " + dataList.size() + ".", Toast.LENGTH_SHORT).show();
+//
+//                if (BackendDataAccessV2.hasConnectivity(getApplicationContext())) {
+//                    if (BuildConfig.DEBUG)
+//                        Log.d(TAG, "about to upload receipt & details.");
+//
+//                    //BackendDataAccess.uploadReceiptDetails(mReceipt, dataList,
+//                    // getApplicationContext(), getCloudBackend());
+//                    BackendDataAccessV2.uploadReceiptAndDetails(mReceipt, dataList,
+//                            getApplicationContext(), getCloudBackend());
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -272,7 +318,7 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
             mReceipt.setTimestamp(System.currentTimeMillis());
             List<Receipt> listReceipt = new ArrayList<Receipt>();
             listReceipt.add(mReceipt);
-            mDS.insertReceipts(listReceipt);
+            mLDS.insertReceipts(listReceipt, mInsertReceiptsCallback);
 
             // TODO: Mostrar una lista con los receipts insertados donde figure
             // el

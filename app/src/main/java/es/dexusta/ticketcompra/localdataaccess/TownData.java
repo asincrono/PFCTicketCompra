@@ -93,8 +93,8 @@ public class TownData extends DataAccess<Town> {
     }
 
     @Override
-    public void read(String sql, String[] args, DataAccessCallback<Town> callback) {
-        new TownAsyncRead(mHelper, sql, null, callback).execute();
+    public void read(String sqlQuery, String[] args, DataAccessCallback<Town> callback) {
+        new TownAsyncRead(mHelper, sqlQuery, null, callback).execute();
     }
 
     @Override

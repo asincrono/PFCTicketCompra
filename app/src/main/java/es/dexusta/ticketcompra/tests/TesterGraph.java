@@ -53,7 +53,7 @@ import es.dexusta.ticketcompra.dataaccess.Types.Operation;
 import es.dexusta.ticketcompra.model.Detail;
 import es.dexusta.ticketcompra.model.Receipt;
 import es.dexusta.ticketcompra.model.Shop;
-import es.dexusta.ticketcompra.util.Interval.Periodicity;
+import es.dexusta.ticketcompra.util.Intervall.Periodicity;
 
 //import android.app.DatePickerDialog;
 //import android.widget.DatePicker;
