@@ -294,4 +294,12 @@ public class SelectShopV2Activity extends CloudBackendActivity implements
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setTitle(title);
+        }
+    }
 }

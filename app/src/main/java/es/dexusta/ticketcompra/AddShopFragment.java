@@ -252,6 +252,7 @@ public class AddShopFragment extends Fragment {
             Log.d(TAG, "onResume.");
         mChain = mCallbacks.getChain();
         if (mChain == null) throw new AssertionError("Returned chain can't be null");
+        mCallbacks.setActionBarTitle("Add shop");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package es.dexusta.ticketcompra;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -191,5 +192,14 @@ public class SelectShopActivity extends FragmentActivity
     public void showSoftKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInputFromInputMethod(view.getWindowToken(), 0);
+    }
+
+
+    @Override
+    public void setActionBarTitle(String title) {
+        ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setTitle(title);
+        }
     }
 }

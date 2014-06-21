@@ -52,7 +52,7 @@ public class SubcategorySelectionFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         setListAdapter(mCallback.getSubcategoryAdapter());
-
+        mCallback.setActionBarTitle("Select subcategory");
     }
 
     @Override

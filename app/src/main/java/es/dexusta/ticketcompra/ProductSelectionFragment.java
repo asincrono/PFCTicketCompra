@@ -51,6 +51,7 @@ public class ProductSelectionFragment extends ListFragment {
 
         setListAdapter(mCallback.getProductAdapter());
         //mCallback.hideAcceptCancelActionBar();
+        mCallback.setActionBarTitle("Select product");
     }
 
     @Override

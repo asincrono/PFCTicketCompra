@@ -229,11 +229,11 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
         renderer.setLabelsTextSize(25f);
         renderer.setLegendTextSize(25f);
         renderer.setDisplayValues(true);
-        renderer.setShowLabels(true);
+        renderer.setShowLabels(false);
         //renderer.setLegendTextSize(30f);
 
-        renderer.setShowLegend(false);
-        //renderer.setFitLegend(true);
+        renderer.setShowLegend(true);
+        renderer.setFitLegend(true);
         //renderer.setFitLegend(false);
 
         return renderer;
@@ -255,8 +255,9 @@ public class SpendingByCategoryGraphActivity extends Activity implements SetStar
                 value = detail.getPrice();
             } else {
                 value += detail.getPrice();
-                total += detail.getPrice();
             }
+
+            total += detail.getPrice();
 
             if (BuildConfig.DEBUG)
                 Log.d(TAG, category_name + " value: " + value);

@@ -8,5 +8,6 @@ import android.view.View.OnClickListener;
 public interface FragmentABCallback extends FragmentSoftKeyCallback {
     public void showAcceptCancelActionBar(OnClickListener onClickAccept, OnClickListener onClickCancel);
     public void hideAcceptCancelActionBar();
+    public void setActionBarTitle(String title);
     public boolean isABAvaliable();
 }

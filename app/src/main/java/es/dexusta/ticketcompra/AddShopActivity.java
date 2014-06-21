@@ -1,5 +1,6 @@
 package es.dexusta.ticketcompra;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -260,5 +261,13 @@ public class AddShopActivity extends CloudBackendActivity implements
     public void showSoftKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInputFromInputMethod(view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setTitle(title);
+        }
     }
 }

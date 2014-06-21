@@ -62,7 +62,8 @@
             android:parentActivityName="es.dexusta.ticketcompra.TicketCompraActivity" />
         <activity
             android:name="es.dexusta.ticketcompra.AddDetailedReceiptActivity"
-            android:label="Add detailed receipt" />
+            android:label="Add detailed receipt"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="es.dexusta.ticketcompra.AddTotalActivity"
             android:label="Add total receipt" />

@@ -59,6 +59,7 @@ public class CategorySelectionFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         setListAdapter(mCallback.getCategoryAdapter());
+        mCallback.setActionBarTitle("Select category");
     }
 
     @Override

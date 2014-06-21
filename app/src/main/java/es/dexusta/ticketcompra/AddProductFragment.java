@@ -124,7 +124,7 @@ public class AddProductFragment extends Fragment {
                     }
                 }
         );
-
+        mCallback.setActionBarTitle("Add product");
     }
 
     private boolean validateForm() {

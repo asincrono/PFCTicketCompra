@@ -40,6 +40,9 @@
     <string name="tv_example_shop">A shop</string>
     <string name="tv_example_price_per_unit">Price per unit 50.00 €</string>
     <string name="tv_example_price_per_weight">Price per kilo 50.00 €</string>
+    <string name="lbl_price_per_unit">Price per unit</string>
+    <string name="lbl_price_per_weight">Price per kilo</string>
+    <string name="lbl_price_per_volume">Price per liter</string>
     <string name="lbl_category">Category</string>
     <string name="lbl_subcategory">Subcategory</string>
     <string name="lbl_price">Price</string>
@@ -103,7 +106,6 @@
 
     <string-array name="drawer_first_menu">
         <item>New detailed ticket</item>
-        <item>New total ticket</item>
         <item>New shop</item>
         <item>New product</item>
     </string-array>
@@ -119,7 +121,6 @@
     <string-array name="drawer_menu_titles">
         <item>New data</item>
         <item>Check spending</item>
-        <item>Reports &amp; suggestions</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
@@ -376,5 +377,6 @@
     <string name="action_tests">Tests</string>
     <string name="title_activity_list_shops">ListShopsActivity</string>
     <string name="title_activity_list_products">ListProductsActivity</string>
+    <string name="lbl_price_per_weight_or_volume">Pricer per kilo/litre</string>
 
 </resources>

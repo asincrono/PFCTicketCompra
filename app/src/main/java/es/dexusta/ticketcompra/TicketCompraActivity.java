@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.cloud.backend.android.CloudBackendActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import es.dexusta.ticketcompra.backendataaccess.BackendDataAccessV2;
@@ -49,16 +51,12 @@ public class TicketCompraActivity extends CloudBackendActivity {
     // Drawer menu constants.
     // Title: NEW DATA = 0
     private static final int DETAILED_RECEIPT       = 1;
-    private static final int TOTAL_TICKET           = 2;
-    private static final int ADD_SHOP               = 3;
-    private static final int ADD_PRODUCT            = 4;
+    private static final int ADD_SHOP               = 2;
+    private static final int ADD_PRODUCT            = 3;
     // Title: CHECK SPENDING = 5
-    private static final int CUMULATIVE_SPENDING    = 6;
-    private static final int SPENDING_IN_TIME       = 7;
-    private static final int SPENDING_BY_CATEGORY   = 8;
-    // Title: REPORTS & SUGGESTIONS = 9
-    private static final int PURCHASING_SUGGESTIONS = 10;
-    private static final int BETTER_PRICES          = 11;
+    private static final int CUMULATIVE_SPENDING    = 5;
+    private static final int SPENDING_IN_TIME       = 6;
+    private static final int SPENDING_BY_CATEGORY   = 7;
 
     // Request codes for startAcitivityForResult.
     // Need to take in account that:
@@ -84,7 +82,7 @@ public class TicketCompraActivity extends CloudBackendActivity {
     private String[] mDrawerMenuTitles;
     private String[] mDrawerFirstMenu;
     private String[] mDrawerSecondMenu;
-    private String[] mDrawerThirdMenu;
+    //private String[] mDrawerThirdMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +94,7 @@ public class TicketCompraActivity extends CloudBackendActivity {
         mDrawerMenuTitles = getResources().getStringArray(R.array.drawer_menu_titles);
         mDrawerFirstMenu = getResources().getStringArray(R.array.drawer_first_menu);
         mDrawerSecondMenu = getResources().getStringArray(R.array.drawer_second_menu);
-        mDrawerThirdMenu = getResources().getStringArray(R.array.drawer_third_menu);
+        //mDrawerThirdMenu = getResources().getStringArray(R.array.drawer_third_menu);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -108,19 +106,20 @@ public class TicketCompraActivity extends CloudBackendActivity {
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Gestión del tique de la compra");
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer,
                 R.string.drawer_open, R.string.drawer_close) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                getActionBar().setTitle("Hola");
+                //getActionBar().setTitle("");
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("Hola drawer");
+                // getActionBar().setTitle("");
                 invalidateOptionsMenu();
             }
         };
@@ -340,12 +339,6 @@ public class TicketCompraActivity extends CloudBackendActivity {
                     intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddDetailedReceiptActivity.class);
                     startActivity(intent);
                     break;
-                case TOTAL_TICKET:
-                    // call total ticket sequence.
-                    intent = new Intent(TicketCompraActivity.this, SelectShopV2Activity.class);
-                    intent.putExtra(Keys.KEY_DESTINATION_ACTIVITY, AddTotalActivity.class);
-                    startActivity(intent);
-                    break;
                 case ADD_SHOP:
                     intent = new Intent(TicketCompraActivity.this, AddShopActivity.class);
                     startActivity(intent);
@@ -376,12 +369,12 @@ public class TicketCompraActivity extends CloudBackendActivity {
     private class DawerListAdapter extends BaseAdapter {
         private final int mFirstMenuCount  = mDrawerFirstMenu.length;
         private final int mSecondMenuCount = mDrawerSecondMenu.length;
-        private final int mThirdMenuCount  = mDrawerThirdMenu.length;
+        //private final int mThirdMenuCount  = mDrawerThirdMenu.length;
 
         private final int mCount = mDrawerMenuTitles.length
                 + mDrawerFirstMenu.length
-                + mDrawerSecondMenu.length
-                + mDrawerThirdMenu.length;
+                + mDrawerSecondMenu.length;
+                //+ mDrawerThirdMenu.length;
 
         private final LayoutInflater mInflater = LayoutInflater
                 .from(TicketCompraActivity.this);
@@ -394,53 +387,69 @@ public class TicketCompraActivity extends CloudBackendActivity {
 
         @Override
         public String getItem(int position) {
-            // Position 0 = title1
-            // Position 0 + mFirstMenuCount = title2
-            // Position 0 + mFirstMenuCount = title2
-            int offset;
-            if (position < mFirstMenuCount + 1) { // + 1 = one header.
-                offset = 0;
-                if (position == 0) { // position - offset == 0
-                    return mDrawerMenuTitles[0];
-                } else {
-                    return mDrawerFirstMenu[position - 1]; // position - offset
-                    // - 1 (header before
-                    // (first one))
-                }
-            } else if (position < mFirstMenuCount + mSecondMenuCount + 2) { // +
-                // 2
-                // =
-                // two
-                // headers.
-                offset = mFirstMenuCount + 1;
-                if (position == offset) { // = position - offset == 0
-                    return mDrawerMenuTitles[1];
-                } else {
-                    return mDrawerSecondMenu[position - offset - 1]; // 1
-                    // (headers
-                    // before
-                    // in this
-                    // chunk)
-                }
-            } else if (position < mFirstMenuCount + mSecondMenuCount + mThirdMenuCount + 3) { // +
-                // 3
-                // =
-                // three
-                // headers.
-                offset = mFirstMenuCount + mSecondMenuCount + 2;
-                if (position == offset) {
-                    return mDrawerMenuTitles[2];
-                } else {
-                    return mDrawerThirdMenu[position - offset - 1]; // one
-                    // header
-                    // before in
-                    // this
-                    // chunk
-                }
-            }
 
-            throw new IllegalArgumentException("Invalid position: " + Integer.toString(position));
+            ArrayList<String> totalArray = new ArrayList<String>();
+            totalArray.add(mDrawerMenuTitles[0]);
+            totalArray.addAll(Arrays.asList(mDrawerFirstMenu));
+            totalArray.add(mDrawerMenuTitles[1]);
+            totalArray.addAll(Arrays.asList(mDrawerSecondMenu));
+
+            if (position >= 0 && position < mCount) {
+                return totalArray.get(position);
+            } else {
+                throw new IllegalArgumentException("Invalid position: " + Integer.toString(position));
+            }
         }
+
+        //        @Override
+//        public String getItem(int position) {
+//            // Position 0 = title1
+//            // Position 0 + mFirstMenuCount = title2
+//            // Position 0 + mFirstMenuCount = title2
+//            int offset;
+//            if (position < mFirstMenuCount + 1) { // + 1 = one header.
+//                offset = 0;
+//                if (position == 0) { // position - offset == 0
+//                    return mDrawerMenuTitles[0];
+//                } else {
+//                    return mDrawerFirstMenu[position - 1]; // position - offset
+//                    // - 1 (header before
+//                    // (first one))
+//                }
+//            } else if (position < mFirstMenuCount + mSecondMenuCount + 2) { // +
+//                // 2
+//                // =
+//                // two
+//                // headers.
+//                offset = mFirstMenuCount + 1;
+//                if (position == offset) { // = position - offset == 0
+//                    return mDrawerMenuTitles[1];
+//                } else {
+//                    return mDrawerSecondMenu[position - offset - 1]; // 1
+//                    // (headers
+//                    // before
+//                    // in this
+//                    // chunk)
+//                }
+//            } else if (position < mFirstMenuCount + mSecondMenuCount + mThirdMenuCount + 3) { // +
+//                // 3
+//                // =
+//                // three
+//                // headers.
+//                offset = mFirstMenuCount + mSecondMenuCount + 2;
+//                if (position == offset) {
+//                    return mDrawerMenuTitles[2];
+//                } else {
+//                    return mDrawerThirdMenu[position - offset - 1]; // one
+//                    // header
+//                    // before in
+//                    // this
+//                    // chunk
+//                }
+//            }
+//
+//            throw new IllegalArgumentException("Invalid position: " + Integer.toString(position));
+//        }
 
         @Override
         public long getItemId(int position) {

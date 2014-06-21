@@ -97,6 +97,7 @@ public class ChainSelectionFragment extends ListFragment {
         if (DEBUG)
             Log.d(TAG, "onResume.");
         setListAdapter(mCallback.getChainAdapter());
+        mCallback.setActionBarTitle("Select chain");
     }
     
     

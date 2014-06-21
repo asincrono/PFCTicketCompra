@@ -102,7 +102,7 @@
                 android:layout_below="@+id/div_address"
                 android:gravity="top|left"
                 android:hint="@string/hint_address"
-                android:inputType="textPostalAddress|textMultiLine"
+                android:inputType="textPostalAddress|textMultiLine|textCapSentences"
                 android:lines="3"
                 android:maxLines="3"
                 android:minLines="3" />

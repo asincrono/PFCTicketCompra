@@ -379,6 +379,14 @@ public class AddDetailedReceiptActivity extends CloudBackendActivity implements
     }
 
     @Override
+    public void setActionBarTitle(String title) {
+        ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setTitle(title);
+        }
+    }
+
+    @Override
     public boolean isABAvaliable() {
         return (getActionBar() != null);
     }

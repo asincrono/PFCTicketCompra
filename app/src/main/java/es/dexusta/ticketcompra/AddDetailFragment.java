@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,6 +39,12 @@ public class AddDetailFragment extends Fragment {
     private EditText mEdtSecondUnit;
     private Spinner  mSpnSecondUnit;
 
+    private TextView mTvLblPricePerUnit;
+    private TextView mTvLblPricePerWeightVolume;
+
+    private TextView mTvPricePerUnit;
+    private TextView mTvPricePerWeightVolume;
+
     private Product mProduct;
 
     @Override
@@ -54,6 +63,121 @@ public class AddDetailFragment extends Fragment {
         mSpnSecondUnit = (Spinner) view.findViewById(R.id.spn_second_unit);
 
         mSpnSecondUnit.setAdapter(new UnitsAdapter(getActivity()));
+
+        mSpnSecondUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (id == 0) {// -> weight (kg.)
+                    mTvLblPricePerWeightVolume.setText(getString(R.string.lbl_price_per_weight));
+                } else {// id = 1 -> volume (l.)
+                    mTvLblPricePerWeightVolume.setText(getString(R.string.lbl_price_per_volume));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mTvLblPricePerUnit = (TextView) view.findViewById(R.id.lbl_price_per_unit);
+        mTvLblPricePerWeightVolume = (TextView) view.findViewById(R.id.lbl_price_per_weight_volume);
+
+        mTvPricePerUnit = (TextView) view.findViewById(R.id.tv_price_per_unit);
+        mTvPricePerWeightVolume = (TextView) view.findViewById(R.id.tv_price_per_weight_volume);
+
+        mEdtUnits.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Read the number, read the price if set.
+
+                if (mEdtPrice.length() > 0) {
+                    float price = Float.parseFloat(mEdtPrice.getText().toString());
+
+                    if (price > 0) {
+                        if (s.length() > 0) {
+                            int units = Integer.parseInt(s.toString());
+                            if (units > 0) {
+                                float pricePerUnits = price / units;
+                                mTvPricePerUnit.setText(String.valueOf(pricePerUnits) + " €");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        mEdtSecondUnit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mEdtPrice.length() > 0) {
+                    float price = Float.parseFloat(mEdtPrice.getText().toString());
+                    if (price > 0) {
+                        if (s.length() > 0) {
+                            int secondUnitVal = Integer.parseInt(s.toString());
+                            if (secondUnitVal > 0) {
+                                float pricePerSecondUnit = price / secondUnitVal * 1000;
+                                mTvPricePerWeightVolume.setText(String.valueOf(pricePerSecondUnit) + " €");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        mEdtPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    float price = Float.parseFloat(s.toString());
+                    if (price >= 0) {
+                        if (mEdtUnits.length() > 0) {
+                            int units = Integer.parseInt(mEdtUnits.getText().toString());
+                            if (units > 0) {
+                                float pricePerUnit = price / units;
+                                mTvPricePerUnit.setText(String.valueOf(pricePerUnit) + " €");
+                            }
+                        }
+
+                        if (mEdtSecondUnit.length() > 0) {
+                            int secondUnits = Integer.parseInt(mEdtSecondUnit.getText().toString());
+                            if (secondUnits > 0) {
+                                float pricePerSecondUnit = price / secondUnits;
+                                mTvPricePerWeightVolume.setText(String.valueOf(pricePerSecondUnit) + " €");
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
         return view;
     }
@@ -148,7 +272,6 @@ public class AddDetailFragment extends Fragment {
         mEdtUnits.setText("");
         mEdtSecondUnit.setText("");
         mSpnSecondUnit.setSelection(0);
-
     }
 
     @Override
